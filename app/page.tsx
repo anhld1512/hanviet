@@ -1,5 +1,6 @@
 import Link from "next/link"
 import FloatingCTA from "./components/FloatingCTA"
+import NavAuth from "./components/NavAuth"
 
 const sampleLessons = [
   {
@@ -63,15 +64,7 @@ export default function Home() {
             <span className="font-bold text-xl text-gray-900">HanViet</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-              Đăng nhập
-            </Link>
-            <a
-              href="#lessons"
-              className="text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              Học thử miễn phí
-            </a>
+            <NavAuth />
           </div>
         </div>
       </nav>

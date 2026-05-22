@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import type { Lesson } from "@/lib/lessons-data"
+import { createClient } from "@/lib/supabase-client"
 
 type Section = "dialogue" | "vocabulary" | "grammar" | "quiz" | "complete"
 
@@ -64,6 +65,23 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
   const [showAnswer, setShowAnswer] = useState(false)
   const [correctCount, setCorrectCount] = useState(0)
   const [showRomanization, setShowRomanization] = useState(true)
+  const [savedProgress, setSavedProgress] = useState(false)
+
+  useEffect(() => {
+    if (section === "complete" && !savedProgress) {
+      setSavedProgress(true)
+      const supabase = createClient()
+      supabase.auth.getUser().then(({ data }) => {
+        if (!data.user) return
+        supabase.from("user_lessons").upsert({
+          user_id: data.user.id,
+          lesson_id: lesson.id,
+          score: correctCount,
+          completed_at: new Date().toISOString(),
+        }, { onConflict: "user_id,lesson_id" })
+      })
+    }
+  }, [section, savedProgress, lesson.id, correctCount])
 
   const sections: Section[] = ["dialogue", "vocabulary", "grammar", "quiz", "complete"]
   const sectionIndex = sections.indexOf(section)
@@ -119,7 +137,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-6 py-3 flex items-center gap-4">
-          <Link href="/" className="text-gray-400 hover:text-gray-600 transition-colors text-lg">
+          <Link href="/dashboard" className="text-gray-400 hover:text-gray-600 transition-colors text-lg">
             ←
           </Link>
           <div className="flex-1">
@@ -418,7 +436,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
             </div>
 
             <div className="flex flex-col gap-3 max-w-xs mx-auto">
-              {lesson.id < 3 && (
+              {lesson.id < 10 && (
                 <Link
                   href={`/lessons/${lesson.id + 1}`}
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3.5 rounded-xl transition-colors text-center"
@@ -427,10 +445,16 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                 </Link>
               )}
               <Link
-                href="/"
+                href="/flashcards"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 rounded-xl transition-colors text-center"
+              >
+                Ôn từ vựng với Flashcard →
+              </Link>
+              <Link
+                href="/dashboard"
                 className="w-full border border-gray-200 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors text-center"
               >
-                Về trang chủ
+                Về Dashboard
               </Link>
             </div>
           </div>

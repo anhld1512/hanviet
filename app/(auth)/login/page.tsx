@@ -62,6 +62,8 @@ function LoginForm() {
               </label>
               <input
                 type="email"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@example.com"
@@ -76,6 +78,8 @@ function LoginForm() {
               </label>
               <input
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mật khẩu của bạn"
