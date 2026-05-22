@@ -403,7 +403,7 @@ export const lessons: Lesson[] = [
     duration: "7 phút",
     emoji: "☕",
     dialogue: {
-      situation: "Tinh huong: Vao mot cafe Starbucks o Han Quoc goi nuoc",
+      situation: "Tình huống: Vào một cafe Starbucks ở Hàn Quốc gọi nước",
       lines: [
         { speaker: "A", kr: "안녕하세요, 주문하시겠어요?", romanization: "Annyeonghaseyo, jumunhasigeseoyo?", vi: "Xin chào, bạn muốn gọi gì?" },
         { speaker: "B", kr: "아메리카노 한 잔 주세요.", romanization: "Amerikano han jan juseyo.", vi: "Cho tôi một ly americano." },
@@ -433,9 +433,9 @@ export const lessons: Lesson[] = [
       },
     ],
     quiz: [
-      { type: "multiple_choice", question: "Goi mot ly americano nong, ban noi?", options: ["아이스 아메리카노 주세요", "따뜻한 아메리카노 주세요", "아메리카노 없어요", "커피 싫어요"], correct: 1, explanation: "따뜻한 = nong + 아메리카노 + 주세요 = cho toi. Day la cach goi do uong nong." },
-      { type: "multiple_choice", question: "'계산할게요' co nghia la?", options: ["Toi muon xem menu", "Toi se thanh toan", "Toi can them thoi gian", "Toi muon huy don"], correct: 1, explanation: "계산하다 = tinh tien/thanh toan. -할게요 = toi se lam. Cau nay tuong duong 'Toi thanh toan nhe'." },
-      { type: "multiple_choice", question: "Nhan vien hoi '포인트 카드 있으세요?', ho dang hoi gi?", options: ["Ban co the tan hang khong?", "Ban co the tin dung khong?", "Ban co the tich diem khong?", "Ban co so dien thoai khong?"], correct: 2, explanation: "포인트 카드 = the tich diem (loyalty card). 있으세요? = ban co ... khong?" },
+      { type: "multiple_choice", question: "Gọi một ly americano nóng, bạn nói?", options: ["아이스 아메리카노 주세요", "따뜻한 아메리카노 주세요", "아메리카노 없어요", "커피 싫어요"], correct: 1, explanation: "따뜻한 = nóng + 아메리카노 + 주세요 = cho tôi. Đây là cách gọi đồ uống nóng." },
+      { type: "multiple_choice", question: "'계산할게요' có nghĩa là?", options: ["Tôi muốn xem menu", "Tôi sẽ thanh toán", "Tôi cần thêm thời gian", "Tôi muốn hủy đơn"], correct: 1, explanation: "계산하다 = tính tiền/thanh toán. -할게요 = tôi sẽ làm. Câu này tương đương 'Tôi thanh toán nhé'." },
+      { type: "multiple_choice", question: "Nhân viên hỏi '포인트 카드 있으세요?', họ đang hỏi gì?", options: ["Bạn có thẻ tản hàng không?", "Bạn có thẻ tín dụng không?", "Bạn có thẻ tích điểm không?", "Bạn có số điện thoại không?"], correct: 2, explanation: "포인트 카드 = thẻ tích điểm (loyalty card). 있으세요? = bạn có... không?" },
     ],
   },
   {
@@ -447,14 +447,14 @@ export const lessons: Lesson[] = [
     duration: "8 phút",
     emoji: "⏰",
     dialogue: {
-      situation: "Tinh huong: Dang o van phong va can biet gio de khong tre cuoc hop",
+      situation: "Tình huống: Đang ở văn phòng và cần biết giờ để không trễ cuộc họp",
       lines: [
-        { speaker: "B", kr: "지금 몇 시예요?", romanization: "Jigeum myeot sieyeo?", vi: "Bay gio la may gio?" },
-        { speaker: "A", kr: "두 시 반이에요.", romanization: "Du si banieyo.", vi: "2 gio ruoi." },
-        { speaker: "B", kr: "회의가 몇 시에 시작해요?", romanization: "Hoeuiga myeot sie sijakhaeyo?", vi: "Cuoc hop bat dau luc may gio?" },
-        { speaker: "A", kr: "세 시에 시작해요.", romanization: "Se sie sijakhaeyo.", vi: "Bat dau luc 3 gio." },
-        { speaker: "B", kr: "그럼 30분 남았네요.", romanization: "Geureom samsip bun namatneyo.", vi: "Vay con 30 phut nua nhi." },
-        { speaker: "A", kr: "네, 빨리 준비해요!", romanization: "Ne, ppalli junbihaeyo!", vi: "Ung, nhanh chuan bi di!" },
+        { speaker: "B", kr: "지금 몇 시예요?", romanization: "Jigeum myeot sieyeo?", vi: "Bây giờ là mấy giờ?" },
+        { speaker: "A", kr: "두 시 반이에요.", romanization: "Du si banieyo.", vi: "2 giờ rưỡi." },
+        { speaker: "B", kr: "회의가 몇 시에 시작해요?", romanization: "Hoeuiga myeot sie sijakhaeyo?", vi: "Cuộc họp bắt đầu lúc mấy giờ?" },
+        { speaker: "A", kr: "세 시에 시작해요.", romanization: "Se sie sijakhaeyo.", vi: "Bắt đầu lúc 3 giờ." },
+        { speaker: "B", kr: "그럼 30분 남았네요.", romanization: "Geureom samsip bun namatneyo.", vi: "Vậy còn 30 phút nữa nhỉ." },
+        { speaker: "A", kr: "네, 빨리 준비해요!", romanization: "Ne, ppalli junbihaeyo!", vi: "Ừ, nhanh chuẩn bị đi!" },
       ],
     },
     vocabulary: [
@@ -467,19 +467,19 @@ export const lessons: Lesson[] = [
     ],
     grammar: [
       {
-        pattern: "Cach doc gio trong tieng Han",
-        meaning: "So Han Viet cho gio, so thuan Viet cho phut",
-        explanation: "Tieng Han dung 2 he thong so dem: So Han-Viet cho GIO (한 시=1h, 두 시=2h, 세 시=3h, 네 시=4h, 다섯 시=5h...) va so thuan Han cho PHUT (일 분=1ph, 이 분=2ph, 삼십 분=30ph). Vi du: 2 gio 30 phut = 두 시 삼십 분 hoac 두 시 반 (ban = ruoi).",
+        pattern: "Cách đọc giờ trong tiếng Hàn",
+        meaning: "Số Hán Việt cho giờ, số thuần Hàn cho phút",
+        explanation: "Tiếng Hàn dùng 2 hệ thống số đếm: Số thuần Hàn cho GIỜ (한 시=1h, 두 시=2h, 세 시=3h, 네 시=4h, 다섯 시=5h...) và số Hán-Hàn cho PHÚT (일 분=1ph, 이 분=2ph, 삼십 분=30ph). Ví dụ: 2 giờ 30 phút = 두 시 삼십 분 hoặc 두 시 반 (반 = rưỡi).",
         examples: [
-          { kr: "세 시 십오 분이에요.", vi: "La 3 gio 15 phut." },
-          { kr: "여섯 시 반에 만나요.", vi: "Gap nhau luc 6 gio ruoi nhe." },
+          { kr: "세 시 십오 분이에요.", vi: "Là 3 giờ 15 phút." },
+          { kr: "여섯 시 반에 만나요.", vi: "Gặp nhau lúc 6 giờ rưỡi nhé." },
         ],
       },
     ],
     quiz: [
-      { type: "multiple_choice", question: "'두 시 반'co nghia la may gio?", options: ["2 gio 10 phut", "2 gio 15 phut", "2 gio 30 phut", "2 gio 45 phut"], correct: 2, explanation: "반 (半) = nua = 30 phut. Hai gio 반 = 2:30. Tuong tu trong tieng Viet 'hai gio ruoi'." },
-      { type: "multiple_choice", question: "Muon hoi may gio roi, ban dung cau?", options: ["몇 살이에요?", "몇 시예요?", "몇 명이에요?", "몇 층이에요?"], correct: 1, explanation: "몇 시예요? = May gio roi? 몇 살 = may tuoi, 몇 명 = may nguoi, 몇 층 = tang may." },
-      { type: "multiple_choice", question: "'시작하다'co nghia la?", options: ["Ket thuc", "Bat dau", "Tiep tuc", "Dung lai"], correct: 1, explanation: "시작하다 = bat dau. Trai nghia la 끝나다 = ket thuc. 계속하다 = tiep tuc, 멈추다 = dung lai." },
+      { type: "multiple_choice", question: "'두 시 반' có nghĩa là mấy giờ?", options: ["2 giờ 10 phút", "2 giờ 15 phút", "2 giờ 30 phút", "2 giờ 45 phút"], correct: 2, explanation: "반 (半) = nửa = 30 phút. 두 시 반 = 2:30. Tương tự trong tiếng Việt 'hai giờ rưỡi'." },
+      { type: "multiple_choice", question: "Muốn hỏi mấy giờ rồi, bạn dùng câu?", options: ["몇 살이에요?", "몇 시예요?", "몇 명이에요?", "몇 층이에요?"], correct: 1, explanation: "몇 시예요? = Mấy giờ rồi? 몇 살 = mấy tuổi, 몇 명 = mấy người, 몇 층 = tầng mấy." },
+      { type: "multiple_choice", question: "'시작하다' có nghĩa là?", options: ["Kết thúc", "Bắt đầu", "Tiếp tục", "Dừng lại"], correct: 1, explanation: "시작하다 = bắt đầu. Trái nghĩa là 끝나다 = kết thúc. 계속하다 = tiếp tục, 멈추다 = dừng lại." },
     ],
   },
   {
@@ -491,14 +491,14 @@ export const lessons: Lesson[] = [
     duration: "8 phút",
     emoji: "🌤️",
     dialogue: {
-      situation: "Tinh huong: Noi chuyen voi dong nghiep truoc khi di an trua",
+      situation: "Tình huống: Nói chuyện với đồng nghiệp trước khi đi ăn trưa",
       lines: [
-        { speaker: "A", kr: "오늘 날씨가 어때요?", romanization: "Oneul nalssiga eottaeyo?", vi: "Hom nay thoi tiet the nao?" },
-        { speaker: "B", kr: "밖이 엄청 더워요. 35도래요.", romanization: "Bakki eomcheong deowoyo. Samsip o dorae yo.", vi: "Ngoai troi nong kinh. Nghe noi 35 do." },
-        { speaker: "A", kr: "진짜요? 우산 챙겼어요?", romanization: "Jinjjayo? Usan chaenggyeosseoyo?", vi: "That a? Ban mang o ro chua?" },
-        { speaker: "B", kr: "왜요? 비가 올 것 같아요?", romanization: "Waeyo? Biga ol geot gatayo?", vi: "Sao vay? Troi se mua a?" },
-        { speaker: "A", kr: "오후에 비가 온다고 했어요.", romanization: "Ohuee biga ondago haesseoyo.", vi: "Ho noi chieu se co mua." },
-        { speaker: "B", kr: "그럼 우산 챙길게요. 고마워요!", romanization: "Geureom usan chaenggilgeyo. Gomawoyo!", vi: "Vay thi minh mang o thi. Cam on nha!" },
+        { speaker: "A", kr: "오늘 날씨가 어때요?", romanization: "Oneul nalssiga eottaeyo?", vi: "Hôm nay thời tiết thế nào?" },
+        { speaker: "B", kr: "밖이 엄청 더워요. 35도래요.", romanization: "Bakki eomcheong deowoyo. Samsip o dorae yo.", vi: "Ngoài trời nóng kinh. Nghe nói 35 độ." },
+        { speaker: "A", kr: "진짜요? 우산 챙겼어요?", romanization: "Jinjjayo? Usan chaenggyeosseoyo?", vi: "Thật à? Bạn mang ô rồi chưa?" },
+        { speaker: "B", kr: "왜요? 비가 올 것 같아요?", romanization: "Waeyo? Biga ol geot gatayo?", vi: "Sao vậy? Trời sẽ mưa à?" },
+        { speaker: "A", kr: "오후에 비가 온다고 했어요.", romanization: "Ohuee biga ondago haesseoyo.", vi: "Họ nói chiều sẽ có mưa." },
+        { speaker: "B", kr: "그럼 우산 챙길게요. 고마워요!", romanization: "Geureom usan chaenggilgeyo. Gomawoyo!", vi: "Vậy thì mình mang ô thôi. Cảm ơn nhé!" },
       ],
     },
     vocabulary: [
@@ -512,18 +512,18 @@ export const lessons: Lesson[] = [
     grammar: [
       {
         pattern: "-(으)ㄹ 것 같아요",
-        meaning: "Co ve se ... / Hinh nhu se ...",
-        explanation: "Cau truc du doan hoac suy doan. 비가 올 것 같아요 = co ve troi se mua. Cach tao: bo 다 cua dong tu + -(으)ㄹ 것 같다. Neu goc dong tu ket thuc bang nguyen am -> dung ㄹ, ket thuc bang phu am -> dung 을. Trong tieng Viet tuong duong 'hinh nhu se...' hoac 'co ve...'.",
+        meaning: "Có vẻ sẽ... / Hình như sẽ...",
+        explanation: "Cấu trúc dự đoán hoặc suy đoán. 비가 올 것 같아요 = có vẻ trời sẽ mưa. Cách tạo: bỏ 다 của động từ + -(으)ㄹ 것 같다. Nếu gốc động từ kết thúc bằng nguyên âm dùng ㄹ, kết thúc bằng phụ âm dùng 을. Trong tiếng Việt tương đương 'hình như sẽ...' hoặc 'có vẻ...'.",
         examples: [
-          { kr: "눈이 올 것 같아요.", vi: "Co ve troi se co tuyet." },
-          { kr: "오늘 바쁠 것 같아요.", vi: "Hom nay co ve se ban." },
+          { kr: "눈이 올 것 같아요.", vi: "Có vẻ trời sẽ có tuyết." },
+          { kr: "오늘 바쁠 것 같아요.", vi: "Hôm nay có vẻ sẽ bận." },
         ],
       },
     ],
     quiz: [
-      { type: "multiple_choice", question: "'날씨가 어때요?' co nghia la?", options: ["Hom nay la thu may?", "Thoi tiet the nao?", "Nhiet do la bao nhieu?", "Troi mua chua?"], correct: 1, explanation: "날씨 = thoi tiet, 어때요? = the nao? = Thoi tiet the nao?" },
-      { type: "multiple_choice", question: "Troi dang mua, ban noi?", options: ["눈이 와요", "비가 와요", "바람이 불어요", "날씨가 맑아요"], correct: 1, explanation: "비 = mua, 와요 = den/roi. 비가 와요 = troi dang mua. 눈이 와요 = tuyet roi, 바람이 불어요 = gio dang toi, 맑아요 = quang dang." },
-      { type: "multiple_choice", question: "'비가 올 것 같아요'co nghia la?", options: ["Troi vua mua xong", "Co ve troi se mua", "Troi dang mua", "Troi khong mua"], correct: 1, explanation: "-(으)ㄹ 것 같다 = co ve se... Du doan tuong lai. 올 = se den/roi (tu 오다)." },
+      { type: "multiple_choice", question: "'날씨가 어때요?' có nghĩa là?", options: ["Hôm nay là thứ mấy?", "Thời tiết thế nào?", "Nhiệt độ là bao nhiêu?", "Trời mưa chưa?"], correct: 1, explanation: "날씨 = thời tiết, 어때요? = thế nào? Ghép lại: Thời tiết thế nào?" },
+      { type: "multiple_choice", question: "Trời đang mưa, bạn nói?", options: ["눈이 와요", "비가 와요", "바람이 불어요", "날씨가 맑아요"], correct: 1, explanation: "비 = mưa, 와요 = đến/rơi. 비가 와요 = trời đang mưa. 눈이 와요 = tuyết rơi, 바람이 불어요 = gió đang thổi, 맑아요 = quang đãng." },
+      { type: "multiple_choice", question: "'비가 올 것 같아요' có nghĩa là?", options: ["Trời vừa mưa xong", "Có vẻ trời sẽ mưa", "Trời đang mưa", "Trời không mưa"], correct: 1, explanation: "-(으)ㄹ 것 같다 = có vẻ sẽ... Dự đoán tương lai. 올 = sẽ đến/rơi (từ 오다)." },
     ],
   },
   {
@@ -535,14 +535,14 @@ export const lessons: Lesson[] = [
     duration: "7 phút",
     emoji: "🏪",
     dialogue: {
-      situation: "Tinh huong: Vao GS25 mua do an nhanh va thanh toan",
+      situation: "Tình huống: Vào GS25 mua đồ ăn nhanh và thanh toán",
       lines: [
-        { speaker: "B", kr: "이거 얼마예요?", romanization: "Igeo eolmayeyo?", vi: "Cai nay bao nhieu tien?" },
-        { speaker: "A", kr: "1,500원이에요.", romanization: "Cheon obaeк wonieyeo.", vi: "1.500 won a." },
-        { speaker: "B", kr: "이것도 같이 계산해 주세요.", romanization: "Igeotdo gachi gyesanhe juseyo.", vi: "Tinh luon cai nay cung nhe." },
-        { speaker: "A", kr: "다해서 4,000원이에요. 봉투 필요하세요?", romanization: "Dahaeseo samcheon wonieyeo. Bongtu pilyohaseyo?", vi: "Tong cong 4.000 won. Ban can tui khong?" },
-        { speaker: "B", kr: "아니요, 괜찮아요. 카드로 낼게요.", romanization: "Aniyo, gwaenchanacho. Kadeuro naelgeyo.", vi: "Khong, thoi a. Toi tra bang the." },
-        { speaker: "A", kr: "여기 영수증이에요.", romanization: "Yeogi yeongsujeungieyeo.", vi: "Day la hoa don a." },
+        { speaker: "B", kr: "이거 얼마예요?", romanization: "Igeo eolmayeyo?", vi: "Cái này bao nhiêu tiền?" },
+        { speaker: "A", kr: "1,500원이에요.", romanization: "Cheon obaeк wonieyeo.", vi: "1.500 won ạ." },
+        { speaker: "B", kr: "이것도 같이 계산해 주세요.", romanization: "Igeotdo gachi gyesanhe juseyo.", vi: "Tính luôn cái này cùng nhé." },
+        { speaker: "A", kr: "다해서 4,000원이에요. 봉투 필요하세요?", romanization: "Dahaeseo samcheon wonieyeo. Bongtu pilyohaseyo?", vi: "Tổng cộng 4.000 won. Bạn cần túi không?" },
+        { speaker: "B", kr: "아니요, 괜찮아요. 카드로 낼게요.", romanization: "Aniyo, gwaenchanacho. Kadeuro naelgeyo.", vi: "Không, thôi ạ. Tôi trả bằng thẻ." },
+        { speaker: "A", kr: "여기 영수증이에요.", romanization: "Yeogi yeongsujeungieyeo.", vi: "Đây là hóa đơn ạ." },
       ],
     },
     vocabulary: [
@@ -555,19 +555,19 @@ export const lessons: Lesson[] = [
     ],
     grammar: [
       {
-        pattern: "다해서 [so tien]이에요",
-        meaning: "Tong cong la [so tien]",
-        explanation: "다 = tat ca, 해서 = lam thanh = tong hop lai. 다해서 = tong cong/cong lai. Day la cau thong dung khi thanh toan tai cua hang. Tuong tu: 전부 다 해서 = tat ca tong cong. Viet so tien: 100 = 백, 1000 = 천, 10000 = 만.",
+        pattern: "다해서 [số tiền]이에요",
+        meaning: "Tổng cộng là [số tiền]",
+        explanation: "다 = tất cả, 해서 = làm thành = tổng hợp lại. 다해서 = tổng cộng/cộng lại. Đây là câu thông dụng khi thanh toán tại cửa hàng. Viết số tiền: 100 = 백, 1000 = 천, 10000 = 만.",
         examples: [
-          { kr: "다해서 만 원이에요.", vi: "Tong cong 10.000 won." },
-          { kr: "다해서 오만 원입니다.", vi: "Tong cong 50.000 won." },
+          { kr: "다해서 만 원이에요.", vi: "Tổng cộng 10.000 won." },
+          { kr: "다해서 오만 원입니다.", vi: "Tổng cộng 50.000 won." },
         ],
       },
     ],
     quiz: [
-      { type: "multiple_choice", question: "Muon hoi gia, ban noi?", options: ["얼마예요?", "어디예요?", "무엇이에요?", "언제예요?"], correct: 0, explanation: "얼마예요? = Bao nhieu tien? La cau hoi gia co ban nhat khi di mua sam." },
-      { type: "multiple_choice", question: "'봉투 필요하세요?' co nghia la?", options: ["Ban co the tin dung khong?", "Ban can hoa don khong?", "Ban can tui khong?", "Ban tra bang tien mat khong?"], correct: 2, explanation: "봉투 = tui (nhua), 필요하다 = can thiet/can. 봉투 필요하세요? = Ban can tui khong? (o Han Quoc hay hoi cau nay vi phi tui)." },
-      { type: "multiple_choice", question: "Tra bang tien mat, ban noi?", options: ["카드로 낼게요", "현금으로 낼게요", "포인트로 낼게요", "앱으로 낼게요"], correct: 1, explanation: "현금 = tien mat + 으로 (bang) + 낼게요 (toi se tra). 카드로 = bang the, 포인트로 = bang diem tich luy." },
+      { type: "multiple_choice", question: "Muốn hỏi giá, bạn nói?", options: ["얼마예요?", "어디예요?", "무엇이에요?", "언제예요?"], correct: 0, explanation: "얼마예요? = Bao nhiêu tiền? Là câu hỏi giá cơ bản nhất khi đi mua sắm." },
+      { type: "multiple_choice", question: "'봉투 필요하세요?' có nghĩa là?", options: ["Bạn có thẻ tín dụng không?", "Bạn cần hóa đơn không?", "Bạn cần túi không?", "Bạn trả bằng tiền mặt không?"], correct: 2, explanation: "봉투 = túi (nhựa), 필요하다 = cần thiết/cần. 봉투 필요하세요? = Bạn cần túi không? (Ở Hàn Quốc hay hỏi câu này vì phí túi)." },
+      { type: "multiple_choice", question: "Trả bằng tiền mặt, bạn nói?", options: ["카드로 낼게요", "현금으로 낼게요", "포인트로 낼게요", "앱으로 낼게요"], correct: 1, explanation: "현금 = tiền mặt + 으로 (bằng) + 낼게요 (tôi sẽ trả). 카드로 = bằng thẻ, 포인트로 = bằng điểm tích lũy." },
     ],
   },
   {
@@ -579,14 +579,14 @@ export const lessons: Lesson[] = [
     duration: "10 phút",
     emoji: "🙋",
     dialogue: {
-      situation: "Tinh huong: Buoi tieu nganh dau tien, tu gioi thieu voi lop",
+      situation: "Tình huống: Buổi học đầu tiên, tự giới thiệu với cả lớp",
       lines: [
-        { speaker: "B", kr: "안녕하세요, 자기소개 해주세요.", romanization: "Annyeonghaseyo, jagisogyae haejuseyo.", vi: "Xin chao, hay tu gioi thieu di." },
-        { speaker: "A", kr: "안녕하세요! 저는 응우옌 민이에요. 베트남 사람이에요.", romanization: "Annyeonghaseyo! Jeoneun Nguyễn Min ieyo. Beteunam saramieyo.", vi: "Xin chao! Toi la Nguyen Minh. Toi la nguoi Viet Nam." },
-        { speaker: "A", kr: "나이는 스물다섯 살이에요. 회사원이에요.", romanization: "Naineun seumul daseot sarieyeo. Hoesawonieyeo.", vi: "Toi 25 tuoi. Toi la nhan vien van phong." },
-        { speaker: "A", kr: "취미는 음악 듣기예요. 한국 드라마도 좋아해요.", romanization: "Chwiminun eumak deutgieyeo. Hanguk deuramado johahaeyo.", vi: "So thich cua toi la nghe nhac. Toi cung thich phim Han Quoc." },
-        { speaker: "B", kr: "반가워요! 한국어 잘 하시네요.", romanization: "Bangawoyo! Hangugeo jal hasineyeo.", vi: "Vui duoc gap! Ban noi tieng Han gioi qua." },
-        { speaker: "A", kr: "아니에요, 아직 배우고 있어요. 잘 부탁드려요!", romanization: "Anieyo, ajik baeugo isseoyo. Jal butakdeuryeoyo!", vi: "Khong dau, toi van dang hoc. Mong duoc moi nguoi giup do!" },
+        { speaker: "B", kr: "안녕하세요, 자기소개 해주세요.", romanization: "Annyeonghaseyo, jagisogyae haejuseyo.", vi: "Xin chào, hãy tự giới thiệu đi." },
+        { speaker: "A", kr: "안녕하세요! 저는 응우옌 민이에요. 베트남 사람이에요.", romanization: "Annyeonghaseyo! Jeoneun Nguyễn Min ieyo. Beteunam saramieyo.", vi: "Xin chào! Tôi là Nguyễn Minh. Tôi là người Việt Nam." },
+        { speaker: "A", kr: "나이는 스물다섯 살이에요. 회사원이에요.", romanization: "Naineun seumul daseot sarieyeo. Hoesawonieyeo.", vi: "Tôi 25 tuổi. Tôi là nhân viên văn phòng." },
+        { speaker: "A", kr: "취미는 음악 듣기예요. 한국 드라마도 좋아해요.", romanization: "Chwiminun eumak deutgieyeo. Hanguk deuramado johahaeyo.", vi: "Sở thích của tôi là nghe nhạc. Tôi cũng thích phim Hàn Quốc." },
+        { speaker: "B", kr: "반가워요! 한국어 잘 하시네요.", romanization: "Bangawoyo! Hangugeo jal hasineyeo.", vi: "Vui được gặp! Bạn nói tiếng Hàn giỏi quá." },
+        { speaker: "A", kr: "아니에요, 아직 배우고 있어요. 잘 부탁드려요!", romanization: "Anieyo, ajik baeugo isseoyo. Jal butakdeuryeoyo!", vi: "Không đâu, tôi vẫn đang học. Mong được mọi người giúp đỡ!" },
       ],
     },
     vocabulary: [
@@ -599,19 +599,19 @@ export const lessons: Lesson[] = [
     ],
     grammar: [
       {
-        pattern: "저는 [nghe nghiep]이에요/예요",
-        meaning: "Toi la [nghe nghiep]",
-        explanation: "Cach gioi thieu nghe nghiep. Sau phu am dung 이에요, sau nguyen am dung 예요. Vi du: 학생이에요 (hoc sinh - ket thuc bang ng), 선생님이에요 (giao vien), 회사원이에요 (nhan vien), 의사예요 (bac si - ket thuc bang nguyen am). Ngoai ra tu gioi thieu thuong gom: ten (이름), tuoi (나이), nghe nghiep (직업), que quan (출신), so thich (취미).",
+        pattern: "저는 [nghề nghiệp]이에요/예요",
+        meaning: "Tôi là [nghề nghiệp]",
+        explanation: "Cách giới thiệu nghề nghiệp. Sau phụ âm dùng 이에요, sau nguyên âm dùng 예요. Ví dụ: 학생이에요 (học sinh), 선생님이에요 (giáo viên), 회사원이에요 (nhân viên), 의사예요 (bác sĩ). Ngoài ra tự giới thiệu thường gồm: tên (이름), tuổi (나이), nghề nghiệp (직업), quê quán (출신), sở thích (취미).",
         examples: [
-          { kr: "저는 학생이에요.", vi: "Toi la hoc sinh." },
-          { kr: "저는 의사예요.", vi: "Toi la bac si." },
+          { kr: "저는 학생이에요.", vi: "Tôi là học sinh." },
+          { kr: "저는 의사예요.", vi: "Tôi là bác sĩ." },
         ],
       },
     ],
     quiz: [
-      { type: "multiple_choice", question: "'취미'co nghia la gi?", options: ["Nghe nghiep", "Ten", "So thich", "Tuoi"], correct: 2, explanation: "취미 = so thich/hobby. Khi tu gioi thieu thuong noi 취미는 ... 이에요/예요 = so thich cua toi la..." },
-      { type: "multiple_choice", question: "Noi tuoi trong tieng Han: '25 tuoi' la?", options: ["이십오 살이에요", "스물다섯 살이에요", "스물오 살이에요", "이십다섯 살이에요"], correct: 1, explanation: "Tuoi dung so thuan Han: 스물다섯 = 25, 살 = tuoi. Khong dung so Han-Viet (이십오) cho tuoi trong giao tiep thuong ngay." },
-      { type: "multiple_choice", question: "'잘 부탁드려요' dung trong tinh huong nao?", options: ["Khi tam biet", "Khi cap nhat moi nguoi cham soc/giup do", "Khi xin loi", "Khi cam on"], correct: 1, explanation: "잘 부탁드려요 = Mong duoc moi nguoi giup do / Mong chung ta hop tac tot. Dung khi lan dau gap, mang y nghia mo cau hop tac va nho nhuong." },
+      { type: "multiple_choice", question: "'취미' có nghĩa là gì?", options: ["Nghề nghiệp", "Tên", "Sở thích", "Tuổi"], correct: 2, explanation: "취미 = sở thích/hobby. Khi tự giới thiệu thường nói 취미는... 이에요/예요 = sở thích của tôi là..." },
+      { type: "multiple_choice", question: "Nói tuổi trong tiếng Hàn: '25 tuổi' là?", options: ["이십오 살이에요", "스물다섯 살이에요", "스물오 살이에요", "이십다섯 살이에요"], correct: 1, explanation: "Tuổi dùng số thuần Hàn: 스물다섯 = 25, 살 = tuổi. Không dùng số Hán-Hàn (이십오) cho tuổi trong giao tiếp thường ngày." },
+      { type: "multiple_choice", question: "'잘 부탁드려요' dùng trong tình huống nào?", options: ["Khi tạm biệt", "Khi nhờ mọi người chăm sóc/giúp đỡ", "Khi xin lỗi", "Khi cảm ơn"], correct: 1, explanation: "잘 부탁드려요 = Mong được mọi người giúp đỡ / Mong chúng ta hợp tác tốt. Dùng khi lần đầu gặp, mang ý nghĩa mở đầu hợp tác và nhờ nhượng." },
     ],
   },
 ]
