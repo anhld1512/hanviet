@@ -1,0 +1,224 @@
+{
+  "lesson_number": 4,
+  "title_kr": "동작과 사물",
+  "title_vi": "Hành động và sự vật",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": false,
+  "dialogue": [
+    {
+      "speaker": "A",
+      "speaker_role": "Tổ trưởng sản xuất",
+      "text_kr": "뚜언 씨, 지금 뭐 해요?",
+      "text_vi": "Anh Tuấn, bây giờ đang làm gì vậy?",
+      "grammar_note": "씨 = anh/chị (kính ngữ đi kèm tên); 뭐 해요? = làm gì?"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "부품을 조립하고 있어요.",
+      "text_vi": "Tôi đang lắp ráp linh kiện.",
+      "grammar_note": "-고 있어요 = đang làm gì (thì hiện tại tiếp diễn)"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Tổ trưởng sản xuất",
+      "text_kr": "이 버튼을 누르세요.",
+      "text_vi": "Hãy nhấn nút này.",
+      "grammar_note": "-(으)세요 = hãy... (lệnh lịch sự)"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "이렇게요?",
+      "text_vi": "Như thế này phải không?",
+      "grammar_note": "이렇게 = như thế này"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Tổ trưởng sản xuất",
+      "text_kr": "네, 맞아요. 그다음에 이걸 들어 올리세요.",
+      "text_vi": "Đúng rồi. Tiếp theo hãy nhấc cái này lên.",
+      "grammar_note": "그다음에 = tiếp theo; 들어 올리다 = nhấc lên"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "무거워요. 혼자 할 수 없어요.",
+      "text_vi": "Nặng quá. Tôi không thể làm một mình.",
+      "grammar_note": "무겁다 = nặng; -ㄹ/을 수 없다 = không thể"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Tổ trưởng sản xuất",
+      "text_kr": "알겠어요. 같이 합시다.",
+      "text_vi": "Được rồi. Cùng làm nhé.",
+      "grammar_note": "-ㅂ/읍시다 = hãy cùng... (rủ rê tập thể)"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "조립하다",
+      "word_vi": "Lắp ráp",
+      "pronunciation": "jo-rip-ha-da",
+      "example_kr": "부품을 조립해요.",
+      "example_vi": "Lắp ráp linh kiện.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "누르다",
+      "word_vi": "Nhấn/Bấm",
+      "pronunciation": "nu-reu-da",
+      "example_kr": "버튼을 누르세요.",
+      "example_vi": "Hãy nhấn nút.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "들다",
+      "word_vi": "Nhấc/Cầm/Nâng",
+      "pronunciation": "deul-da",
+      "example_kr": "상자를 들어 올리세요.",
+      "example_vi": "Hãy nhấc hộp lên.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "운반하다",
+      "word_vi": "Vận chuyển",
+      "pronunciation": "un-ban-ha-da",
+      "example_kr": "물건을 운반해요.",
+      "example_vi": "Vận chuyển hàng hóa.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "확인하다",
+      "word_vi": "Kiểm tra/Xác nhận",
+      "pronunciation": "hwak-in-ha-da",
+      "example_kr": "부품을 확인하세요.",
+      "example_vi": "Hãy kiểm tra linh kiện.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "부품",
+      "word_vi": "Linh kiện/Phụ tùng",
+      "pronunciation": "bu-pum",
+      "example_kr": "부품을 조립해요.",
+      "example_vi": "Lắp ráp linh kiện.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "기계",
+      "word_vi": "Máy móc",
+      "pronunciation": "gi-gye",
+      "example_kr": "기계를 작동시켜요.",
+      "example_vi": "Vận hành máy móc.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "무겁다",
+      "word_vi": "Nặng",
+      "pronunciation": "mu-geop-da",
+      "example_kr": "이 상자가 무거워요.",
+      "example_vi": "Hộp này nặng.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "가볍다",
+      "word_vi": "Nhẹ",
+      "pronunciation": "ga-byeop-da",
+      "example_kr": "이 물건은 가벼워요.",
+      "example_vi": "Đồ vật này nhẹ.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "조심하다",
+      "word_vi": "Cẩn thận",
+      "pronunciation": "jo-sim-ha-da",
+      "example_kr": "조심하세요!",
+      "example_vi": "Hãy cẩn thận!",
+      "is_key_word": true
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "-고 있어요",
+      "meaning": "Đang làm gì đó (thì hiện tại tiếp diễn)",
+      "explanation_vi": "Giống 'đang' trong tiếng Việt. Cách tạo: bỏ 다 của động từ + 고 있어요. Ví dụ: 일하다 → 일하고 있어요 = đang làm việc. 먹다 → 먹고 있어요 = đang ăn.",
+      "examples": [
+        { "kr": "부품을 조립하고 있어요.", "vi": "Đang lắp ráp linh kiện." },
+        { "kr": "기계를 확인하고 있어요.", "vi": "Đang kiểm tra máy móc." },
+        { "kr": "지금 일하고 있어요.", "vi": "Bây giờ đang làm việc." }
+      ]
+    },
+    {
+      "pattern": "-(으)세요",
+      "meaning": "Hãy... (mệnh lệnh lịch sự)",
+      "explanation_vi": "Dạng mệnh lệnh lịch sự, dùng khi cấp trên chỉ thị hoặc hướng dẫn. Sau nguyên âm hoặc ㄹ dùng -세요, sau phụ âm dùng -으세요.",
+      "examples": [
+        { "kr": "이 버튼을 누르세요.", "vi": "Hãy nhấn nút này." },
+        { "kr": "조심하세요.", "vi": "Hãy cẩn thận." },
+        { "kr": "확인하세요.", "vi": "Hãy kiểm tra." }
+      ]
+    },
+    {
+      "pattern": "-(으)ㄹ 수 없어요",
+      "meaning": "Không thể làm gì",
+      "explanation_vi": "있어요/없어요 ghép với -(으)ㄹ 수 = có thể/không thể. Đây là cấu trúc thường dùng khi báo cáo vấn đề với tổ trưởng.",
+      "examples": [
+        { "kr": "혼자 할 수 없어요.", "vi": "Không thể làm một mình." },
+        { "kr": "이 기계를 작동할 수 없어요.", "vi": "Không thể vận hành máy này." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "Tổ trưởng hỏi '지금 뭐 해요?', bạn đang lắp ráp linh kiện, trả lời:",
+      "options": [
+        "부품을 조립했어요",
+        "부품을 조립하고 있어요",
+        "부품을 조립할 거예요",
+        "부품을 조립해요"
+      ],
+      "correct": 1,
+      "explanation": "-고 있어요 = đang làm. Đang lắp ráp linh kiện = 부품을 조립하고 있어요. 조립했어요 = đã lắp, 조립할 거예요 = sẽ lắp."
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Tổ trưởng nói '확인하세요', nghĩa là:",
+      "options": ["Bạn đã kiểm tra rồi", "Hãy kiểm tra", "Đang kiểm tra", "Không cần kiểm tra"],
+      "correct": 1,
+      "explanation": "-세요 là dạng mệnh lệnh lịch sự. 확인하세요 = Hãy kiểm tra. Dạng này thường được tổ trưởng dùng khi hướng dẫn công việc."
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "'조립하다'có nghĩa là:",
+      "options": ["Vận hành", "Lắp ráp", "Vận chuyển", "Kiểm tra"],
+      "correct": 1,
+      "explanation": "조립하다 = lắp ráp. 작동하다 = vận hành, 운반하다 = vận chuyển, 확인하다 = kiểm tra."
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "Hộp quá nặng, bạn không thể nhấc một mình, nói:",
+      "options": [
+        "상자가 무거워요. 혼자 할 수 있어요.",
+        "상자가 무거워요. 혼자 할 수 없어요.",
+        "상자가 가벼워요. 혼자 할 수 있어요.",
+        "상자가 가벼워요. 혼자 할 수 없어요."
+      ],
+      "correct": 1,
+      "explanation": "무거워요 = nặng, 할 수 없어요 = không thể làm. Câu đúng: Hộp nặng. Không thể làm một mình."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "'같이 합시다'có nghĩa là:",
+      "options": ["Tôi sẽ làm", "Bạn hãy làm", "Cùng làm nhé", "Đừng làm"],
+      "correct": 2,
+      "explanation": "-ㅂ/읍시다 = hãy cùng... (rủ rê tập thể). 같이 = cùng nhau. 같이 합시다 = cùng làm nhé."
+    }
+  ]
+}

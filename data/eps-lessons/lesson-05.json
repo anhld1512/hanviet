@@ -1,0 +1,246 @@
+{
+  "lesson_number": 5,
+  "title_kr": "날짜와 요일",
+  "title_vi": "Ngày tháng và thứ trong tuần",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": false,
+  "dialogue": [
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên phòng nhân sự",
+      "text_kr": "오늘이 며칠이에요?",
+      "text_vi": "Hôm nay là mấy?",
+      "grammar_note": "며칠 = mấy (ngày trong tháng)"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "오늘은 3월 15일이에요.",
+      "text_vi": "Hôm nay là ngày 15 tháng 3.",
+      "grammar_note": "월 = tháng, 일 = ngày"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên phòng nhân sự",
+      "text_kr": "무슨 요일이에요?",
+      "text_vi": "Hôm nay thứ mấy?",
+      "grammar_note": "무슨 요일 = thứ mấy"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "화요일이에요.",
+      "text_vi": "Thứ Ba.",
+      "grammar_note": "화요일 = thứ Ba"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên phòng nhân sự",
+      "text_kr": "다음 주 수요일에 건강검진이 있어요.",
+      "text_vi": "Tuần tới thứ Tư có khám sức khỏe.",
+      "grammar_note": "다음 주 = tuần tới; 건강검진 = khám sức khỏe"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "몇 시에 가야 해요?",
+      "text_vi": "Tôi phải đến lúc mấy giờ?",
+      "grammar_note": "-아야/어야 해요 = phải làm gì"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên phòng nhân sự",
+      "text_kr": "오전 9시까지 병원에 오세요.",
+      "text_vi": "Hãy đến bệnh viện trước 9 giờ sáng.",
+      "grammar_note": "까지 = đến/trước (giới hạn thời gian); 오전 = sáng"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "알겠습니다.",
+      "text_vi": "Tôi hiểu rồi.",
+      "grammar_note": "알겠습니다 = tôi hiểu (trang trọng)"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "월요일",
+      "word_vi": "Thứ Hai",
+      "pronunciation": "wo-ryo-il",
+      "example_kr": "월요일에 일해요.",
+      "example_vi": "Làm việc thứ Hai.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "화요일",
+      "word_vi": "Thứ Ba",
+      "pronunciation": "hwa-yo-il",
+      "example_kr": "화요일이에요.",
+      "example_vi": "Hôm nay là thứ Ba.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "수요일",
+      "word_vi": "Thứ Tư",
+      "pronunciation": "su-yo-il",
+      "example_kr": "수요일에 회의가 있어요.",
+      "example_vi": "Thứ Tư có họp.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "목요일",
+      "word_vi": "Thứ Năm",
+      "pronunciation": "mo-gyo-il",
+      "example_kr": "목요일에 쉬어요.",
+      "example_vi": "Thứ Năm nghỉ.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "금요일",
+      "word_vi": "Thứ Sáu",
+      "pronunciation": "geu-myo-il",
+      "example_kr": "금요일은 야근이에요.",
+      "example_vi": "Thứ Sáu tăng ca.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "토요일",
+      "word_vi": "Thứ Bảy",
+      "pronunciation": "to-yo-il",
+      "example_kr": "토요일에 일해요?",
+      "example_vi": "Thứ Bảy có làm việc không?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "일요일",
+      "word_vi": "Chủ Nhật",
+      "pronunciation": "i-ryo-il",
+      "example_kr": "일요일은 쉬는 날이에요.",
+      "example_vi": "Chủ Nhật là ngày nghỉ.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "오늘",
+      "word_vi": "Hôm nay",
+      "pronunciation": "o-neul",
+      "example_kr": "오늘 며칠이에요?",
+      "example_vi": "Hôm nay mấy?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "내일",
+      "word_vi": "Ngày mai",
+      "pronunciation": "nae-il",
+      "example_kr": "내일 출근해요?",
+      "example_vi": "Ngày mai đi làm không?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "다음 주",
+      "word_vi": "Tuần sau",
+      "pronunciation": "da-eum-ju",
+      "example_kr": "다음 주에 휴가예요.",
+      "example_vi": "Tuần sau nghỉ phép.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "이번 주",
+      "word_vi": "Tuần này",
+      "pronunciation": "i-beon-ju",
+      "example_kr": "이번 주 토요일에 일해요.",
+      "example_vi": "Tuần này thứ Bảy làm việc.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "휴가",
+      "word_vi": "Nghỉ phép",
+      "pronunciation": "hyu-ga",
+      "example_kr": "내일 휴가예요.",
+      "example_vi": "Ngày mai nghỉ phép.",
+      "is_key_word": true
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "N월 N일이에요",
+      "meaning": "Ngày N tháng N",
+      "explanation_vi": "월 = tháng, 일 = ngày. Đọc theo số Hán-Hàn: 일(1), 이(2), 삼(3), 사(4), 오(5), 육(6), 칠(7), 팔(8), 구(9), 십(10), 십일(11), 십이(12). Ví dụ: 3월 15일 = ngày 15 tháng 3.",
+      "examples": [
+        { "kr": "오늘은 3월 15일이에요.", "vi": "Hôm nay là ngày 15 tháng 3." },
+        { "kr": "제 생일은 7월 10일이에요.", "vi": "Sinh nhật tôi là ngày 10 tháng 7." }
+      ]
+    },
+    {
+      "pattern": "-아야/어야 해요",
+      "meaning": "Phải làm gì",
+      "explanation_vi": "Diễn tả nghĩa vụ hoặc điều cần thiết. Giống 'phải' trong tiếng Việt. Bỏ 다 của động từ + 아야/어야 해요. Động từ có ㅏ/ㅗ ở âm cuối dùng 아야, còn lại dùng 어야.",
+      "examples": [
+        { "kr": "9시까지 가야 해요.", "vi": "Phải đến trước 9 giờ." },
+        { "kr": "신분증을 가져와야 해요.", "vi": "Phải mang theo chứng minh thư." },
+        { "kr": "안전모를 써야 해요.", "vi": "Phải đội mũ bảo hiểm." }
+      ]
+    },
+    {
+      "pattern": "N까지",
+      "meaning": "Đến N / Trước N (giới hạn thời gian/địa điểm)",
+      "explanation_vi": "까지 = đến/cho đến. Dùng cho thời gian (까지 = trước..., không được trễ) hoặc địa điểm (đến nơi). Rất quan trọng trong môi trường làm việc.",
+      "examples": [
+        { "kr": "8시까지 출근해야 해요.", "vi": "Phải đến làm trước 8 giờ." },
+        { "kr": "이번 주 금요일까지 제출해야 해요.", "vi": "Phải nộp trước thứ Sáu tuần này." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "'수요일'là thứ mấy?",
+      "options": ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm"],
+      "correct": 2,
+      "explanation": "수요일 = thứ Tư. Thứ tự: 월(Hai), 화(Ba), 수(Tư), 목(Năm), 금(Sáu), 토(Bảy), 일(CN)."
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Sếp nói 'Phải đến trước 8 giờ', tiếng Hàn là:",
+      "options": [
+        "8시에 와요",
+        "8시부터 와야 해요",
+        "8시까지 와야 해요",
+        "8시에서 와야 해요"
+      ],
+      "correct": 2,
+      "explanation": "까지 = trước (giới hạn). 와야 해요 = phải đến. 8시까지 와야 해요 = Phải đến trước 8 giờ."
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "Hôm nay là ngày 10 tháng 5. Nói tiếng Hàn:",
+      "options": ["오늘은 오월 십일이에요", "오늘은 5월 10일이에요", "오늘은 십월 오일이에요", "오늘은 오일 십월이에요"],
+      "correct": 1,
+      "explanation": "5월 = tháng 5 (오월), 10일 = ngày 10 (십일). Thứ tự luôn là tháng trước, ngày sau."
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "'휴가'có nghĩa là:",
+      "options": ["Tăng ca", "Nghỉ phép", "Lương", "Hợp đồng"],
+      "correct": 1,
+      "explanation": "휴가 = nghỉ phép. 야근 = tăng ca, 월급 = lương tháng, 계약 = hợp đồng."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "Tuần sau thứ Hai nghỉ. Nói tiếng Hàn:",
+      "options": [
+        "이번 주 월요일에 쉬어요",
+        "다음 주 월요일에 쉬어요",
+        "저번 주 월요일에 쉬었어요",
+        "매주 월요일에 쉬어요"
+      ],
+      "correct": 1,
+      "explanation": "다음 주 = tuần sau, 월요일 = thứ Hai, 에 쉬어요 = nghỉ vào ngày đó."
+    }
+  ]
+}

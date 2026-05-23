@@ -1,0 +1,229 @@
+{
+  "lesson_number": 10,
+  "title_kr": "물건 구입",
+  "title_vi": "Mua sắm",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": false,
+  "dialogue": [
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "이 옷 얼마예요?",
+      "text_vi": "Bộ quần áo này bao nhiêu tiền?",
+      "grammar_note": "얼마예요? = Bao nhiêu tiền?"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên bán hàng",
+      "text_kr": "35,000원이에요.",
+      "text_vi": "35.000 won ạ.",
+      "grammar_note": "만 = 10.000. 35.000 = 삼만 오천"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "좀 깎아 줄 수 있어요?",
+      "text_vi": "Bạn có thể bớt giá không?",
+      "grammar_note": "깎다 = bớt giá/mặc cả"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên bán hàng",
+      "text_kr": "30,000원에 드릴게요.",
+      "text_vi": "Tôi bán cho bạn 30.000 won.",
+      "grammar_note": "에 드리다 = bán với giá; 드리다 = cho/tặng (kính ngữ)"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "다른 색깔은 없어요? 파란색이 있으면 좋겠어요.",
+      "text_vi": "Có màu khác không? Nếu có màu xanh thì tốt.",
+      "grammar_note": "색깔 = màu sắc; -으면 좋겠다 = nếu có/được thì tốt"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên bán hàng",
+      "text_kr": "죄송해요, 지금 파란색은 없어요. 검은색이랑 흰색만 있어요.",
+      "text_vi": "Xin lỗi, hiện tại không có màu xanh. Chỉ có màu đen và trắng.",
+      "grammar_note": "만 = chỉ"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "그럼 검은색으로 할게요. 카드로 계산할 수 있어요?",
+      "text_vi": "Vậy lấy màu đen. Có thể trả bằng thẻ không?",
+      "grammar_note": "-(으)로 할게요 = lấy loại/màu...; 카드로 = bằng thẻ"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên bán hàng",
+      "text_kr": "네, 가능해요.",
+      "text_vi": "Vâng, được ạ.",
+      "grammar_note": "가능하다 = có thể/được phép"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "얼마예요",
+      "word_vi": "Bao nhiêu tiền?",
+      "pronunciation": "eol-ma-ye-yo",
+      "example_kr": "이게 얼마예요?",
+      "example_vi": "Cái này bao nhiêu tiền?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "깎다",
+      "word_vi": "Bớt giá/Mặc cả",
+      "pronunciation": "kkak-da",
+      "example_kr": "좀 깎아 주세요.",
+      "example_vi": "Xin bớt giá một chút.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "색깔",
+      "word_vi": "Màu sắc",
+      "pronunciation": "saek-kkal",
+      "example_kr": "무슨 색깔이에요?",
+      "example_vi": "Màu gì vậy?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "빨간색",
+      "word_vi": "Màu đỏ",
+      "pronunciation": "ppal-gan-saek",
+      "example_kr": "빨간색 있어요?",
+      "example_vi": "Có màu đỏ không?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "파란색",
+      "word_vi": "Màu xanh lam",
+      "pronunciation": "pa-ran-saek",
+      "example_kr": "파란색으로 주세요.",
+      "example_vi": "Cho tôi màu xanh.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "검은색",
+      "word_vi": "Màu đen",
+      "pronunciation": "geo-meun-saek",
+      "example_kr": "검은색이 좋아요.",
+      "example_vi": "Tôi thích màu đen.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "흰색",
+      "word_vi": "Màu trắng",
+      "pronunciation": "hwin-saek",
+      "example_kr": "흰색 셔츠 주세요.",
+      "example_vi": "Cho tôi áo sơ mi trắng.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "사이즈",
+      "word_vi": "Cỡ/Kích cỡ",
+      "pronunciation": "sa-i-jeu",
+      "example_kr": "작은 사이즈 있어요?",
+      "example_vi": "Có cỡ nhỏ không?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "영수증",
+      "word_vi": "Hóa đơn",
+      "pronunciation": "yeong-su-jeung",
+      "example_kr": "영수증 주세요.",
+      "example_vi": "Cho tôi hóa đơn.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "교환하다",
+      "word_vi": "Đổi hàng",
+      "pronunciation": "gyo-hwan-ha-da",
+      "example_kr": "교환할 수 있어요?",
+      "example_vi": "Có thể đổi hàng không?",
+      "is_key_word": true
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "N에 드릴게요",
+      "meaning": "Bán cho bạn với giá N",
+      "explanation_vi": "에 = với giá (ở đây chỉ giá cả), 드리다 = cho/bán (kính ngữ của 주다). Người bán dùng khi đưa ra mức giá.",
+      "examples": [
+        { "kr": "30,000원에 드릴게요.", "vi": "Tôi bán cho bạn 30.000 won." },
+        { "kr": "10,000원에 드릴게요.", "vi": "Tôi bán cho bạn 10.000 won." }
+      ]
+    },
+    {
+      "pattern": "-으면 좋겠어요",
+      "meaning": "Nếu được... thì tốt / Tôi muốn...",
+      "explanation_vi": "Diễn tả mong muốn nhẹ nhàng, không quá áp đặt. -으면 = nếu, 좋겠다 = tốt/muốn. Giống 'giá mà có...' hoặc 'nếu có... thì tốt' trong tiếng Việt.",
+      "examples": [
+        { "kr": "파란색이 있으면 좋겠어요.", "vi": "Nếu có màu xanh thì tốt." },
+        { "kr": "할인이 있으면 좋겠어요.", "vi": "Nếu có giảm giá thì tốt." }
+      ]
+    },
+    {
+      "pattern": "N(으)로 할게요",
+      "meaning": "Tôi lấy loại/màu N",
+      "explanation_vi": "(으)로 = trợ từ lựa chọn. 할게요 = tôi sẽ lấy/chọn. Dùng khi quyết định chọn một trong các lựa chọn.",
+      "examples": [
+        { "kr": "검은색으로 할게요.", "vi": "Tôi lấy màu đen." },
+        { "kr": "큰 사이즈로 할게요.", "vi": "Tôi lấy cỡ lớn." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "Bạn muốn mặc cả, nói:",
+      "options": [
+        "얼마예요?",
+        "좀 깎아 줄 수 있어요?",
+        "교환할 수 있어요?",
+        "영수증 주세요"
+      ],
+      "correct": 1,
+      "explanation": "깎다 = bớt giá, 줄 수 있어요? = có thể ... không? 좀 깎아 줄 수 있어요? = Có thể bớt giá không?"
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Nhân viên nói '죄송해요', họ đang nói gì?",
+      "options": ["Cảm ơn", "Xin lỗi", "Xin chào", "Tạm biệt"],
+      "correct": 1,
+      "explanation": "죄송해요 = xin lỗi (trang trọng). 미안해요 = xin lỗi (thân mật). 감사해요 = cảm ơn."
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "'파란색'là màu gì?",
+      "options": ["Màu đỏ", "Màu đen", "Màu xanh lam", "Màu trắng"],
+      "correct": 2,
+      "explanation": "파란색 = màu xanh lam. 빨간색 = đỏ, 검은색 = đen, 흰색 = trắng, 노란색 = vàng."
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "Bạn quyết định lấy cỡ lớn, nói:",
+      "options": [
+        "큰 사이즈 있어요?",
+        "큰 사이즈로 주세요",
+        "큰 사이즈로 할게요",
+        "큰 사이즈를 원해요"
+      ],
+      "correct": 2,
+      "explanation": "-(으)로 할게요 = tôi sẽ lấy/chọn. Dùng khi đã quyết định. 큰 사이즈로 할게요 = Tôi lấy cỡ lớn."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "'교환하다'có nghĩa là:",
+      "options": ["Mặc cả", "Trả hàng", "Đổi hàng", "Mua thêm"],
+      "correct": 2,
+      "explanation": "교환하다 = đổi hàng (lấy hàng khác). 환불하다 = hoàn tiền/trả hàng. 깎다 = mặc cả."
+    }
+  ]
+}

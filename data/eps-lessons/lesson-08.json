@@ -1,0 +1,213 @@
+{
+  "lesson_number": 8,
+  "title_kr": "가족과 친구",
+  "title_vi": "Gia đình và bạn bè",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": false,
+  "dialogue": [
+    {
+      "speaker": "A",
+      "speaker_role": "Đồng nghiệp Hàn Quốc",
+      "text_kr": "가족이 몇 명이에요?",
+      "text_vi": "Gia đình bạn có mấy người?",
+      "grammar_note": "가족 = gia đình; 몇 명 = mấy người"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân người Việt",
+      "text_kr": "부모님, 형, 저, 이렇게 네 명이에요.",
+      "text_vi": "Bố mẹ, anh trai, tôi, tổng cộng 4 người.",
+      "grammar_note": "부모님 = bố mẹ; 이렇게 = như vậy/tổng cộng"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Đồng nghiệp Hàn Quốc",
+      "text_kr": "결혼했어요?",
+      "text_vi": "Bạn đã kết hôn chưa?",
+      "grammar_note": "결혼하다 = kết hôn"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân người Việt",
+      "text_kr": "아니요, 아직 미혼이에요. 한국에서 돈을 모아서 결혼할 거예요.",
+      "text_vi": "Chưa, vẫn còn độc thân. Tôi sẽ để dành tiền ở Hàn Quốc rồi kết hôn.",
+      "grammar_note": "미혼 = độc thân; 모으다 = để dành/tích lũy"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Đồng nghiệp Hàn Quốc",
+      "text_kr": "가족들은 베트남에 있어요?",
+      "text_vi": "Gia đình vẫn ở Việt Nam hả?",
+      "grammar_note": "-들 = hậu tố số nhiều"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân người Việt",
+      "text_kr": "네. 한 달에 한 번 영상통화해요.",
+      "text_vi": "Vâng. Mỗi tháng gọi video một lần.",
+      "grammar_note": "한 달에 한 번 = một tháng một lần; 영상통화 = gọi video"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Đồng nghiệp Hàn Quốc",
+      "text_kr": "보고 싶겠네요.",
+      "text_vi": "Chắc nhớ lắm nhỉ.",
+      "grammar_note": "-겠- = suy đoán; -네요 = thán từ cảm thán"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "가족",
+      "word_vi": "Gia đình",
+      "pronunciation": "ga-jok",
+      "example_kr": "가족이 보고 싶어요.",
+      "example_vi": "Tôi nhớ gia đình.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "부모님",
+      "word_vi": "Bố mẹ",
+      "pronunciation": "bu-mo-nim",
+      "example_kr": "부모님께 전화해요.",
+      "example_vi": "Gọi điện cho bố mẹ.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "형",
+      "word_vi": "Anh trai (của nam)",
+      "pronunciation": "hyeong",
+      "example_kr": "형이 있어요.",
+      "example_vi": "Tôi có anh trai.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "오빠",
+      "word_vi": "Anh trai (của nữ)",
+      "pronunciation": "op-pa",
+      "example_kr": "오빠가 두 명이에요.",
+      "example_vi": "Tôi có hai anh trai.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "누나",
+      "word_vi": "Chị gái (của nam)",
+      "pronunciation": "nu-na",
+      "example_kr": "누나가 한국에 있어요.",
+      "example_vi": "Chị tôi đang ở Hàn Quốc.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "언니",
+      "word_vi": "Chị gái (của nữ)",
+      "pronunciation": "eon-ni",
+      "example_kr": "언니는 결혼했어요.",
+      "example_vi": "Chị tôi đã kết hôn.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "동생",
+      "word_vi": "Em trai/Em gái",
+      "pronunciation": "dong-saeng",
+      "example_kr": "동생이 대학교에 다녀요.",
+      "example_vi": "Em tôi đang học đại học.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "결혼하다",
+      "word_vi": "Kết hôn",
+      "pronunciation": "gyeol-hon-ha-da",
+      "example_kr": "내년에 결혼할 거예요.",
+      "example_vi": "Năm tới sẽ kết hôn.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "보고 싶다",
+      "word_vi": "Nhớ/Muốn gặp",
+      "pronunciation": "bo-go sip-da",
+      "example_kr": "가족이 보고 싶어요.",
+      "example_vi": "Tôi nhớ gia đình.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "전화하다",
+      "word_vi": "Gọi điện",
+      "pronunciation": "jeon-hwa-ha-da",
+      "example_kr": "매주 부모님께 전화해요.",
+      "example_vi": "Mỗi tuần gọi điện cho bố mẹ.",
+      "is_key_word": false
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "N에 N번",
+      "meaning": "N lần mỗi N (tần suất)",
+      "explanation_vi": "Diễn tả tần suất. 한 달에 한 번 = một tháng một lần. 일주일에 두 번 = một tuần hai lần. 하루에 세 번 = một ngày ba lần.",
+      "examples": [
+        { "kr": "한 달에 한 번 영상통화해요.", "vi": "Một tháng gọi video một lần." },
+        { "kr": "일주일에 두 번 운동해요.", "vi": "Một tuần tập thể dục hai lần." }
+      ]
+    },
+    {
+      "pattern": "-아/어서",
+      "meaning": "Rồi / Và sau đó (nguyên nhân/thứ tự)",
+      "explanation_vi": "Nối hai hành động có quan hệ nhân quả hoặc thứ tự. 돈을 모아서 결혼할 거예요 = tích lũy tiền rồi sẽ kết hôn.",
+      "examples": [
+        { "kr": "돈을 모아서 결혼할 거예요.", "vi": "Tích lũy tiền rồi sẽ kết hôn." },
+        { "kr": "밥을 먹어서 배불러요.", "vi": "Ăn cơm rồi nên no." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "Anh trai của nam giới gọi là:",
+      "options": ["오빠", "형", "누나", "언니"],
+      "correct": 1,
+      "explanation": "형 = anh trai (nam gọi). 오빠 = anh trai (nữ gọi). 누나 = chị gái (nam gọi). 언니 = chị gái (nữ gọi)."
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "'가족이 몇 명이에요?'có nghĩa là:",
+      "options": [
+        "Bạn có bao nhiêu tuổi?",
+        "Gia đình bạn có mấy người?",
+        "Bạn có bao nhiêu bạn bè?",
+        "Bạn làm ở đâu?"
+      ],
+      "correct": 1,
+      "explanation": "가족 = gia đình, 몇 명 = mấy người, 이에요 = là. Câu hỏi về số thành viên trong gia đình."
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "Một tuần gọi điện hai lần. Nói tiếng Hàn:",
+      "options": [
+        "한 달에 두 번 전화해요",
+        "일주일에 두 번 전화해요",
+        "이틀에 한 번 전화해요",
+        "하루에 두 번 전화해요"
+      ],
+      "correct": 1,
+      "explanation": "일주일 = một tuần, 에 = mỗi, 두 번 = hai lần. 일주일에 두 번 = một tuần hai lần."
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "'보고 싶어요'có nghĩa là:",
+      "options": ["Tôi muốn nhìn", "Tôi nhớ/muốn gặp", "Tôi không muốn", "Tôi đã gặp"],
+      "correct": 1,
+      "explanation": "보고 싶다 = nhớ/muốn gặp. Cấu trúc -고 싶다 = muốn làm gì. Ở đây 보다 = nhìn/gặp, nhưng 보고 싶다 mang nghĩa nhớ ai đó."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "'결혼하다'có nghĩa là:",
+      "options": ["Ly hôn", "Kết hôn", "Hẹn hò", "Độc thân"],
+      "correct": 1,
+      "explanation": "결혼하다 = kết hôn. 이혼하다 = ly hôn, 미혼 = độc thân, 사귀다 = hẹn hò."
+    }
+  ]
+}

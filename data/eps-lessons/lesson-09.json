@@ -1,0 +1,214 @@
+{
+  "lesson_number": 9,
+  "title_kr": "음식 주문",
+  "title_vi": "Đặt đồ ăn",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": false,
+  "dialogue": [
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên nhà ăn",
+      "text_kr": "어서 오세요. 뭐 드시겠어요?",
+      "text_vi": "Xin mời vào. Bạn dùng gì ạ?",
+      "grammar_note": "드시다 = ăn/uống (kính ngữ của 먹다/마시다)"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "삼겹살 이 인분이랑 소주 한 병 주세요.",
+      "text_vi": "Cho tôi 2 phần thịt ba chỉ và một chai soju.",
+      "grammar_note": "인분 = phần (đơn vị đếm đồ ăn); 이랑 = và (trong câu thân mật)"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên nhà ăn",
+      "text_kr": "고기는 직접 구워 드릴까요?",
+      "text_vi": "Chúng tôi có nướng thịt giúp không ạ?",
+      "grammar_note": "-아/어 드릴까요? = chúng tôi có ... giúp không?"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "아니요, 괜찮아요. 저희가 구울게요.",
+      "text_vi": "Không cần, cảm ơn. Chúng tôi tự nướng.",
+      "grammar_note": "저희 = chúng tôi (khiêm nhường)"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên nhà ăn",
+      "text_kr": "알겠습니다. 혹시 못 드시는 음식 있어요?",
+      "text_vi": "Vâng ạ. Bạn có thức ăn nào không ăn được không?",
+      "grammar_note": "혹시 = hỏi thêm; 못 = không thể"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân",
+      "text_kr": "저는 돼지고기 못 먹어요. 저는 이슬람교도예요.",
+      "text_vi": "Tôi không ăn được thịt lợn. Tôi là người theo đạo Hồi.",
+      "grammar_note": "못 먹다 = không ăn được"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Nhân viên nhà ăn",
+      "text_kr": "아, 그렇군요. 그럼 닭고기나 소고기 어때요?",
+      "text_vi": "Ồ vậy à. Vậy thịt gà hoặc thịt bò thì sao?",
+      "grammar_note": "-군요 = ồ vậy à (phát hiện mới); N이나 N = N hoặc N"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "삼겹살",
+      "word_vi": "Thịt ba chỉ nướng",
+      "pronunciation": "sam-gyeop-sal",
+      "example_kr": "삼겹살을 먹어요.",
+      "example_vi": "Ăn thịt ba chỉ nướng.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "김치찌개",
+      "word_vi": "Canh kimchi",
+      "pronunciation": "gim-chi-jji-gae",
+      "example_kr": "김치찌개는 매워요.",
+      "example_vi": "Canh kimchi cay.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "된장찌개",
+      "word_vi": "Canh tương đậu",
+      "pronunciation": "doen-jang-jji-gae",
+      "example_kr": "된장찌개 주세요.",
+      "example_vi": "Cho tôi canh tương đậu.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "주세요",
+      "word_vi": "Cho tôi / Làm ơn cho",
+      "pronunciation": "ju-se-yo",
+      "example_kr": "물 주세요.",
+      "example_vi": "Cho tôi nước.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "맵다",
+      "word_vi": "Cay",
+      "pronunciation": "maep-da",
+      "example_kr": "이 음식이 너무 매워요.",
+      "example_vi": "Món này quá cay.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "달다",
+      "word_vi": "Ngọt",
+      "pronunciation": "dal-da",
+      "example_kr": "이 음식은 달아요.",
+      "example_vi": "Món này ngọt.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "짜다",
+      "word_vi": "Mặn",
+      "pronunciation": "jja-da",
+      "example_kr": "너무 짜요.",
+      "example_vi": "Mặn quá.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "계산",
+      "word_vi": "Thanh toán/Tính tiền",
+      "pronunciation": "gye-san",
+      "example_kr": "계산해 주세요.",
+      "example_vi": "Tính tiền giúp tôi.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "영수증",
+      "word_vi": "Hóa đơn",
+      "pronunciation": "yeong-su-jeung",
+      "example_kr": "영수증 주세요.",
+      "example_vi": "Cho tôi hóa đơn.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "인분",
+      "word_vi": "Phần (đơn vị đếm đồ ăn)",
+      "pronunciation": "in-bun",
+      "example_kr": "2인분 주세요.",
+      "example_vi": "Cho tôi 2 phần.",
+      "is_key_word": true
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "N 주세요",
+      "meaning": "Cho tôi N",
+      "explanation_vi": "주세요 = 주다 (cho/đưa) + 세요 (lịch sự). Đặt tên món ăn/đồ vật trước 주세요. Đây là cấu trúc gọi món cơ bản nhất trong tiếng Hàn.",
+      "examples": [
+        { "kr": "비빔밥 주세요.", "vi": "Cho tôi cơm trộn." },
+        { "kr": "물 한 잔 주세요.", "vi": "Cho tôi một ly nước." },
+        { "kr": "메뉴판 주세요.", "vi": "Cho tôi xem thực đơn." }
+      ]
+    },
+    {
+      "pattern": "못 + V",
+      "meaning": "Không thể làm gì (không có khả năng)",
+      "explanation_vi": "못 đặt trước động từ = không thể/không ăn được. Khác với 안 = không làm (không muốn). 못 먹어요 = không ăn được (vì lý do nào đó). 안 먹어요 = không ăn (vì không muốn).",
+      "examples": [
+        { "kr": "돼지고기 못 먹어요.", "vi": "Không ăn được thịt lợn." },
+        { "kr": "매운 거 못 먹어요.", "vi": "Không ăn được đồ cay." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "Gọi một tô canh kimchi, bạn nói:",
+      "options": [
+        "김치찌개 먹어요",
+        "김치찌개 주세요",
+        "김치찌개 있어요?",
+        "김치찌개 좋아해요"
+      ],
+      "correct": 1,
+      "explanation": "Để gọi món, dùng [tên món] + 주세요. 김치찌개 주세요 = Cho tôi canh kimchi."
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "'못 먹어요'và '안 먹어요' khác nhau thế nào?",
+      "options": [
+        "Giống nhau hoàn toàn",
+        "못 = không thể (bất khả năng), 안 = không muốn ăn",
+        "못 = không muốn, 안 = không thể",
+        "Cả hai đều là không ăn được"
+      ],
+      "correct": 1,
+      "explanation": "못 먹어요 = không ăn được (do dị ứng, tôn giáo...). 안 먹어요 = không ăn (do không thích/không muốn). Quan trọng khi thông báo dị ứng thực phẩm!"
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "'계산해 주세요'có nghĩa là:",
+      "options": ["Cho tôi xem thực đơn", "Gọi thêm món", "Tính tiền giúp tôi", "Đóng gói giúp tôi"],
+      "correct": 2,
+      "explanation": "계산 = tính tiền/thanh toán. 해 주세요 = làm giúp tôi. 계산해 주세요 = Tính tiền giúp tôi. Câu này dùng khi muốn trả tiền."
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "Món ăn quá cay. Nói tiếng Hàn:",
+      "options": ["너무 달아요", "너무 짜요", "너무 매워요", "너무 싱거워요"],
+      "correct": 2,
+      "explanation": "맵다 → 매워요 = cay. 달다 → 달아요 = ngọt, 짜다 → 짜요 = mặn, 싱겁다 → 싱거워요 = nhạt."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "'2인분'có nghĩa là:",
+      "options": ["2 người", "2 phần ăn", "2 chai", "2 cái"],
+      "correct": 1,
+      "explanation": "인분 = phần ăn (đơn vị đếm đặc biệt cho đồ ăn). 2인분 = 2 phần ăn. 명 = người (đếm người), 병 = chai, 개 = cái."
+    }
+  ]
+}

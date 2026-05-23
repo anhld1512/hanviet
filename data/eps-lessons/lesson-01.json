@@ -1,0 +1,240 @@
+{
+  "lesson_number": 1,
+  "title_kr": "자기소개",
+  "title_vi": "Giới thiệu bản thân",
+  "book": 1,
+  "category": "daily_life",
+  "is_free": true,
+  "dialogue": [
+    {
+      "speaker": "A",
+      "speaker_role": "Quản lý nhà máy",
+      "text_kr": "안녕하세요. 이름이 뭐예요?",
+      "text_vi": "Xin chào. Bạn tên là gì?",
+      "grammar_note": "이름이 뭐예요? = Tên (là) gì?"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân mới",
+      "text_kr": "안녕하세요. 제 이름은 뚜언입니다.",
+      "text_vi": "Xin chào. Tên tôi là Tuấn.",
+      "grammar_note": "제 이름은 = Tên tôi là"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Quản lý nhà máy",
+      "text_kr": "어느 나라 사람이에요?",
+      "text_vi": "Bạn là người nước nào?",
+      "grammar_note": "어느 나라 사람 = người nước nào"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân mới",
+      "text_kr": "저는 베트남 사람입니다.",
+      "text_vi": "Tôi là người Việt Nam.",
+      "grammar_note": "N은/는 N입니다 = N là N (trang trọng)"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Quản lý nhà máy",
+      "text_kr": "몇 살이에요?",
+      "text_vi": "Bạn bao nhiêu tuổi?",
+      "grammar_note": "몇 살 = bao nhiêu tuổi"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân mới",
+      "text_kr": "스물다섯 살입니다.",
+      "text_vi": "Tôi 25 tuổi.",
+      "grammar_note": "스물다섯 = 25 (số thuần Hàn dùng cho tuổi)"
+    },
+    {
+      "speaker": "A",
+      "speaker_role": "Quản lý nhà máy",
+      "text_kr": "반갑습니다. 잘 부탁합니다.",
+      "text_vi": "Rất vui được gặp. Mong được hợp tác tốt.",
+      "grammar_note": "잘 부탁합니다 = Mong được nhờ cậy/hợp tác"
+    },
+    {
+      "speaker": "B",
+      "speaker_role": "Công nhân mới",
+      "text_kr": "네, 저도 잘 부탁드립니다.",
+      "text_vi": "Vâng, tôi cũng mong được hợp tác tốt.",
+      "grammar_note": "저도 = tôi cũng"
+    }
+  ],
+  "vocabulary": [
+    {
+      "word_kr": "이름",
+      "word_vi": "Tên",
+      "pronunciation": "i-reum",
+      "example_kr": "제 이름은 뚜언입니다.",
+      "example_vi": "Tên tôi là Tuấn.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "나라",
+      "word_vi": "Đất nước/Quốc gia",
+      "pronunciation": "na-ra",
+      "example_kr": "어느 나라 사람이에요?",
+      "example_vi": "Bạn là người nước nào?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "베트남",
+      "word_vi": "Việt Nam",
+      "pronunciation": "be-teu-nam",
+      "example_kr": "저는 베트남 사람입니다.",
+      "example_vi": "Tôi là người Việt Nam.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "나이",
+      "word_vi": "Tuổi",
+      "pronunciation": "na-i",
+      "example_kr": "나이가 어떻게 돼요?",
+      "example_vi": "Bạn bao nhiêu tuổi?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "직업",
+      "word_vi": "Nghề nghiệp",
+      "pronunciation": "ji-geop",
+      "example_kr": "직업이 뭐예요?",
+      "example_vi": "Nghề nghiệp của bạn là gì?",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "근로자",
+      "word_vi": "Người lao động",
+      "pronunciation": "geul-lo-ja",
+      "example_kr": "저는 외국인 근로자입니다.",
+      "example_vi": "Tôi là lao động nước ngoài.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "공장",
+      "word_vi": "Nhà máy/Xưởng",
+      "pronunciation": "gong-jang",
+      "example_kr": "저는 공장에서 일합니다.",
+      "example_vi": "Tôi làm việc tại nhà máy.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "반갑습니다",
+      "word_vi": "Rất vui được gặp",
+      "pronunciation": "ban-gap-seum-ni-da",
+      "example_kr": "처음 뵙겠습니다. 반갑습니다.",
+      "example_vi": "Lần đầu gặp mặt. Rất vui được gặp.",
+      "is_key_word": false
+    },
+    {
+      "word_kr": "저",
+      "word_vi": "Tôi (khiêm nhường)",
+      "pronunciation": "jeo",
+      "example_kr": "저는 뚜언입니다.",
+      "example_vi": "Tôi là Tuấn.",
+      "is_key_word": true
+    },
+    {
+      "word_kr": "한국",
+      "word_vi": "Hàn Quốc",
+      "pronunciation": "han-guk",
+      "example_kr": "저는 한국에 왔습니다.",
+      "example_vi": "Tôi đã đến Hàn Quốc.",
+      "is_key_word": true
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "N은/는 N입니다",
+      "meaning": "N là N (trang trọng)",
+      "explanation_vi": "Giống 'là' trong tiếng Việt. Dùng 은 sau phụ âm (받침), dùng 는 sau nguyên âm. 입니다 là dạng trang trọng nhất, dùng khi nói chuyện với cấp trên hoặc người lạ.",
+      "examples": [
+        { "kr": "저는 베트남 사람입니다.", "vi": "Tôi là người Việt Nam." },
+        { "kr": "제 이름은 뚜언입니다.", "vi": "Tên tôi là Tuấn." },
+        { "kr": "저는 공장 근로자입니다.", "vi": "Tôi là công nhân nhà máy." }
+      ]
+    },
+    {
+      "pattern": "N이/가 뭐예요?",
+      "meaning": "N là gì?",
+      "explanation_vi": "Câu hỏi cơ bản để hỏi về thứ gì đó. 이/가 là trợ từ chủ ngữ. 뭐예요 = là gì (dạng thân mật lịch sự). Dùng 이에요 sau phụ âm, 예요 sau nguyên âm khi trả lời.",
+      "examples": [
+        { "kr": "이름이 뭐예요?", "vi": "Tên là gì?" },
+        { "kr": "직업이 뭐예요?", "vi": "Nghề nghiệp là gì?" }
+      ]
+    },
+    {
+      "pattern": "몇 살이에요?",
+      "meaning": "Bao nhiêu tuổi?",
+      "explanation_vi": "몇 = bao nhiêu, 살 = tuổi. Khi nói tuổi phải dùng số thuần Hàn: 하나(1), 둘(2), 셋(3)... 스물(20), 서른(30). Ví dụ: 스물다섯 살 = 25 tuổi. KHÔNG dùng số Hán-Hàn (일, 이, 삼...) cho tuổi.",
+      "examples": [
+        { "kr": "몇 살이에요? — 스물다섯 살이에요.", "vi": "Bao nhiêu tuổi? — 25 tuổi." },
+        { "kr": "서른 살입니다.", "vi": "Tôi 30 tuổi." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "Chọn câu đúng để tự giới thiệu tên 'Minh':",
+      "options": [
+        "저는 민이에요",
+        "제 이름은 민입니다",
+        "이름은 민이 있어요",
+        "저는 민을 입니다"
+      ],
+      "correct": 1,
+      "explanation": "'제 이름은 민입니다' = Tên tôi là Minh. Dùng 은 sau 이름 (kết thúc bằng phụ âm ㅁ)."
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Điền vào chỗ trống: '저는 베트남 ___ 입니다.'",
+      "options": ["사람", "나라", "이름", "나이"],
+      "correct": 0,
+      "explanation": "사람 = người. 베트남 사람 = người Việt Nam. Đây là cách nói quốc tịch chuẩn trong tiếng Hàn."
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "'몇 살이에요?' có nghĩa là gì?",
+      "options": [
+        "Bạn tên là gì?",
+        "Bạn là người nước nào?",
+        "Bạn bao nhiêu tuổi?",
+        "Bạn làm nghề gì?"
+      ],
+      "correct": 2,
+      "explanation": "몇 = bao nhiêu, 살 = tuổi, 이에요 = là. 몇 살이에요? = Bao nhiêu tuổi?"
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "Nói '25 tuổi' trong tiếng Hàn là:",
+      "options": [
+        "이십오 살",
+        "스물다섯 살",
+        "이오 살",
+        "스물오 살"
+      ],
+      "correct": 1,
+      "explanation": "Tuổi dùng số thuần Hàn: 스물 = 20, 다섯 = 5, nên 25 = 스물다섯. KHÔNG dùng 이십오 (số Hán-Hàn) cho tuổi."
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "Quản lý nói '잘 부탁합니다', bạn trả lời thế nào?",
+      "options": [
+        "감사합니다",
+        "네, 저도 잘 부탁드립니다",
+        "괜찮아요",
+        "안녕히 계세요"
+      ],
+      "correct": 1,
+      "explanation": "Khi ai đó nói 잘 부탁합니다, bạn đáp lại 저도 잘 부탁드립니다 = Tôi cũng vậy. 저도 = tôi cũng, 드립니다 = dạng kính ngữ của 합니다."
+    }
+  ]
+}
