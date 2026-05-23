@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import type { Lesson } from "@/lib/lessons-data"
+import type { EpsLesson } from "@/lib/eps-lesson"
 import { createClient } from "@/lib/supabase-client"
 
 type Section = "dialogue" | "vocabulary" | "grammar" | "quiz" | "complete"
@@ -38,9 +38,7 @@ function SpeakButton({ text, size = "md" }: { text: string; size?: "sm" | "md" }
     window.speechSynthesis.speak(utter)
   }
 
-  const base = size === "sm"
-    ? "w-7 h-7 text-xs"
-    : "w-8 h-8 text-sm"
+  const base = size === "sm" ? "w-7 h-7 text-xs" : "w-8 h-8 text-sm"
 
   return (
     <button
@@ -57,14 +55,21 @@ function SpeakButton({ text, size = "md" }: { text: string; size?: "sm" | "md" }
   )
 }
 
-export default function LessonViewer({ lesson }: { lesson: Lesson }) {
+const categoryEmoji: Record<string, string> = {
+  daily_life: "🏠",
+  workplace: "🏭",
+  safety: "⛑️",
+  health: "🏥",
+  rights: "📋",
+}
+
+export default function LessonViewer({ lesson }: { lesson: EpsLesson }) {
   const [section, setSection] = useState<Section>("dialogue")
   const [vocabIndex, setVocabIndex] = useState(0)
   const [quizIndex, setQuizIndex] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [showAnswer, setShowAnswer] = useState(false)
   const [correctCount, setCorrectCount] = useState(0)
-  const [showRomanization, setShowRomanization] = useState(true)
   const [savedProgress, setSavedProgress] = useState(false)
 
   useEffect(() => {
@@ -75,13 +80,13 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
         if (!data.user) return
         supabase.from("user_lessons").upsert({
           user_id: data.user.id,
-          lesson_id: lesson.id,
+          lesson_id: lesson.lesson_number,
           score: correctCount,
           completed_at: new Date().toISOString(),
         }, { onConflict: "user_id,lesson_id" })
       })
     }
-  }, [section, savedProgress, lesson.id, correctCount])
+  }, [section, savedProgress, lesson.lesson_number, correctCount])
 
   const sections: Section[] = ["dialogue", "vocabulary", "grammar", "quiz", "complete"]
   const sectionIndex = sections.indexOf(section)
@@ -99,14 +104,14 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
     if (showAnswer) return
     setSelected(index)
     setShowAnswer(true)
-    const q = lesson.quiz[quizIndex]
+    const q = lesson.exercises[quizIndex]
     if (q.type === "multiple_choice" && index === q.correct) {
       setCorrectCount((c) => c + 1)
     }
   }
 
   function handleNextQuiz() {
-    if (quizIndex < lesson.quiz.length - 1) {
+    if (quizIndex < lesson.exercises.length - 1) {
       setQuizIndex((i) => i + 1)
       setSelected(null)
       setShowAnswer(false)
@@ -117,12 +122,11 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
 
   function playAll() {
     window.speechSynthesis.cancel()
-    const lines = lesson.dialogue.lines
     const voice = getBestKoreanVoice()
     let i = 0
     function next() {
-      if (i >= lines.length) return
-      const utter = new SpeechSynthesisUtterance(lines[i].kr)
+      if (i >= lesson.dialogue.length) return
+      const utter = new SpeechSynthesisUtterance(lesson.dialogue[i].text_kr)
       utter.lang = "ko-KR"
       utter.rate = 0.82
       if (voice) utter.voice = voice
@@ -131,6 +135,8 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
     }
     next()
   }
+
+  const emoji = categoryEmoji[lesson.category] ?? "📖"
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -158,7 +164,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
               />
             </div>
           </div>
-          <span className="text-xs text-gray-400 shrink-0">{lesson.level}</span>
+          <span className="text-xs text-gray-400 shrink-0">Bài {lesson.lesson_number}</span>
         </div>
       </div>
 
@@ -169,13 +175,12 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
           <div>
             <div className="mb-5">
               <div className="flex items-center gap-3 mb-1">
-                <span className="text-2xl">{lesson.emoji}</span>
-                <h1 className="text-xl font-bold text-gray-900">{lesson.title}</h1>
+                <span className="text-2xl">{emoji}</span>
+                <h1 className="text-xl font-bold text-gray-900">{lesson.title_vi}</h1>
               </div>
-              <p className="text-sm text-gray-500">{lesson.dialogue.situation}</p>
+              <p className="text-sm text-gray-400">{lesson.title_kr}</p>
             </div>
 
-            {/* Controls */}
             <div className="flex items-center justify-between mb-3">
               <button
                 onClick={playAll}
@@ -183,16 +188,10 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
               >
                 <span>▶</span> Nghe toàn bộ hội thoại
               </button>
-              <button
-                onClick={() => setShowRomanization((v) => !v)}
-                className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                {showRomanization ? "Ẩn phiên âm" : "Hiện phiên âm"}
-              </button>
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 space-y-5">
-              {lesson.dialogue.lines.map((line, i) => (
+              {lesson.dialogue.map((line, i) => (
                 <div key={i} className={`flex gap-3 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-1 ${
@@ -201,9 +200,10 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                   >
                     {line.speaker}
                   </div>
-                  <div className={`max-w-sm ${line.speaker === "B" ? "items-end" : "items-start"} flex flex-col gap-1`}>
+                  <div className={`max-w-sm flex flex-col gap-1 ${line.speaker === "B" ? "items-end" : "items-start"}`}>
+                    <div className="text-xs text-gray-400 font-medium px-1">{line.speaker_role}</div>
                     <div className="flex items-center gap-2">
-                      {line.speaker === "B" && <SpeakButton text={line.kr} size="sm" />}
+                      {line.speaker === "B" && <SpeakButton text={line.text_kr} size="sm" />}
                       <div
                         className={`px-4 py-2.5 rounded-2xl text-sm font-medium ${
                           line.speaker === "A"
@@ -211,18 +211,18 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                             : "bg-blue-500 text-white rounded-tr-none"
                         }`}
                       >
-                        {line.kr}
+                        {line.text_kr}
                       </div>
-                      {line.speaker === "A" && <SpeakButton text={line.kr} size="sm" />}
+                      {line.speaker === "A" && <SpeakButton text={line.text_kr} size="sm" />}
                     </div>
-                    {showRomanization && (
-                      <div className={`text-xs text-gray-400 italic px-1 ${line.speaker === "B" ? "text-right" : ""}`}>
-                        {line.romanization}
+                    <div className={`text-xs text-gray-500 px-1 ${line.speaker === "B" ? "text-right" : ""}`}>
+                      {line.text_vi}
+                    </div>
+                    {line.grammar_note && (
+                      <div className={`text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-lg ${line.speaker === "B" ? "text-right" : ""}`}>
+                        {line.grammar_note}
                       </div>
                     )}
-                    <div className={`text-xs text-gray-500 px-1 ${line.speaker === "B" ? "text-right" : ""}`}>
-                      {line.vi}
-                    </div>
                   </div>
                 </div>
               ))}
@@ -245,18 +245,27 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
               {vocabIndex + 1} / {lesson.vocabulary.length} từ
             </p>
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center mb-4 min-h-52 flex flex-col items-center justify-center">
+            <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center mb-4 min-h-56 flex flex-col items-center justify-center">
+              {lesson.vocabulary[vocabIndex].is_key_word && (
+                <div className="text-xs bg-orange-100 text-orange-600 font-semibold px-2.5 py-1 rounded-full mb-3">
+                  Từ hay thi
+                </div>
+              )}
               <div className="flex items-center gap-3 mb-3">
                 <div className="text-4xl font-bold text-gray-900">
-                  {lesson.vocabulary[vocabIndex].hangul}
+                  {lesson.vocabulary[vocabIndex].word_kr}
                 </div>
-                <SpeakButton text={lesson.vocabulary[vocabIndex].hangul} />
+                <SpeakButton text={lesson.vocabulary[vocabIndex].word_kr} />
               </div>
               <div className="text-sm text-gray-400 italic mb-4">
-                [{lesson.vocabulary[vocabIndex].romanization}]
+                [{lesson.vocabulary[vocabIndex].pronunciation}]
               </div>
-              <div className="text-lg font-semibold text-blue-600">
-                {lesson.vocabulary[vocabIndex].meaning}
+              <div className="text-lg font-semibold text-blue-600 mb-4">
+                {lesson.vocabulary[vocabIndex].word_vi}
+              </div>
+              <div className="bg-gray-50 rounded-xl px-4 py-3 text-center w-full">
+                <div className="text-sm font-medium text-gray-900">{lesson.vocabulary[vocabIndex].example_kr}</div>
+                <div className="text-xs text-gray-500 mt-1">{lesson.vocabulary[vocabIndex].example_vi}</div>
               </div>
             </div>
 
@@ -277,7 +286,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                   onClick={() => setVocabIndex((i) => i - 1)}
                   className="flex-1 border border-gray-200 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors"
                 >
-                  ← Trước
+                  Trước
                 </button>
               )}
               {vocabIndex < lesson.vocabulary.length - 1 ? (
@@ -311,7 +320,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                   <div className="text-lg font-bold text-blue-700">{g.pattern}</div>
                   <div className="text-sm text-blue-500 mt-0.5">{g.meaning}</div>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{g.explanation}</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">{g.explanation_vi}</p>
                 <div className="border-t border-gray-100 pt-4">
                   <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Ví dụ</div>
                   <div className="space-y-3">
@@ -347,12 +356,12 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900">Bài tập</h2>
               <span className="text-sm text-gray-400">
-                {quizIndex + 1} / {lesson.quiz.length}
+                {quizIndex + 1} / {lesson.exercises.length}
               </span>
             </div>
 
             {(() => {
-              const q = lesson.quiz[quizIndex]
+              const q = lesson.exercises[quizIndex]
               if (q.type !== "multiple_choice") return null
               return (
                 <div>
@@ -380,10 +389,9 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                             <span className="mr-2 font-bold text-xs">{["A", "B", "C", "D"][i]}.</span>
                             {opt}
                           </span>
-                          <span className="flex items-center gap-1">
+                          <span>
                             {showAnswer && i === q.correct && <span className="text-green-600">✓</span>}
                             {showAnswer && i === selected && i !== q.correct && <span className="text-red-500">✗</span>}
-                            <SpeakButton text={opt} size="sm" />
                           </span>
                         </button>
                       )
@@ -402,7 +410,7 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
                       onClick={handleNextQuiz}
                       className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3.5 rounded-xl transition-colors"
                     >
-                      {quizIndex < lesson.quiz.length - 1 ? "Câu tiếp →" : "Xem kết quả →"}
+                      {quizIndex < lesson.exercises.length - 1 ? "Câu tiếp →" : "Xem kết quả →"}
                     </button>
                   )}
                 </div>
@@ -416,13 +424,13 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
           <div className="text-center py-8">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Hoàn thành bài học!</h2>
-            <p className="text-gray-500 mb-6">{lesson.title}</p>
+            <p className="text-gray-500 mb-6">{lesson.title_vi}</p>
 
             <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-8 inline-block min-w-64">
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-extrabold text-blue-500">
-                    {correctCount}/{lesson.quiz.length}
+                    {correctCount}/{lesson.exercises.length}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">Câu đúng</div>
                 </div>
@@ -436,12 +444,19 @@ export default function LessonViewer({ lesson }: { lesson: Lesson }) {
             </div>
 
             <div className="flex flex-col gap-3 max-w-xs mx-auto">
-              {lesson.id < 10 && (
+              {lesson.lesson_number < 3 ? (
                 <Link
-                  href={`/lessons/${lesson.id + 1}`}
+                  href={`/lessons/${lesson.lesson_number + 1}`}
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3.5 rounded-xl transition-colors text-center"
                 >
                   Bài tiếp theo →
+                </Link>
+              ) : (
+                <Link
+                  href="/register"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3.5 rounded-xl transition-colors text-center"
+                >
+                  Mở khóa 57 bài còn lại →
                 </Link>
               )}
               <Link
