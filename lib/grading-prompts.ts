@@ -79,7 +79,7 @@ Hay tra loi bang JSON chinh xac theo dinh dang nay:
   "better_example": "<cau mau tot hon neu can, bang tieng Han>"
 }
 
-CHU Y: Chi tra loi JSON, khong them gi khac.`
+CHU Y: QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
 }
 
 // ============================================================
@@ -129,7 +129,7 @@ Tra loi bang JSON:
   "better_example": "<cau mau tot hon neu can>"
 }
 
-Chi tra loi JSON.`
+QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
 }
 
 // ============================================================
@@ -189,7 +189,7 @@ Tra loi bang JSON:
   "better_example": "<1-2 cau mau tot hon cho phan yeu nhat>"
 }
 
-Chi tra loi JSON.`
+QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
 }
 
 // ============================================================
@@ -255,5 +255,5 @@ Tra loi JSON chi tiet:
   "better_opening": "<goi y cau mo bai tot hon neu can>"
 }
 
-Chi tra loi JSON.`
+QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
 }

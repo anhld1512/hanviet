@@ -17,13 +17,24 @@ const MODEL_SIMPLE = "deepseek-v4-flash"
 // Q53/Q54: dung Pro (phan tich sau hon)
 const MODEL_ADVANCED = "deepseek-v4-pro"
 
-// Parse JSON an toan tu response
+// Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {
   try {
-    const match = text.match(/\{[\s\S]*\}/)
-    if (!match) return null
+    // Strip markdown code fences: ```json ... ``` hoac ``` ... ```
+    const cleaned = text
+      .replace(/```json\s*/gi, "")
+      .replace(/```\s*/g, "")
+      .trim()
+
+    // Tim JSON object
+    const match = cleaned.match(/\{[\s\S]*\}/)
+    if (!match) {
+      console.error("[parseGradeJSON] No JSON found in response:", text.slice(0, 300))
+      return null
+    }
     return JSON.parse(match[0])
-  } catch {
+  } catch (e) {
+    console.error("[parseGradeJSON] Parse error:", e, "Raw text:", text.slice(0, 300))
     return null
   }
 }
