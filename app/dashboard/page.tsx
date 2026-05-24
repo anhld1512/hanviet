@@ -1,11 +1,20 @@
-import { getEpsLesson, type EpsLesson } from "@/lib/eps-lesson"
+import { redirect } from "next/navigation"
+import { createClient } from "@/lib/supabase-server"
 import DashboardClient from "./DashboardClient"
 
-export default function DashboardPage() {
-  const lessons: EpsLesson[] = []
-  for (let i = 1; i <= 10; i++) {
-    const l = getEpsLesson(i)
-    if (l) lessons.push(l)
-  }
-  return <DashboardClient lessons={lessons} />
+export default async function DashboardPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect("/login")
+
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single()
+
+  if (!profile?.onboarding_completed) redirect("/onboarding")
+
+  return <DashboardClient profile={profile} user={user} />
 }

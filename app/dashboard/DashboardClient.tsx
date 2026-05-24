@@ -1,355 +1,178 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase-client"
-import type { EpsLesson } from "@/lib/eps-lesson"
+import { useRouter } from "next/navigation"
 import type { User } from "@supabase/supabase-js"
 
-const INDUSTRIES = ["Sản xuất chế tạo", "Xây dựng", "Nông nghiệp", "Ngư nghiệp"] as const
-const PASSING: Record<string, number> = {
-  "Sản xuất chế tạo": 110,
-  "Xây dựng": 80,
-  "Nông nghiệp": 80,
-  "Ngư nghiệp": 60,
+type Profile = {
+  display_name: string
+  avatar_url: string | null
+  target_level: number
+  learning_path: string
+  study_streak: number
+  total_essays_written: number
+  subscription_tier: string
+  writing_experience: string
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  daily_life: "Sinh hoạt hàng ngày",
-  workplace: "Tại nơi làm việc",
-  safety: "An toàn lao động",
-  health: "Sức khỏe",
-  rights: "Quyền lợi",
+const PATH_LABEL: Record<string, string> = {
+  A: "Nền tảng từ đầu",
+  B: "Tăng tốc Q53-Q54",
+  C: "Sửa lỗi có hệ thống",
+  D: "Nâng cao",
+  E: "Chau chuốt Q54",
 }
 
-const CATEGORY_EMOJI: Record<string, string> = {
-  daily_life: "🏠",
-  workplace: "🏭",
-  safety: "⛑️",
-  health: "🏥",
-  rights: "📋",
-}
+const STAGE_MAP = [
+  { key: "Q51", label: "Q51 Master", desc: "Điền câu vào thực dụng văn", color: "bg-green-100 text-green-700", route: "/practice/q51" },
+  { key: "Q52", label: "Q52 Master", desc: "Điền câu vào đoạn văn nghị luận", color: "bg-blue-100 text-blue-700", route: "/practice/q52" },
+  { key: "Q53", label: "Q53 Deep Dive", desc: "Phân tích biểu đồ 200-300 chữ", color: "bg-purple-100 text-purple-700", route: "/practice/q53" },
+  { key: "Q54", label: "Q54 Intensive", desc: "Viết luận nghị luận 600-700 chữ", color: "bg-orange-100 text-orange-700", route: "/practice/q54" },
+]
 
-function daysUntil(dateStr: string): number {
-  const target = new Date(dateStr)
-  const now = new Date()
-  return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-}
-
-export default function DashboardClient({ lessons }: { lessons: EpsLesson[] }) {
+export default function DashboardClient({ profile, user }: { profile: Profile; user: User }) {
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [completedLessons, setCompletedLessons] = useState<number[]>([])
-  const [industry, setIndustry] = useState("Sản xuất chế tạo")
-  const [examDate, setExamDate] = useState("")
-  const [editingDate, setEditingDate] = useState(false)
-
-  useEffect(() => {
-    const saved = localStorage.getItem("eps_industry")
-    if (saved) setIndustry(saved)
-    const savedDate = localStorage.getItem("eps_exam_date")
-    if (savedDate) setExamDate(savedDate)
-  }, [])
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) { router.push("/login"); return }
-      setUser(data.user)
-      const { data: ul } = await supabase
-        .from("user_lessons").select("lesson_id").eq("user_id", data.user.id)
-      setCompletedLessons((ul || []).map((r: { lesson_id: number }) => r.lesson_id))
-      setLoading(false)
-    })
-  }, [router])
-
-  function saveIndustry(val: string) {
-    setIndustry(val)
-    localStorage.setItem("eps_industry", val)
-  }
-
-  function saveExamDate(val: string) {
-    setExamDate(val)
-    localStorage.setItem("eps_exam_date", val)
-    setEditingDate(false)
-  }
 
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push("/")
+    router.push("/login")
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-400 text-sm">Đang tải...</div>
-      </div>
-    )
-  }
-
-  const firstName = user?.user_metadata?.full_name?.split(" ").pop() || "bạn"
-  const completedCount = completedLessons.length
-  const totalLessons = lessons.length
-  const xp = completedCount * 15
-  const progressPercent = Math.round((completedCount / totalLessons) * 100)
-  const estimatedScore = Math.round((completedCount / totalLessons) * 160) + 20
-  const passingScore = PASSING[industry]
-  const onTrack = estimatedScore >= passingScore
-
-  const nextLesson = lessons.find((l) => !completedLessons.includes(l.lesson_number))
-  const daysLeft = examDate ? daysUntil(examDate) : null
+  const firstName = profile.display_name?.split(" ").pop() || "bạn"
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Nav */}
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🇰🇷</span>
-            <span className="font-bold text-gray-900">HanViet</span>
-            <span className="text-xs text-blue-500 font-semibold ml-0.5">EPS</span>
+            <span className="text-lg">✍️</span>
+            <span className="font-extrabold text-gray-900 text-sm">HanViet</span>
+            <span className="text-xs text-gray-400 hidden sm:block">Writing Coach</span>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500 hidden sm:block">
-              {user?.user_metadata?.full_name || user?.email}
-            </span>
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors hidden sm:block">
-              Trang chủ
-            </Link>
-            <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+          <div className="flex items-center gap-3">
+            {profile.subscription_tier === "free" && (
+              <Link
+                href="/pricing"
+                className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-full"
+              >
+                Nâng Pro
+              </Link>
+            )}
+            <button
+              onClick={handleLogout}
+              className="text-xs text-gray-400 hover:text-gray-600"
+            >
               Đăng xuất
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
-
-        {/* Welcome */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-extrabold text-gray-900 mb-1">Chào {firstName}! 👋</h1>
-          <p className="text-gray-500 text-sm">
-            {completedCount === 0
-              ? "Hãy bắt đầu ôn thi EPS-TOPIK từ bài học đầu tiên."
-              : `Đã hoàn thành ${completedCount}/${totalLessons} bài. Tiếp tục thôi!`}
-          </p>
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+        {/* Greeting */}
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-5 text-white">
+          <p className="text-blue-100 text-sm mb-1">Xin chào,</p>
+          <h1 className="text-xl font-extrabold mb-3">{firstName} 👋</h1>
+          <div className="flex items-center gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-extrabold">{profile.study_streak}</div>
+              <div className="text-blue-200 text-xs">ngày streak</div>
+            </div>
+            <div className="w-px h-8 bg-blue-400" />
+            <div className="text-center">
+              <div className="text-2xl font-extrabold">{profile.total_essays_written}</div>
+              <div className="text-blue-200 text-xs">bài đã viết</div>
+            </div>
+            <div className="w-px h-8 bg-blue-400" />
+            <div className="text-center">
+              <div className="text-2xl font-extrabold">{profile.target_level}</div>
+              <div className="text-blue-200 text-xs">cấp mục tiêu</div>
+            </div>
+          </div>
         </div>
 
-        {/* Industry + Exam date */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <div className="text-xs font-semibold text-gray-400 mb-2">NGÀNH ĐỀ XUẤT SANG HÀN</div>
-            <div className="flex flex-wrap gap-2">
-              {INDUSTRIES.map((ind) => (
-                <button
-                  key={ind}
-                  onClick={() => saveIndustry(ind)}
-                  className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                    industry === ind ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {ind} ({PASSING[ind]}+)
-                </button>
+        {/* Learning Path */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="font-bold text-gray-900">Lộ trình của bạn</h2>
+            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">
+              Path {profile.learning_path}
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mb-4">{PATH_LABEL[profile.learning_path] || "Cá nhân hóa"}</p>
+          <Link
+            href="/learning-path"
+            className="text-sm text-blue-500 font-medium hover:text-blue-600"
+          >
+            Xem lộ trình chi tiết →
+          </Link>
+        </div>
+
+        {/* Quick Practice */}
+        <div>
+          <h2 className="font-bold text-gray-900 mb-3">Luyện viết ngay</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {STAGE_MAP.map((s) => (
+              <Link
+                key={s.key}
+                href={s.route}
+                className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-blue-200 hover:shadow-sm transition-all"
+              >
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${s.color}`}>
+                  {s.key}
+                </span>
+                <p className="font-bold text-gray-900 mt-2 text-sm">{s.label}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Score Estimate Placeholder */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 className="font-bold text-gray-900 mb-3">Điểm Writing ước tính</h2>
+          {profile.total_essays_written === 0 ? (
+            <div className="text-center py-6">
+              <div className="text-4xl mb-2">📝</div>
+              <p className="text-gray-500 text-sm">Chưa có dữ liệu</p>
+              <p className="text-gray-400 text-xs mt-1">Viết bài đầu tiên để xem điểm ước tính</p>
+              <Link
+                href="/practice/q51"
+                className="inline-block mt-3 text-sm bg-blue-500 text-white font-bold px-4 py-2 rounded-xl"
+              >
+                Viết thử Q51 →
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-2">
+              {["Q51", "Q52", "Q53", "Q54"].map((q) => (
+                <div key={q} className="text-center bg-gray-50 rounded-xl py-3">
+                  <div className="text-lg font-extrabold text-gray-300">?</div>
+                  <div className="text-xs text-gray-400">{q}</div>
+                </div>
               ))}
             </div>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <div className="text-xs font-semibold text-gray-400 mb-2">NGÀY THI DỰ KIẾN</div>
-            {examDate && !editingDate ? (
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className={`text-2xl font-extrabold ${daysLeft !== null && daysLeft > 0 ? "text-blue-500" : "text-red-500"}`}>
-                    {daysLeft !== null && daysLeft > 0 ? `${daysLeft} ngày` : daysLeft === 0 ? "Hôm nay!" : "Đã qua"}
-                  </span>
-                  <div className="text-xs text-gray-400 mt-0.5">còn lại ({examDate})</div>
-                </div>
-                <button onClick={() => setEditingDate(true)} className="text-xs text-blue-500 hover:underline">Sửa</button>
-              </div>
-            ) : (
-              <div className="flex gap-2 items-center">
-                <input
-                  type="date"
-                  defaultValue={examDate}
-                  min={new Date().toISOString().split("T")[0]}
-                  onChange={(e) => e.target.value && saveExamDate(e.target.value)}
-                  className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-400"
-                />
-                {editingDate && (
-                  <button onClick={() => setEditingDate(false)} className="text-xs text-gray-400 shrink-0">Hủy</button>
-                )}
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Readiness bar */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <div className="font-bold text-gray-900">Độ sẵn sàng thi</div>
-              <div className="text-xs text-gray-400 mt-0.5">
-                Ước tính cho ngành <span className="font-medium text-gray-600">{industry}</span> (điểm đậu {passingScore}/200)
-              </div>
-            </div>
-            <div className="text-right">
-              <div className={`text-2xl font-extrabold ${onTrack ? "text-green-500" : "text-orange-500"}`}>
-                {estimatedScore}<span className="text-sm text-gray-300">/200</span>
-              </div>
-              <div className={`text-xs font-medium ${onTrack ? "text-green-500" : "text-orange-500"}`}>
-                {onTrack ? "Ước tính đủ điểm" : `Cần thêm ${passingScore - estimatedScore} điểm`}
-              </div>
-            </div>
-          </div>
-          <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${onTrack ? "bg-green-500" : "bg-orange-400"}`}
-              style={{ width: `${Math.min((estimatedScore / 200) * 100, 100)}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between mt-2">
-            <div className="text-xs text-gray-400">{progressPercent}% lộ trình hoàn thành</div>
-            <div className="text-xs text-gray-400">Điểm chuẩn: {passingScore}/200</div>
-          </div>
-        </div>
-
-        {/* Next lesson */}
-        {nextLesson && (
-          <Link
-            href={`/lessons/${nextLesson.lesson_number}`}
-            className="flex items-center gap-4 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl p-5 mb-6 transition-colors group"
-          >
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0">
-              {CATEGORY_EMOJI[nextLesson.category] ?? "📖"}
-            </div>
-            <div className="flex-1">
-              <div className="text-xs text-blue-100 mb-0.5">
-                {completedCount === 0 ? "Bài học đầu tiên" : "Tiếp tục học"}
-              </div>
-              <div className="font-bold text-base">{nextLesson.title_vi}</div>
-              <div className="text-blue-100 text-sm">{nextLesson.title_kr} · Bài {nextLesson.lesson_number}</div>
-            </div>
-            <span className="text-white/60 text-xl group-hover:translate-x-1 transition-transform">→</span>
+        {/* Quick links */}
+        <div className="grid grid-cols-3 gap-3">
+          <Link href="/templates" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
+            <div className="text-2xl mb-1">📋</div>
+            <div className="text-xs font-semibold text-gray-700">Templates</div>
           </Link>
-        )}
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-            <div className="text-2xl mb-1">📚</div>
-            <div className="text-xl font-extrabold text-gray-900">{completedCount}/{totalLessons}</div>
-            <div className="text-xs text-gray-500 mt-0.5">Bài hoàn thành</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-            <div className="text-2xl mb-1">⭐</div>
-            <div className="text-xl font-extrabold text-gray-900">{xp}</div>
-            <div className="text-xs text-gray-500 mt-0.5">XP tích lũy</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-            <div className="text-2xl mb-1">🎯</div>
-            <div className="text-xl font-extrabold text-gray-900">{progressPercent}%</div>
-            <div className="text-xs text-gray-500 mt-0.5">Tiến độ</div>
-          </div>
-        </div>
-
-        {/* Tools */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Link
-            href="/eps-test"
-            className="bg-red-500 hover:bg-red-600 text-white rounded-2xl p-5 flex items-center gap-4 transition-colors group"
-          >
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🎯</div>
-            <div>
-              <div className="font-bold text-base">Thi thử EPS</div>
-              <div className="text-red-100 text-sm mt-0.5">50 câu · 70 phút</div>
-            </div>
-            <span className="ml-auto text-white/60 group-hover:translate-x-0.5 transition-transform">→</span>
+          <Link href="/review" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
+            <div className="text-2xl mb-1">🔍</div>
+            <div className="text-xs font-semibold text-gray-700">Ôn lỗi</div>
           </Link>
-          <Link
-            href="/flashcards"
-            className="bg-green-500 hover:bg-green-600 text-white rounded-2xl p-5 flex items-center gap-4 transition-colors group"
-          >
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🃏</div>
-            <div>
-              <div className="font-bold text-base">Flashcard</div>
-              <div className="text-green-100 text-sm mt-0.5">Ôn từ vựng hay thi</div>
-            </div>
-            <span className="ml-auto text-white/60 group-hover:translate-x-0.5 transition-transform">→</span>
-          </Link>
-          <Link
-            href="/topik"
-            className="bg-purple-500 hover:bg-purple-600 text-white rounded-2xl p-5 flex items-center gap-4 transition-colors group"
-          >
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0">📝</div>
-            <div>
-              <div className="font-bold text-base">Luyện đề</div>
-              <div className="text-purple-100 text-sm mt-0.5">Theo dạng câu</div>
-            </div>
-            <span className="ml-auto text-white/60 group-hover:translate-x-0.5 transition-transform">→</span>
+          <Link href="/learning-path" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
+            <div className="text-2xl mb-1">🗺️</div>
+            <div className="text-xs font-semibold text-gray-700">Lộ trình</div>
           </Link>
         </div>
-
-        {/* Lesson roadmap */}
-        <div>
-          <h2 className="font-bold text-gray-900 text-lg mb-4">Lộ trình 60 bài học EPS</h2>
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 mb-5 text-xs text-amber-700">
-            Hiện có 10 bài Quyển 1. Các quyển tiếp theo sẽ cập nhật liên tục.
-          </div>
-
-          <div className="space-y-3">
-            {lessons.map((lesson) => {
-              const done = completedLessons.includes(lesson.lesson_number)
-              const isNext = nextLesson?.lesson_number === lesson.lesson_number
-              const locked = !lesson.is_free
-
-              return (
-                <Link
-                  key={lesson.lesson_number}
-                  href={`/lessons/${lesson.lesson_number}`}
-                  className={`flex items-center gap-4 bg-white rounded-xl border p-4 hover:shadow-sm transition-all group ${
-                    isNext ? "border-blue-300 ring-1 ring-blue-200"
-                    : done ? "border-green-200"
-                    : "border-gray-100"
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${
-                    done ? "bg-green-100"
-                    : isNext ? "bg-blue-100"
-                    : locked ? "bg-gray-100"
-                    : "bg-blue-50"
-                  }`}>
-                    {locked && !done ? "🔒" : (CATEGORY_EMOJI[lesson.category] ?? "📖")}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-xs text-gray-400 shrink-0">Bài {lesson.lesson_number}</span>
-                      {lesson.is_free && (
-                        <span className="text-xs bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full font-medium">Miễn phí</span>
-                      )}
-                      {isNext && (
-                        <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-medium">Tiếp theo</span>
-                      )}
-                    </div>
-                    <div className="font-medium text-gray-900 text-sm">{lesson.title_vi}</div>
-                    <div className="text-xs text-gray-400">{lesson.title_kr} · {CATEGORY_LABELS[lesson.category] ?? lesson.category}</div>
-                  </div>
-                  <div className="shrink-0">
-                    {done ? (
-                      <span className="text-green-500 text-sm font-bold">✓</span>
-                    ) : isNext ? (
-                      <span className="text-blue-500 text-sm group-hover:translate-x-0.5 transition-transform block">→</span>
-                    ) : (
-                      <span className="text-gray-200 text-sm">○</span>
-                    )}
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
       </div>
     </div>
   )
