@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Thieu question_type" }, { status: 400 })
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!process.env.DEEPSEEK_API_KEY) {
       return NextResponse.json(
-        { error: "ANTHROPIC_API_KEY chua duoc cau hinh" },
+        { error: "DEEPSEEK_API_KEY chua duoc cau hinh. Them vao file .env.local" },
         { status: 500 }
       )
     }
