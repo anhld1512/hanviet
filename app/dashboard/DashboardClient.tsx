@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { createClient } from "@/lib/supabase-client"
-import { useRouter } from "next/navigation"
+import Sidebar from "@/app/components/Sidebar"
 import type { User } from "@supabase/supabase-js"
 
 type Profile = {
@@ -17,163 +16,222 @@ type Profile = {
 }
 
 const PATH_LABEL: Record<string, string> = {
-  A: "Nền tảng từ đầu",
-  B: "Tăng tốc Q53-Q54",
-  C: "Sửa lỗi có hệ thống",
-  D: "Nâng cao",
-  E: "Chau chuốt Q54",
+  A: "Nền tảng từ đầu — Template Q51 đến Q54",
+  B: "Tăng tốc — Focus Q53 và Q54 chuyên sâu",
+  C: "Sửa lỗi có hệ thống — Luyện từng tiêu chí yếu",
+  D: "Nâng cao — Template nâng cao, từ vựng học thuật",
+  E: "Chau chuốt — Chỉ luyện Q54, nhắm 45-50/50",
 }
 
-const STAGE_MAP = [
-  { key: "Q51", label: "Q51 Master", desc: "Điền câu vào thực dụng văn", color: "bg-green-100 text-green-700", route: "/practice/q51" },
-  { key: "Q52", label: "Q52 Master", desc: "Điền câu vào đoạn văn nghị luận", color: "bg-blue-100 text-blue-700", route: "/practice/q52" },
-  { key: "Q53", label: "Q53 Deep Dive", desc: "Phân tích biểu đồ 200-300 chữ", color: "bg-purple-100 text-purple-700", route: "/practice/q53" },
-  { key: "Q54", label: "Q54 Intensive", desc: "Viết luận nghị luận 600-700 chữ", color: "bg-orange-100 text-orange-700", route: "/practice/q54" },
+const QUICK_PRACTICE = [
+  {
+    key: "Q51",
+    label: "Q51 — Thực dụng văn",
+    desc: "Điền câu vào thư/thông báo",
+    points: "10 điểm",
+    time: "3-5 phút",
+    color: "bg-green-50 border-green-100",
+    badge: "bg-green-100 text-green-700",
+    route: "/practice/q51",
+  },
+  {
+    key: "Q52",
+    label: "Q52 — Nghị luận ngắn",
+    desc: "Điền câu vào đoạn văn",
+    points: "10 điểm",
+    time: "5-7 phút",
+    color: "bg-blue-50 border-blue-100",
+    badge: "bg-blue-100 text-blue-700",
+    route: "/practice/q52",
+  },
+  {
+    key: "Q53",
+    label: "Q53 — Phân tích biểu đồ",
+    desc: "Viết 200-300 chữ",
+    points: "30 điểm",
+    time: "10-12 phút",
+    color: "bg-purple-50 border-purple-100",
+    badge: "bg-purple-100 text-purple-700",
+    route: "/practice/q53",
+  },
+  {
+    key: "Q54",
+    label: "Q54 — Luận nghị luận",
+    desc: "Viết 600-700 chữ",
+    points: "50 điểm",
+    time: "28-35 phút",
+    color: "bg-orange-50 border-orange-100",
+    badge: "bg-orange-100 text-orange-700",
+    route: "/practice/q54",
+  },
 ]
 
 export default function DashboardClient({ profile, user }: { profile: Profile; user: User }) {
-  const router = useRouter()
-
-  async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/login")
-  }
-
   const firstName = profile.display_name?.split(" ").pop() || "bạn"
+  const totalWritingScore = 100
+  const progressPercent = profile.total_essays_written > 0 ? 15 : 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Nav */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">✍️</span>
-            <span className="font-extrabold text-gray-900 text-sm">HanViet</span>
-            <span className="text-xs text-gray-400 hidden sm:block">Writing Coach</span>
-          </div>
-          <div className="flex items-center gap-3">
-            {profile.subscription_tier === "free" && (
-              <Link
-                href="/pricing"
-                className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-full"
-              >
-                Nâng Pro
-              </Link>
-            )}
-            <button
-              onClick={handleLogout}
-              className="text-xs text-gray-400 hover:text-gray-600"
-            >
-              Đăng xuất
-            </button>
-          </div>
-        </div>
-      </nav>
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar tier={profile.subscription_tier} />
 
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
-        {/* Greeting */}
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-5 text-white">
-          <p className="text-blue-100 text-sm mb-1">Xin chào,</p>
-          <h1 className="text-xl font-extrabold mb-3">{firstName} 👋</h1>
-          <div className="flex items-center gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-extrabold">{profile.study_streak}</div>
-              <div className="text-blue-200 text-xs">ngày streak</div>
-            </div>
-            <div className="w-px h-8 bg-blue-400" />
-            <div className="text-center">
-              <div className="text-2xl font-extrabold">{profile.total_essays_written}</div>
-              <div className="text-blue-200 text-xs">bài đã viết</div>
-            </div>
-            <div className="w-px h-8 bg-blue-400" />
-            <div className="text-center">
-              <div className="text-2xl font-extrabold">{profile.target_level}</div>
-              <div className="text-blue-200 text-xs">cấp mục tiêu</div>
-            </div>
-          </div>
-        </div>
+      {/* Main content — offset by sidebar width */}
+      <main className="ml-56 flex-1 min-h-screen">
+        <div className="p-8 max-w-5xl">
 
-        {/* Learning Path */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="font-bold text-gray-900">Lộ trình của bạn</h2>
-            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">
-              Path {profile.learning_path}
-            </span>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-extrabold text-gray-900">
+              Xin chào, {firstName} 👋
+            </h1>
+            <p className="text-gray-500 mt-1">
+              Hôm nay luyện viết câu nào?
+            </p>
           </div>
-          <p className="text-sm text-gray-500 mb-4">{PATH_LABEL[profile.learning_path] || "Cá nhân hóa"}</p>
-          <Link
-            href="/learning-path"
-            className="text-sm text-blue-500 font-medium hover:text-blue-600"
-          >
-            Xem lộ trình chi tiết →
-          </Link>
-        </div>
 
-        {/* Quick Practice */}
-        <div>
-          <h2 className="font-bold text-gray-900 mb-3">Luyện viết ngay</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {STAGE_MAP.map((s) => (
-              <Link
-                key={s.key}
-                href={s.route}
-                className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-blue-200 hover:shadow-sm transition-all"
-              >
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${s.color}`}>
-                  {s.key}
-                </span>
-                <p className="font-bold text-gray-900 mt-2 text-sm">{s.label}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
-              </Link>
+          {/* Stats row */}
+          <div className="grid grid-cols-4 gap-4 mb-8">
+            {[
+              { label: "Ngày streak", value: profile.study_streak, icon: "🔥", color: "text-orange-500" },
+              { label: "Bài đã viết", value: profile.total_essays_written, icon: "📝", color: "text-blue-500" },
+              { label: "Cấp mục tiêu", value: profile.target_level, icon: "🎯", color: "text-purple-500" },
+              { label: "Điểm Writing", value: profile.total_essays_written > 0 ? "?" : "0", icon: "📊", color: "text-green-500" },
+            ].map((s) => (
+              <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-5">
+                <div className={`text-2xl mb-1`}>{s.icon}</div>
+                <div className={`text-3xl font-extrabold ${s.color}`}>{s.value}</div>
+                <div className="text-sm text-gray-500 mt-0.5">{s.label}</div>
+              </div>
             ))}
           </div>
-        </div>
 
-        {/* Score Estimate Placeholder */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <h2 className="font-bold text-gray-900 mb-3">Điểm Writing ước tính</h2>
-          {profile.total_essays_written === 0 ? (
-            <div className="text-center py-6">
-              <div className="text-4xl mb-2">📝</div>
-              <p className="text-gray-500 text-sm">Chưa có dữ liệu</p>
-              <p className="text-gray-400 text-xs mt-1">Viết bài đầu tiên để xem điểm ước tính</p>
+          {/* Lộ trình + Writing score */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            {/* Learning path */}
+            <div className="col-span-2 bg-white rounded-2xl border border-gray-100 p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-bold text-gray-900 text-lg">Lộ trình của bạn</h2>
+                <span className="text-xs bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full">
+                  Path {profile.learning_path}
+                </span>
+              </div>
+              <p className="text-gray-500 text-sm mb-5 leading-relaxed">
+                {PATH_LABEL[profile.learning_path]}
+              </p>
+
+              {/* Progress bar */}
+              <div className="mb-2">
+                <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+                  <span>Tiến độ tổng thể</span>
+                  <span>{progressPercent}%</span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 rounded-full transition-all"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+
               <Link
-                href="/practice/q51"
-                className="inline-block mt-3 text-sm bg-blue-500 text-white font-bold px-4 py-2 rounded-xl"
+                href="/learning-path"
+                className="inline-flex items-center gap-1 text-sm text-blue-500 font-medium hover:text-blue-600 mt-3"
               >
-                Viết thử Q51 →
+                Xem lộ trình chi tiết →
               </Link>
             </div>
-          ) : (
-            <div className="grid grid-cols-4 gap-2">
-              {["Q51", "Q52", "Q53", "Q54"].map((q) => (
-                <div key={q} className="text-center bg-gray-50 rounded-xl py-3">
-                  <div className="text-lg font-extrabold text-gray-300">?</div>
-                  <div className="text-xs text-gray-400">{q}</div>
+
+            {/* Writing score estimate */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h2 className="font-bold text-gray-900 text-base mb-4">Điểm Writing ước tính</h2>
+              {profile.total_essays_written === 0 ? (
+                <div className="text-center py-4">
+                  <div className="text-5xl font-extrabold text-gray-100 mb-1">?</div>
+                  <div className="text-xs text-gray-400 leading-relaxed">
+                    Viết bài đầu tiên để xem điểm ước tính
+                  </div>
+                  <Link
+                    href="/practice/q51"
+                    className="inline-block mt-4 text-xs bg-blue-500 text-white font-bold px-4 py-2 rounded-xl"
+                  >
+                    Viết thử ngay →
+                  </Link>
                 </div>
+              ) : (
+                <div className="space-y-2">
+                  {[
+                    { q: "Q51", max: 10 },
+                    { q: "Q52", max: 10 },
+                    { q: "Q53", max: 30 },
+                    { q: "Q54", max: 50 },
+                  ].map((q) => (
+                    <div key={q.q} className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500 w-6">{q.q}</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full" />
+                      <span className="text-xs text-gray-300">?/{q.max}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quick practice */}
+          <div className="mb-8">
+            <h2 className="font-bold text-gray-900 text-lg mb-4">Luyện viết ngay</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {QUICK_PRACTICE.map((p) => (
+                <Link
+                  key={p.key}
+                  href={p.route}
+                  className={`bg-white rounded-2xl border ${p.color} p-5 hover:shadow-md transition-all group`}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${p.badge}`}>
+                      {p.key}
+                    </span>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-400">{p.points}</div>
+                      <div className="text-xs text-gray-400">{p.time}</div>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-base mb-1">{p.label}</h3>
+                  <p className="text-sm text-gray-500">{p.desc}</p>
+                  <div className="mt-4 text-sm text-blue-500 font-medium group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
+                    Bắt đầu →
+                  </div>
+                </Link>
               ))}
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Quick links */}
-        <div className="grid grid-cols-3 gap-3">
-          <Link href="/templates" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
-            <div className="text-2xl mb-1">📋</div>
-            <div className="text-xs font-semibold text-gray-700">Templates</div>
-          </Link>
-          <Link href="/review" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
-            <div className="text-2xl mb-1">🔍</div>
-            <div className="text-xs font-semibold text-gray-700">Ôn lỗi</div>
-          </Link>
-          <Link href="/learning-path" className="bg-white rounded-2xl border border-gray-100 p-4 text-center hover:border-blue-200 transition-all">
-            <div className="text-2xl mb-1">🗺️</div>
-            <div className="text-xs font-semibold text-gray-700">Lộ trình</div>
-          </Link>
+          {/* Shortcuts */}
+          <div className="grid grid-cols-3 gap-4">
+            <Link href="/templates" className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-sm transition-all flex items-center gap-4">
+              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl">📋</div>
+              <div>
+                <div className="font-semibold text-gray-900 text-sm">Templates</div>
+                <div className="text-xs text-gray-400">Q51-54 đầy đủ</div>
+              </div>
+            </Link>
+            <Link href="/review" className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-sm transition-all flex items-center gap-4">
+              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-xl">🔍</div>
+              <div>
+                <div className="font-semibold text-gray-900 text-sm">Ôn lỗi</div>
+                <div className="text-xs text-gray-400">Top lỗi hay mắc</div>
+              </div>
+            </Link>
+            <Link href="/learning-path" className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-sm transition-all flex items-center gap-4">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-xl">🗺️</div>
+              <div>
+                <div className="font-semibold text-gray-900 text-sm">Lộ trình</div>
+                <div className="text-xs text-gray-400">4 giai đoạn</div>
+              </div>
+            </Link>
+          </div>
+
         </div>
-      </div>
+      </main>
     </div>
   )
 }
