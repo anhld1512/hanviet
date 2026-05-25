@@ -37,6 +37,11 @@ export async function proxy(request: NextRequest) {
     return supabaseResponse
   }
 
+  // Already logged in → bounce away from landing page and login page
+  if (user && (pathname === "/" || pathname === "/login")) {
+    return NextResponse.redirect(new URL("/practice", request.url))
+  }
+
   // Protected routes: redirect to /login if not authenticated
   const protectedRoutes = ["/dashboard", "/onboarding", "/practice", "/learning-path", "/templates", "/review", "/mock-exam"]
   const isProtected = protectedRoutes.some((r) => pathname.startsWith(r))
@@ -50,6 +55,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/grade).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/grade|auth/callback).*)",
   ],
 }
