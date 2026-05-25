@@ -137,7 +137,7 @@ export default function LandingPage() {
               </thead>
               <tbody>
                 {[
-                  ["Giá", "Từ 199K/tháng", "3-8 triệu/khóa", "Miễn phí (giới hạn)"],
+                  ["Giá", "Từ 133K/tháng", "3-8 triệu/khóa", "Miễn phí (giới hạn)"],
                   ["Chờ kết quả", "5 giây", "3-7 ngày", "Tức thì"],
                   ["Ngôn ngữ feedback", "Tiếng Việt 100%", "Tiếng Việt", "Tiếng Anh"],
                   ["4 tiêu chí NIIED", "✅", "✅", "❌"],
@@ -164,26 +164,26 @@ export default function LandingPage() {
               {
                 name: "Free",
                 price: "0đ",
-                desc: "Dùng thử",
-                features: ["3 lần chấm bài/tuần", "Xem template Q51-52", "Lộ trình demo"],
+                desc: "mãi mãi",
+                features: ["5 lượt chấm AI/tháng", "Luyện Q51 · Q52 · Q53 · Q54", "Xem tips & cấu trúc", "Thi thử 1 lần/tháng"],
                 cta: "Bắt đầu miễn phí",
                 highlight: false,
               },
               {
-                name: "Pro",
-                price: "199K",
-                desc: "/tháng",
-                features: ["Chấm không giới hạn Q51-52-53", "Template đầy đủ", "Lộ trình cá nhân", "Lịch sử + phân tích lỗi"],
-                cta: "Dùng Pro",
-                highlight: true,
+                name: "Pro 3 tháng",
+                price: "399K",
+                desc: "· ~133K/tháng",
+                features: ["Chấm bài không giới hạn", "Thi thử full 4 câu · đề ngẫu nhiên", "Phân tích điểm yếu cá nhân", "Toàn bộ đề TOPIK mới nhất"],
+                cta: "Đăng ký 3 tháng",
+                highlight: false,
               },
               {
-                name: "Premium",
-                price: "399K",
-                desc: "/tháng",
-                features: ["Tất cả Pro", "Chấm Q54 không giới hạn", "Bài mẫu cấp 5-6", "Phân tích xu hướng điểm"],
-                cta: "Dùng Premium",
-                highlight: false,
+                name: "Pro 6 tháng",
+                price: "699K",
+                desc: "· ~117K/tháng",
+                features: ["Tất cả Pro 3 tháng", "Tiết kiệm 99K so với 3 tháng", "Ưu tiên cập nhật đề mới", "Phù hợp ôn từ căn bản đến thi thật"],
+                cta: "Đăng ký 6 tháng",
+                highlight: true,
               },
             ].map((p) => (
               <div
@@ -204,7 +204,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/login"
+                  href="/pricing"
                   className={`mt-5 block text-center text-sm font-bold py-3 rounded-xl transition-colors ${
                     p.highlight
                       ? "bg-white text-blue-600 hover:bg-blue-50"
