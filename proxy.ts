@@ -29,8 +29,16 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // Admin routes: must be logged in AND be admin email
+  if (pathname.startsWith("/admin")) {
+    const adminEmail = process.env.ADMIN_EMAIL ?? "anhld1512@gmail.com"
+    if (!user) return NextResponse.redirect(new URL("/login", request.url))
+    if (user.email !== adminEmail) return NextResponse.redirect(new URL("/practice", request.url))
+    return supabaseResponse
+  }
+
   // Protected routes: redirect to /login if not authenticated
-  const protectedRoutes = ["/dashboard", "/onboarding", "/practice", "/learning-path", "/templates", "/review"]
+  const protectedRoutes = ["/dashboard", "/onboarding", "/practice", "/learning-path", "/templates", "/review", "/mock-exam"]
   const isProtected = protectedRoutes.some((r) => pathname.startsWith(r))
 
   if (isProtected && !user) {
