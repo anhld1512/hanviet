@@ -17,7 +17,7 @@ export function getCounterColor(count: number, min: number, max: number): "green
 export function getCounterStatus(count: number, min: number, max: number): string {
   if (count === 0) return ""
   if (count < min) return `Con thieu ${min - count} chu`
-  if (count <= max) return "Dung do dai"
+  if (count <= max) return "Đúng độ dài"
   return `Vuot ${count - max} chu`
 }
 

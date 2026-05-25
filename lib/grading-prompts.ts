@@ -1,8 +1,12 @@
 // Claude AI grading prompts for TOPIK II Writing Q51-Q54
-// Based on NIIED official rubric
+// AI Writing Coach approach — accurate rubric + deep error analysis + coaching
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export type ErrorCategory = "grammar" | "vocabulary" | "style" | "logic" | "content"
 
 export type GradeResult = {
-  question_type: "q51" | "q52" | "q53" | "q54"
+  question_type: "q51" | "q52" | "q53" | "q54" | "mock_exam"
   scores: {
     content: number
     organization: number
@@ -28,232 +32,302 @@ export type GradeResult = {
     original: string
     corrected: string
     explanation: string
+    type?: ErrorCategory       // grammar | vocabulary | style | logic | content
+    pattern?: string           // e.g. "V-았/었습니다", "N을/를 vs N이/가"
   }>
+  coaching?: {
+    strength: string           // điểm học sinh làm tốt
+    weakness: string           // điểm yếu chính
+    focus_pattern: string      // 1 pattern cụ thể cần ôn
+    level_tip: string          // lời khuyên thực tế
+  }
   better_example?: string
+  char_count_feedback?: string
+  thesis_feedback?: string
+  better_opening?: string
 }
 
-// ============================================================
-// Q51 grading prompt
-// ============================================================
+// ─── Shared error classification guide ────────────────────────────────────────
+const ERROR_GUIDE = `
+=== PHÂN LOẠI LỖI (bắt buộc cho từng correction) ===
+Mỗi lỗi PHẢI có "type":
+• "grammar"    — sai cấu trúc ngữ pháp: trợ từ sai, chia động từ sai, biểu thức ngữ pháp sai
+• "vocabulary" — sai từ, không phù hợp văn phong, thiếu từ học thuật, dùng từ thông thường thay trang trọng
+• "style"      — sai thể văn: dùng 해요체 thay 합쇼체/다체, pha trộn thể văn
+• "logic"      — không phù hợp ngữ cảnh, sai logic lập luận, thiếu liên kết ý
+• "content"    — thiếu thông tin quan trọng, quá vắn tắt, không đáp ứng yêu cầu
+
+Với lỗi grammar/vocabulary: ghi "pattern" = tên cấu trúc cụ thể.
+Ví dụ: "V-았/었습니다 (quá khứ kính ngữ)", "N을/를 (trợ từ tân ngữ)", "V-아/어서 (nguyên nhân)"`
+
+// ─── Q51 ─────────────────────────────────────────────────────────────────────
 export function buildQ51Prompt(
   promptText: string,
   blankKey: string,
   studentAnswer: string,
   contextHint: string
 ): string {
-  return `Ban la giam khao TOPIK II chuyen nghiep. Hay cham diem cau tra loi sau theo tieu chi NIIED.
+  return `Bạn là giáo viên tiếng Hàn TOPIK II, vừa là giám khảo vừa là writing coach. Chấm điểm CHÍNH XÁC và phân tích lỗi SÂU.
 
-DE BAI:
+ĐỀ BÀI:
 ${promptText}
 
-CHO TRONG: (${blankKey})
-NGHI CAN DIEN: ${contextHint}
-BAI VIET CUA HOC SINH: "${studentAnswer}"
+CHỖ TRỐNG: (${blankKey}) | YÊU CẦU: ${contextHint}
+BÀI VIẾT: "${studentAnswer}"
 
-TIEU CHI CHAM (tong 5 diem):
-- Noi dung (2d): Cau co phu hop voi ngu canh va chu de khong? Thong tin day du khong?
-- Ngu phap & tu vung (2d): Cau truc ngu phap dung khong? Tu vung phu hop khong?
-- The van (1d): Co dung 합쇼체 (-ㅂ니다/습니다) khong?
+=== RUBRIC Q51 — 5 điểm ===
 
-Hay tra loi bang JSON chinh xac theo dinh dang nay:
+NỘI DUNG (2đ):
+• 2đ: Câu HOÀN TOÀN phù hợp ngữ cảnh + đủ thông tin + tự nhiên
+• 1đ: Đúng cơ bản NHƯNG thiếu chi tiết / hơi chung chung / dư thừa
+• 0đ: Không liên quan ngữ cảnh, sai nghĩa, hoặc quá ngắn
+
+NGỮ PHÁP & TỪ VỰNG (2đ):
+• 2đ: Ngữ pháp CHÍNH XÁC + từ vựng phong phú phù hợp văn phong trang trọng
+• 1đ: Đúng cơ bản NHƯNG có 1 lỗi nhỏ HOẶC từ vựng đơn giản/không phù hợp
+• 0đ: Nhiều lỗi ngữ pháp nghiêm trọng hoặc từ vựng sai nghĩa
+
+THỂ VĂN (1đ) — KHẮT KHE NHẤT:
+• 1đ: ĐÚNG 합쇼체 — câu KẾT THÚC bằng -ㅂ니다 hoặc -습니다
+• 0đ: BẤT KỲ kết thúc nào KHÁC đều là SAI:
+  - 해요체: -아요, -어요, -해요, -이에요, -세요 → SAI
+  - 반말: -다, -야, -어 → SAI
+  - Quy tắc: KIỂM TRA chữ cuối cùng. Nếu không phải -ㅂ니다/-습니다/-입니다 → style = 0
+
+CÁCH KIỂM TRA: Nhìn vào chữ CUỐI của bài viết "있어요" → kết thúc -요 → 해요체 → style=0
+${ERROR_GUIDE}
+Trả về JSON:
 {
-  "scores": {
-    "content": <0-2>,
-    "language": <0-2>,
-    "style": <0-1>,
-    "total": <0-5>
-  },
+  "scores": { "content": <0-2>, "language": <0-2>, "style": <0-1>, "total": <0-5> },
   "feedback": {
-    "overall": "<nhan xet tong quat bang tieng Viet, 1-2 cau>",
-    "content": "<nhan xet noi dung bang tieng Viet>",
-    "language": "<nhan xet ngu phap tu vung bang tieng Viet>",
-    "style": "<nhan xet the van bang tieng Viet>"
+    "overall": "<1-2 câu tóm tắt: điểm mạnh + điểm yếu chính, tiếng Việt>",
+    "content": "<câu có phù hợp ngữ cảnh không? thiếu/thừa gì cụ thể?>",
+    "organization": "",
+    "language": "<lỗi ngữ pháp/từ vựng cụ thể + gợi ý từ/cấu trúc tốt hơn>",
+    "style": "<đúng/sai thể văn gì, tác động đến điểm>"
   },
   "corrections": [
     {
-      "original": "<phan sai neu co>",
-      "corrected": "<sua lai>",
-      "explanation": "<giai thich bang tieng Viet>"
+      "original": "<phần bị sai>",
+      "corrected": "<sửa lại hoàn chỉnh>",
+      "explanation": "<tại sao sai + cách nhớ, tiếng Việt>",
+      "type": "<grammar|vocabulary|style|logic|content>",
+      "pattern": "<tên cấu trúc ngữ pháp nếu là grammar/vocab>"
     }
   ],
-  "better_example": "<cau mau tot hon neu can, bang tieng Han>"
+  "coaching": {
+    "strength": "<điểm học sinh làm tốt — cụ thể, tích cực>",
+    "weakness": "<điểm yếu chính — thẳng thắn, xây dựng>",
+    "focus_pattern": "<1 mẫu ngữ pháp cần ôn: 'Ôn lại: [pattern] — [ví dụ]'>",
+    "level_tip": "<lời khuyên thực tế 1-2 câu để cải thiện>"
+  },
+  "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
 
-CHU Y: QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
+QUAN TRỌNG: Chỉ trả về raw JSON. TUYỆT ĐỐI không dùng markdown code block.`
 }
 
-// ============================================================
-// Q52 grading prompt
-// ============================================================
+// ─── Q52 ─────────────────────────────────────────────────────────────────────
 export function buildQ52Prompt(
   promptText: string,
   blankKey: string,
   studentAnswer: string,
   contextHint: string
 ): string {
-  return `Ban la giam khao TOPIK II chuyen nghiep. Cham diem cau dien vao doan van nghi luan.
+  return `Bạn là giáo viên TOPIK II chuyên văn nghị luận, vừa chấm điểm vừa coaching viết học thuật.
 
-VAN BAN GOC:
+VĂN BẢN GỐC:
 ${promptText}
 
-CHO TRONG: (${blankKey})
-YEU CAU: ${contextHint}
-BAI VIET CUA HOC SINH: "${studentAnswer}"
+CHỖ TRỐNG: (${blankKey}) | YÊU CẦU: ${contextHint}
+BÀI VIẾT: "${studentAnswer}"
 
-TIEU CHI CHAM (tong 5 diem):
-- Noi dung logic (2d): Cau co phu hop voi y truoc va sau? Co the hien quan diem doi lap/bo sung khong?
-- Ngu phap & tu vung hoc thuat (2d): Dung ngu phap van viet? Tu vung co phu hop voi van phong nghi luan khong?
-- The van (1d): Co dung 다/ㄴ다체 (van viet hoc thuat) khong? TUYET DOI KHONG dung 습니다 hay 해요체.
+=== RUBRIC Q52 — 5 điểm ===
 
-Tra loi bang JSON:
+NỘI DUNG & LOGIC (2đ):
+• 2đ: Câu phù hợp hoàn toàn ý trước + sau + thể hiện đúng quan điểm đối lập/bổ sung
+• 1đ: Đúng cơ bản NHƯNG liên kết với ý xung quanh chưa mượt mà, lập luận chưa rõ
+• 0đ: Không liên quan ngữ cảnh, sai logic, phá vỡ mạch văn
+
+NGỮ PHÁP & TỪ VỰNG HỌC THUẬT (2đ):
+• 2đ: Dùng ngữ pháp văn viết học thuật đúng + từ vựng phong phú (주장하다, 강조하다, ~로 인해, 반면에...)
+• 1đ: Đúng cơ bản NHƯNG từ thông thường thay vì học thuật, hoặc 1 lỗi nhỏ
+• 0đ: Nhiều lỗi ngữ pháp, từ vựng không phù hợp văn phong nghị luận
+
+THỂ VĂN 다체 (1đ) — KHẮT KHE NHẤT:
+• 1đ: ĐÚNG 다/ㄴ다체 — câu kết thúc bằng -다, -ㄴ다, -이다, -된다, -있다, -없다
+• 0đ: BẤT KỲ kết thúc khác đều là SAI:
+  - 합쇼체: -ㅂ니다, -습니다 → SAI (đây là văn nói trang trọng, không phải văn viết học thuật)
+  - 해요체: -아요, -어요, -해요, -이에요 → SAI
+  - KIỂM TRA chữ cuối: nếu không phải đuôi -다 → style=0
+${ERROR_GUIDE}
+Trả về JSON:
 {
-  "scores": {
-    "content": <0-2>,
-    "language": <0-2>,
-    "style": <0-1>,
-    "total": <0-5>
-  },
+  "scores": { "content": <0-2>, "language": <0-2>, "style": <0-1>, "total": <0-5> },
   "feedback": {
-    "overall": "<nhan xet tong quat tieng Viet>",
-    "content": "<nhan xet tinh logic va noi dung>",
-    "language": "<nhan xet ngu phap van hoc thuat>",
-    "style": "<nhan xet the van 다체>"
+    "overall": "<tóm tắt điểm mạnh + yếu, tiếng Việt>",
+    "content": "<câu có logic phù hợp với lập luận trước/sau không?>",
+    "organization": "",
+    "language": "<ngữ pháp văn học thuật + từ vựng: gợi ý cải thiện cụ thể>",
+    "style": "<다체 đúng không? nếu sai thì sai ở đâu>"
   },
   "corrections": [
     {
-      "original": "<phan sai neu co>",
-      "corrected": "<sua lai>",
-      "explanation": "<giai thich tieng Viet>"
+      "original": "<phần sai>",
+      "corrected": "<sửa lại>",
+      "explanation": "<tại sao sai, tiếng Việt>",
+      "type": "<grammar|vocabulary|style|logic|content>",
+      "pattern": "<tên cấu trúc nếu là grammar/vocab>"
     }
   ],
-  "better_example": "<cau mau tot hon neu can>"
+  "coaching": {
+    "strength": "<điểm tốt cụ thể>",
+    "weakness": "<điểm yếu chính>",
+    "focus_pattern": "<1 cấu trúc/từ học thuật cần ôn: 'Ôn lại: ...' + ví dụ>",
+    "level_tip": "<gợi ý cải thiện cụ thể>"
+  },
+  "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
 
-QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
+QUAN TRỌNG: Chỉ trả về raw JSON. TUYỆT ĐỐI không dùng markdown code block.`
 }
 
-// ============================================================
-// Q53 grading prompt
-// ============================================================
+// ─── Q53 ─────────────────────────────────────────────────────────────────────
 export function buildQ53Prompt(
   chartDescription: string,
   studentEssay: string,
   charCount: number
 ): string {
-  return `Ban la giam khao TOPIK II. Cham bai phan tich bieu do Q53.
+  return `Bạn là giáo viên TOPIK II chuyên về văn phân tích biểu đồ, vừa chấm điểm vừa coaching.
 
-DU LIEU BIEU DO:
+DỮ LIỆU BIỂU ĐỒ:
 ${chartDescription}
 
-BAI VIET HOC SINH (${charCount} chu):
+BÀI VIẾT (${charCount} chữ):
 ${studentEssay}
 
-TIEU CHI NIIED Q53 (tong 30 diem):
-1. Noi dung (12d): Co mo ta day du so lieu? Co phan tich nguyen nhan/y nghia khong? Co sai lenh so lieu khong?
-2. Cu truc (9d): Co cau truc ro rang (mo dau, than bai, phan tich)? Mach van mach lac khong?
-3. Ngu phap & tu vung (9d): Ngu phap chinh xac? Tu vung da dang, phu hop van phong hoc thuat?
+=== RUBRIC Q53 — 30 điểm ===
 
-LUU Y:
-- Do dai yeu cau 200-300 chu. Sai qua 10% bi tru diem.
-- The van: 다/ㄴ다체. Dung 습니다 bi tru diem phong cach.
-- Khong chep lai nguyen van de bai.
+NỘI DUNG (12đ):
+① Mô tả số liệu (4đ): Có trích dẫn đủ số liệu chính? Có sai số liệu không? (mỗi số liệu sai -1đ)
+② Phân tích xu hướng (4đ): Có so sánh, đối chiếu, nhận xét xu hướng? (thiếu -3đ)
+③ Nguyên nhân/Ý nghĩa (4đ): Có giải thích nguyên nhân hoặc ý nghĩa? (thiếu -2đ)
 
-Tra loi bang JSON:
+CẤU TRÚC (9đ):
+• 9-8đ: Rõ ràng mở đề → phân tích → kết luận, từ nối tốt (반면에, 또한, 이와 같이...)
+• 7-5đ: Có cấu trúc nhưng chưa rõ phần, từ nối đôi chỗ thiếu
+• 4-0đ: Viết liệt kê rời rạc, không có cấu trúc, thiếu từ nối
+
+NGỮ PHÁP & TỪ VỰNG (9đ):
+• 9-8đ: Ngữ pháp chính xác + từ vựng học thuật phong phú (증가하다, 차지하다, 나타나다, ~배 증가...)
+• 7-5đ: Đúng cơ bản nhưng từ vựng đơn giản, có 1-2 lỗi nhỏ
+• 4-0đ: Nhiều lỗi ngữ pháp, dùng từ thông thường, dùng 습니다체
+
+ĐỘ DÀI: 200-300 chữ. Sai >10% trừ 2-3đ. THỂ VĂN: 다체 bắt buộc. Không chép đề.
+${ERROR_GUIDE}
+Trả về JSON:
 {
-  "scores": {
-    "content": <0-12>,
-    "organization": <0-9>,
-    "language": <0-9>,
-    "total": <0-30>
-  },
-  "max_scores": {
-    "content": 12,
-    "organization": 9,
-    "language": 9,
-    "total": 30
-  },
-  "char_count_feedback": "<nhan xet ve do dai: du/thieu/qua bao nhieu chu>",
+  "scores": { "content": <0-12>, "organization": <0-9>, "language": <0-9>, "style": 0, "total": <0-30> },
+  "char_count_feedback": "<nhận xét độ dài + số chữ cụ thể>",
   "feedback": {
-    "overall": "<nhan xet tong quat tieng Viet, 2-3 cau>",
-    "content": "<nhan xet noi dung va so lieu>",
-    "organization": "<nhan xet cu truc va mach van>",
-    "language": "<nhan xet ngu phap tu vung>"
+    "overall": "<2-3 câu: điểm mạnh + yếu chính, tiếng Việt>",
+    "content": "<có đủ số liệu/xu hướng/nguyên nhân không? thiếu gì?>",
+    "organization": "<cấu trúc + từ nối: tốt/thiếu ở đâu?>",
+    "language": "<ngữ pháp + từ vựng học thuật: gợi ý cải thiện cụ thể>",
+    "style": ""
   },
   "corrections": [
     {
-      "original": "<doan van sai neu co>",
-      "corrected": "<sua lai>",
-      "explanation": "<giai thich tieng Viet>"
+      "original": "<đoạn/câu sai>",
+      "corrected": "<sửa lại>",
+      "explanation": "<tại sao sai, tiếng Việt>",
+      "type": "<grammar|vocabulary|style|logic|content>",
+      "pattern": "<tên cấu trúc nếu là grammar/vocab>"
     }
   ],
-  "better_example": "<1-2 cau mau tot hon cho phan yeu nhat>"
+  "coaching": {
+    "strength": "<điểm tốt nhất của bài>",
+    "weakness": "<điểm yếu chính>",
+    "focus_pattern": "<1 cấu trúc phân tích biểu đồ cần ôn: 'Ôn lại: N이/가 X%를 차지하다 — ví dụ...'>",
+    "level_tip": "<lời khuyên cụ thể để cải thiện>"
+  },
+  "better_example": "<1-2 câu mẫu cho phần yếu nhất, tiếng Hàn>"
 }
 
-QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
+QUAN TRỌNG: Chỉ trả về raw JSON. TUYỆT ĐỐI không dùng markdown code block.`
 }
 
-// ============================================================
-// Q54 grading prompt
-// ============================================================
+// ─── Q54 ─────────────────────────────────────────────────────────────────────
 export function buildQ54Prompt(
   topic: string,
   studentEssay: string,
   charCount: number
 ): string {
-  return `Ban la giam khao TOPIK II chuyen nghiep voi nhieu nam kinh nghiem cham Q54. Hay cham bai luan nay theo rubric NIIED chinh thuc.
+  return `Bạn là giáo viên TOPIK II chuyên về bài luận học thuật, vừa chấm theo rubric NIIED vừa coaching sâu.
 
-CHU DE:
+CHỦ ĐỀ:
 ${topic}
 
-BAI VIET HOC SINH (${charCount} chu):
+BÀI VIẾT (${charCount} chữ):
 ${studentEssay}
 
-RUBRIC NIIED Q54 (tong 50 diem):
-1. Noi dung (12d): Luan diem co ro rang, co su, co dan chung khong? Phat trien y tuong day du khong?
-2. Cu truc (12d): Co du 3 phan (mo-than-ket)? Moi doan co chu de rieng khong? Lien ket giua cac doan tot khong?
-3. Ngu phap & tu vung (14d): Ngu phap da dang va chinh xac? Tu vung co phong phu, phu hop van phong hoc thuat khong?
-4. The van (12d): PHAI dung 합쇼체 (-ㅂ니다/습니다 hoac -ㄴ/는다, -다 cho van ban hoc thuat). TUYET DOI KHONG dung 해요체 (-아/어요). Vi pham the van bi giam toi 30% diem muc 4.
+=== RUBRIC Q54 — 50 điểm (NIIED chính thức) ===
 
-LUU Y QUAN TRONG:
-- Do dai yeu cau CHINH XAC 600-700 chu. Moi sai 50 chu bi tru 2-3 diem.
-- Khong chep lai de bai.
-- Phai co luan diem ro rang, khong chi ke chuyen.
-- Van phong hoc thuat, tranh dung tu thong thuong.
+NỘI DUNG (12đ):
+• 12-10đ: Luận điểm RÕ RÀNG + dẫn chứng CỤ THỂ + phát triển ý đầy đủ, thuyết phục
+• 9-7đ: Luận điểm có nhưng chưa rõ, thiếu dẫn chứng cụ thể, phát triển chưa đầy đủ
+• 6-4đ: Luận điểm mơ hồ, chủ yếu liệt kê, thiếu phân tích và dẫn chứng
+• 3-0đ: Không có luận điểm, lạc đề, nội dung quá nghèo nàn
 
-Tra loi JSON chi tiet:
+CẤU TRÚC (12đ):
+• 12-10đ: Đủ 3 phần mở-thân-kết RÕ RÀNG + mỗi đoạn có chủ đề + liên kết đoạn tốt
+• 9-7đ: Có 3 phần nhưng chưa rõ, liên kết đoạn chưa mượt mà
+• 6-4đ: Cấu trúc lộn xộn, thiếu 1 phần, kết bài giống mở bài
+• 3-0đ: Không có cấu trúc
+
+NGỮ PHÁP & TỪ VỰNG (14đ):
+• 14-12đ: Ngữ pháp đa dạng phức tạp + không lỗi + từ vựng học thuật phong phú
+• 11-8đ: Ngữ pháp đúng nhưng đơn điệu + từ vựng bình thường, 1-2 lỗi nhỏ
+• 7-4đ: Ngữ pháp đơn giản, nhiều lỗi, từ vựng nghèo nàn
+• 3-0đ: Rất nhiều lỗi, từ vựng không phù hợp
+
+THỂ VĂN (12đ) — KHẮT KHE:
+• 12-10đ: NHẤT QUÁN 합쇼체/다체 học thuật xuyên suốt, không pha trộn
+• 9-7đ: Chủ yếu đúng nhưng 1-2 lần pha trộn
+• 6-4đ: Pha trộn nhiều, dùng 해요체 lặp lại
+• 3-0đ: Dùng 해요체 hoàn toàn hoặc hầu hết
+
+ĐỘ DÀI: CHÍNH XÁC 600-700 chữ. Mỗi thiếu/thừa 50 chữ trừ 2-3đ. Không chép đề.
+${ERROR_GUIDE}
+Trả về JSON:
 {
-  "scores": {
-    "content": <0-12>,
-    "organization": <0-12>,
-    "language": <0-14>,
-    "style": <0-12>,
-    "total": <0-50>
-  },
-  "max_scores": {
-    "content": 12,
-    "organization": 12,
-    "language": 14,
-    "style": 12,
-    "total": 50
-  },
-  "char_count_feedback": "<nhan xet do dai: du hay thieu bao nhieu chu>",
+  "scores": { "content": <0-12>, "organization": <0-12>, "language": <0-14>, "style": <0-12>, "total": <0-50> },
+  "char_count_feedback": "<nhận xét độ dài + số chữ cụ thể>",
   "feedback": {
-    "overall": "<nhan xet tong quat, diem manh va diem yeu chinh, 3-4 cau tieng Viet>",
-    "content": "<nhan xet noi dung luan diem>",
-    "organization": "<nhan xet cu truc 3 phan, mach van>",
-    "language": "<nhan xet ngu phap tu vung cu the>",
-    "style": "<nhan xet the van, co pham loi 해요체 khong>"
+    "overall": "<3-4 câu: điểm mạnh + 2 điểm yếu chính, tiếng Việt>",
+    "content": "<luận điểm có rõ không? dẫn chứng có cụ thể không?>",
+    "organization": "<cấu trúc 3 phần thế nào? liên kết đoạn tốt không?>",
+    "language": "<ngữ pháp có đa dạng không? từ vựng học thuật đủ không? lỗi cụ thể?>",
+    "style": "<thể văn nhất quán không? có pha 해요체 không? ở đâu?>"
   },
   "corrections": [
     {
-      "original": "<cau/doan co loi quan trong>",
-      "corrected": "<sua lai hoan chinh>",
-      "explanation": "<giai thich ly do sua tieng Viet>"
+      "original": "<câu/đoạn sai quan trọng nhất>",
+      "corrected": "<sửa lại>",
+      "explanation": "<tại sao sai + hướng cải thiện, tiếng Việt>",
+      "type": "<grammar|vocabulary|style|logic|content>",
+      "pattern": "<tên cấu trúc nếu là grammar/vocab>"
     }
   ],
-  "thesis_feedback": "<phan tich de xuat luan diem (thesis): co ro rang va dac sac khong?>",
-  "better_opening": "<goi y cau mo bai tot hon neu can>"
+  "coaching": {
+    "strength": "<điểm mạnh nhất của bài luận>",
+    "weakness": "<điểm yếu chính ảnh hưởng điểm nhất>",
+    "focus_pattern": "<1 kỹ năng/cấu trúc cần ôn: 'Ôn lại: [pattern] — [ví dụ cụ thể]'>",
+    "level_tip": "<lời khuyên cụ thể để nâng điểm lên 1 bậc>"
+  },
+  "thesis_feedback": "<phân tích câu thesis: có rõ ràng và đặc sắc không? gợi ý cải thiện>",
+  "better_opening": "<gợi ý mở bài tốt hơn nếu cần, tiếng Hàn>"
 }
 
-QUAN TRONG: Chi tra ve raw JSON thuan tuy. TUYET DOI chi tra ve raw JSON thuan tuy, khong dung markdown code block, khong them text ngoai JSON.`
+QUAN TRỌNG: Chỉ trả về raw JSON. TUYỆT ĐỐI không dùng markdown code block.`
 }

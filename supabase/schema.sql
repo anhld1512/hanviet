@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   avg_writing_score REAL,
   last_study_date DATE,
   subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'pro', 'premium')),
+  is_pro BOOLEAN DEFAULT FALSE,
+  monthly_gradings INTEGER DEFAULT 0,
+  grading_month TEXT,             -- format: 'YYYY-MM'
+  pro_expires_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -69,7 +73,7 @@ CREATE TABLE IF NOT EXISTS writing_templates (
 CREATE TABLE IF NOT EXISTS submissions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  prompt_id INTEGER REFERENCES writing_prompts(id),
+  prompt_id INTEGER,  -- local prompt id (no FK — prompts live in lib/data/prompts.ts)
   question_type TEXT NOT NULL CHECK (question_type IN ('q51', 'q52', 'q53', 'q54')),
   user_answer TEXT NOT NULL,
   character_count INTEGER,

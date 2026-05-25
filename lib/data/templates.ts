@@ -40,7 +40,7 @@ export const Q51_TEMPLATES: Template[] = [
 [초청] 바쁘시겠지만 꼭 와 주시면 좋겠습니다.
 [blank ㄴ] 참석 여부를 [기한]까지 알려 주시면 감사하겠습니다.
 [마무리] [이름] 드림`,
-    note: "blank ㄱ: noi dung su kien / blank ㄴ: yeu cau xac nhan hoac loi cam on",
+    note: "blank ㄱ: nội dung sự kiện / blank ㄴ: yêu cầu xác nhận hoặc lời cảm ơn",
   },
   {
     id: 1003,
@@ -67,7 +67,7 @@ export const Q51_TEMPLATES: Template[] = [
 [사과/당부] [blank ㄴ] 궁금한 점이 있으시면 언제든지 연락해 주시기 바랍니다.
 [마무리] 감사합니다.
 [서명] [기관명] 드림`,
-    note: "blank ㄱ: noi dung thay doi cu the / blank ㄴ: cach nhan them thong tin hoac xin loi",
+    note: "blank ㄱ: nội dung thay đổi cụ thể / blank ㄴ: cách nhận thêm thông tin hoặc xin lỗi",
   },
   {
     id: 1005,
@@ -163,7 +163,7 @@ export const Q53_TEMPLATES: Template[] = [
 [특이점] 특히 [연도]에서 [연도] 사이에 가장 큰 [폭으로 증가/급격한 감소]가 나타났다.
 
 [원인 분석] 이러한 변화는 [원인 1]과/와 [원인 2] 등의 영향을 받은 것으로 보인다.`,
-    note: "So sanh so lieu dau va cuoi. Neu diem dac biet. Giai thich nguyen nhan 1-2 cau.",
+    note: "So sánh số liệu đầu và cuối. Nêu điểm đặc biệt. Giải thích nguyên nhân 1-2 câu.",
   },
   {
     id: 3003,

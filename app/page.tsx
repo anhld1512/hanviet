@@ -1,4 +1,23 @@
+import type { Metadata } from "next"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "HanViet Writing Coach — Luyện viết TOPIK II Q51-54",
+  description: "App luyện viết TOPIK II chuyên sâu cho người Việt. AI chấm điểm tức thì theo rubric NIIED, feedback 100% tiếng Việt. Tập trung Q51-54. Miễn phí 5 lượt/tháng.",
+  openGraph: {
+    title: "HanViet Writing Coach — Luyện viết TOPIK II Q51-54",
+    description: "AI chấm bài viết tiếng Hàn tức thì, feedback tiếng Việt, rubric NIIED chính thức. Luyện Q51–Q54 hiệu quả nhất.",
+    url: "https://hanviet.app",
+    siteName: "HanViet Writing Coach",
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HanViet Writing Coach — Luyện viết TOPIK II",
+    description: "AI chấm bài viết tiếng Hàn tức thì. Feedback tiếng Việt, rubric NIIED chính thức.",
+  },
+}
 
 export default function LandingPage() {
   return (

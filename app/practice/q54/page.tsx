@@ -1,92 +1,154 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
-import { Q54_PROMPTS } from "@/lib/data/prompts"
+import GradingResult from "@/app/components/grading/GradingResult"
+import UpgradeModal from "@/app/components/UpgradeModal"
+import { Q54_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
+import type { GradeResult } from "@/lib/grading-prompts"
+import { saveSubmission } from "@/lib/save-submission"
+import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
+import PracticeTips, { TIPS_Q54 } from "@/app/components/writing/PracticeTips"
+import PromptGrid from "@/app/components/writing/PromptGrid"
 
 export default function Q54Page() {
-  const [promptIndex, setPromptIndex] = useState(0)
+  const [selected, setSelected] = useState<WritingPrompt | null>(null)
   const [answer, setAnswer] = useState("")
-  const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [gradeResult, setGradeResult] = useState<GradeResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [scores, setScores] = useState<Record<number, number | null>>({})
+  const [showUpgrade, setShowUpgrade] = useState(false)
 
-  const prompt = Q54_PROMPTS[promptIndex]
+  useEffect(() => {
+    const s: Record<number, number | null> = {}
+    Q54_PROMPTS.forEach((p) => { s[p.id] = getBestPct("q54", p.id) })
+    setScores(s)
+    loadBestScoresFromDB("q54").then((dbScores) => {
+      mergeBestScoresToLocalStorage("q54", dbScores)
+      setScores((prev) => {
+        const merged = { ...prev }
+        for (const [id, pct] of Object.entries(dbScores)) {
+          const key = parseInt(id)
+          if ((merged[key] ?? 0) < pct) merged[key] = pct
+        }
+        return merged
+      })
+    })
+  }, [])
 
-  function handleNext() {
-    const next = (promptIndex + 1) % Q54_PROMPTS.length
-    setPromptIndex(next)
-    setAnswer("")
-    setSubmitted(false)
-  }
+  function openPrompt(p: WritingPrompt) { setSelected(p); setAnswer(""); setGradeResult(null); setError(null) }
+  function backToList() { setSelected(null); setGradeResult(null); setAnswer("") }
 
   async function handleSubmit() {
-    if (!answer.trim()) return
-    setLoading(true)
-    await new Promise((r) => setTimeout(r, 2000))
-    setSubmitted(true)
-    setLoading(false)
+    if (!answer.trim() || !selected) return
+    setLoading(true); setError(null)
+    try {
+      const res = await fetch("/api/grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question_type: "q54", topic: selected.topic ?? selected.text_kr, student_essay: answer }),
+      })
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error || "Lỗi máy chủ") }
+      const result: GradeResult = await res.json()
+      setGradeResult(result)
+      const pct = Math.round((result.scores.total / result.max_scores.total) * 100)
+      saveBestPct("q54", selected.id, pct)
+      setScores((prev) => ({ ...prev, [selected.id]: Math.max(prev[selected.id] ?? 0, pct) }))
+      saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Lỗi không xác định"
+      if (msg === "free_limit_reached") { setShowUpgrade(true); return }
+      setError(msg)
+    } finally { setLoading(false) }
   }
 
-  if (submitted) {
-    const charCount = answer.replace(/\n/g, "").length
-    const inRange = charCount >= 600 && charCount <= 700
+  // Result view
+  if (gradeResult && selected) {
+    const pct = Math.round((gradeResult.scores.total / gradeResult.max_scores.total) * 100)
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
-          <div className="max-w-2xl">
-            <div className="bg-white rounded-2xl border border-gray-100 p-8">
-              <div className="text-center mb-6">
-                <div className="text-5xl mb-3">{inRange ? "🎉" : "⚠️"}</div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
-                  {inRange ? "Hoan thanh! Dung do dai." : "Kiem tra lai do dai"}
-                </h2>
-                <p className="text-gray-500 text-sm">
-                  Bai viet cua ban: <span className={`font-bold ${inRange ? "text-green-600" : "text-orange-500"}`}>{charCount}</span> chu
-                  {!inRange && charCount < 600 && ` (can them ${600 - charCount} chu)`}
-                  {!inRange && charCount > 700 && ` (bot ${charCount - 700} chu)`}
-                </p>
-              </div>
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
+            <div className="w-px h-4 bg-gray-200" />
+            <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+            <span className="text-sm text-gray-500 truncate max-w-xs">{selected.context}</span>
+            <div className="ml-auto flex items-center gap-2">
+              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{gradeResult.scores.total}/{gradeResult.max_scores.total}</span>
+              <span className="text-xs text-gray-400">điểm</span>
+            </div>
+          </div>
+          <GradingResult result={gradeResult} onRetry={() => setGradeResult(null)} onNext={backToList} />
+        </main>
+      </div>
+    )
+  }
 
-              {/* Score breakdown placeholder */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                <div className="text-sm font-bold text-gray-700 mb-3">Rubric NIIED (AI cham o Task 4):</div>
-                <div className="space-y-2">
-                  {[
-                    { label: "Noi dung (Content)", max: 12 },
-                    { label: "Cu truc (Organization)", max: 12 },
-                    { label: "Ngu phap (Language use)", max: 14 },
-                    { label: "The van (Style/Register)", max: 12 },
-                  ].map((r) => (
-                    <div key={r.label} className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500 w-40 shrink-0">{r.label}</span>
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full" />
-                      <span className="text-xs text-gray-300 shrink-0">?/{r.max}</span>
+  // Editor view
+  if (selected) {
+    const charCount = answer.replace(/\n/g, "").length
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar />
+        <main className="ml-56 flex-1 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
+            <div className="w-px h-4 bg-gray-200" />
+            <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+            <span className="text-sm text-gray-500">{selected.context}</span>
+            <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
+          </div>
+          <div className="grid grid-cols-3 gap-6">
+            {/* Đề bài (1/3) */}
+            <div className="flex flex-col gap-4">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <h2 className="font-bold text-gray-900">Đề bài</h2>
+                  <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">{selected.source}</span>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line">{selected.text_kr}</div>
+              </div>
+              <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 space-y-2 text-xs">
+                <div className="font-bold text-orange-800">📐 Cấu trúc gợi ý:</div>
+                {["① Mở đề — nêu vấn đề (~100 chữ)", "② Luận điểm 1 + dẫn chứng (~150 chữ)", "③ Luận điểm 2 + dẫn chứng (~150 chữ)", "④ Kết luận — giải pháp/tổng kết (~100 chữ)"].map((s, i) => (
+                  <div key={i} className="text-orange-700">{s}</div>
+                ))}
+              </div>
+            </div>
+            {/* Editor (2/3) */}
+            <div className="col-span-2 flex flex-col gap-4">
+              <div className="bg-white rounded-2xl border border-gray-100 p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-gray-900">Bài viết của bạn</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1">
+                      {[600, 650, 700].map((threshold) => (
+                        <span key={threshold} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${charCount >= threshold ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400"}`}>
+                          {threshold}
+                        </span>
+                      ))}
                     </div>
-                  ))}
-                  <div className="pt-2 border-t border-gray-200 flex justify-between">
-                    <span className="text-sm font-bold text-gray-700">Tong diem</span>
-                    <span className="text-sm font-bold text-gray-300">?/50</span>
+                    <span className={`text-sm font-bold ${charCount < 600 ? "text-orange-500" : charCount > 700 ? "text-yellow-600" : "text-green-600"}`}>
+                      {charCount} chữ {charCount < 600 ? `(còn ${600 - charCount})` : charCount > 700 ? "(hơi dài)" : "✓"}
+                    </span>
                   </div>
                 </div>
+                <WongojiEditor value={answer} onChange={setAnswer} minChars={600} maxChars={720} questionType="q54" disabled={loading}
+                  placeholder="Viết bài luận... (600–700 chữ, thể văn 다체)" />
               </div>
-
+              {error && <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">{error}</div>}
               <div className="flex gap-3">
-                <button
-                  onClick={() => { setSubmitted(false); setAnswer("") }}
-                  className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
-                >
-                  Viet lai
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="flex-1 bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-colors text-sm"
-                >
-                  De tiep theo
+                <button onClick={() => setAnswer("")} className="px-5 py-3 border border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-sm">Xóa</button>
+                <button onClick={handleSubmit} disabled={charCount < 100 || loading}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
+                  {loading ? "AI đang chấm bài..." : "Nộp bài — AI chấm ngay"}
                 </button>
               </div>
+              <p className="text-center text-xs text-gray-400">Tối đa 50 điểm · AI chấm theo rubric NIIED</p>
             </div>
           </div>
         </main>
@@ -94,88 +156,37 @@ export default function Q54Page() {
     )
   }
 
+  // List view
+  const attempted = Q54_PROMPTS.filter((p) => scores[p.id] !== null && scores[p.id] !== undefined).length
+  const passed = Q54_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
+
   return (
     <div className="flex min-h-screen bg-gray-50">
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
-        <div className="max-w-3xl">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">
-              Quay lai
-            </Link>
-            <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
-            <span className="text-sm text-gray-500">Luan nghi luan</span>
-            <div className="ml-auto flex items-center gap-2">
-              <span className="text-xs text-gray-400">{prompt.source}</span>
-              <span className="text-xs text-gray-300">|</span>
-              <span className="text-xs text-gray-400">{promptIndex + 1}/{Q54_PROMPTS.length}</span>
-              <button onClick={handleNext} className="text-xs text-blue-500 hover:text-blue-600 font-medium ml-1">
-                Doi de
-              </button>
-            </div>
+        <div className="flex items-center gap-3 mb-6">
+          <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
+          <div className="w-px h-4 bg-gray-200" />
+          <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+          <span className="font-bold text-gray-900">Bài luận</span>
+          <div className="ml-auto flex items-center gap-3 text-sm">
+            <span className="text-gray-400">{attempted}/{Q54_PROMPTS.length} đã thử</span>
+            <span className="text-green-600 font-semibold">{passed} đề ≥80%</span>
           </div>
-
-          {/* Canh bao quan trong */}
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-6">
-            <div className="text-xs text-orange-800 space-y-1">
-              <div><span className="font-bold">BAT BUOC:</span> Dung 합쇼체 (-ㅂ니다/습니다). Dung 해요체 bi tru diem phong cach.</div>
-              <div><span className="font-bold">Do dai:</span> 600-700 chu. Thieu hoac vuot qua 50 chu se bi tru diem.</div>
-              <div><span className="font-bold">Cu truc:</span> Mo bai (80-100 chu) + Than bai 2-3 doan (400-500 chu) + Ket luan (80-100 chu).</div>
-            </div>
-          </div>
-
-          {/* De bai */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-            <div className="flex items-start justify-between mb-4">
-              <h2 className="font-bold text-gray-900">De bai</h2>
-              <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">{prompt.context}</span>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-5 text-sm text-gray-600 mb-3 leading-relaxed">
-              {prompt.text_kr}
-            </div>
-            <div className="bg-white border border-orange-200 rounded-xl p-4">
-              <p className="text-sm font-bold text-gray-900 leading-relaxed">{prompt.topic}</p>
-            </div>
-          </div>
-
-          {/* Editor */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900">Bai luan cua ban</h3>
-              <span className="text-xs text-gray-400 bg-orange-50 px-2 py-1 rounded-lg">Thoi gian de nghi: 28-35 phut</span>
-            </div>
-            <WongojiEditor
-              value={answer}
-              onChange={setAnswer}
-              questionType="q54"
-              timeLimit={35 * 60}
-              placeholder="Viet bai luan 600-700 chu o day... (BAT BUOC dung -ㅂ니다/습니다)"
-              disabled={loading}
-            />
-          </div>
-
-          {/* Submit */}
-          <div className="flex gap-3">
-            <button
-              onClick={() => setAnswer("")}
-              className="px-6 py-3.5 border border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-sm"
-            >
-              Xoa het
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!answer.trim() || loading}
-              className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3.5 rounded-xl transition-colors text-sm"
-            >
-              {loading ? "Dang cham bai..." : "Nop bai - AI cham ngay"}
-            </button>
-          </div>
-          <p className="text-center text-xs text-gray-400 mt-3">
-            AI cham theo 4 tieu chi NIIED chinh thuc, feedback chi tiet tieng Viet
-          </p>
         </div>
+        <PracticeTips data={TIPS_Q54} />
+        <h2 className="font-bold text-gray-900 mb-4">Chọn đề để luyện <span className="text-sm font-normal text-gray-400 ml-1">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span></h2>
+        <PromptGrid
+          prompts={Q54_PROMPTS}
+          scores={scores}
+          onSelect={openPrompt}
+          questionType="q54"
+          renderExtra={(p) => p.topic
+            ? <p className="text-xs text-gray-500 italic mt-1 line-clamp-2">{p.topic}</p>
+            : null
+          }
+        />
       </main>
     </div>
   )

@@ -283,7 +283,7 @@ export default function OnboardingPage() {
         total_essays_written: 0,
       })
 
-      router.push("/dashboard")
+      router.push("/practice")
     } catch {
       setSaving(false)
     }

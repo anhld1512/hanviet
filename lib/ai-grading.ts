@@ -9,44 +9,69 @@ import {
 
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: "https://api.deepseek.com",
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "https://hanviet.app",
+    "X-Title": "HanViet Writing Coach",
+  },
 })
 
-// Q51/Q52: dung Flash (don gian, re)
-const MODEL_SIMPLE = "deepseek-v4-flash"
-// Q53/Q54: dung Pro (phan tich sau hon)
-const MODEL_ADVANCED = "deepseek-v4-pro"
+// OpenRouter model names — dung chat model (khong phai reasoning model)
+// deepseek-v4-pro la reasoning model, tra content:null → parse fail
+const MODEL_SIMPLE = "deepseek/deepseek-chat-v3-0324"
+const MODEL_ADVANCED = "deepseek/deepseek-chat-v3-0324"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {
   try {
-    // Strip markdown code fences: ```json ... ``` hoac ``` ... ```
+    // Strip markdown code fences
     const cleaned = text
       .replace(/```json\s*/gi, "")
       .replace(/```\s*/g, "")
       .trim()
 
-    // Tim JSON object
-    const match = cleaned.match(/\{[\s\S]*\}/)
-    if (!match) {
-      console.error("[parseGradeJSON] No JSON found in response:", text.slice(0, 300))
+    // Thu parse toan bo truoc
+    try {
+      return JSON.parse(cleaned)
+    } catch {}
+
+    // Tim JSON object lon nhat bang cach dem ngoac mo/dong
+    let start = cleaned.indexOf("{")
+    if (start === -1) {
+      console.error("[parseGradeJSON] No JSON found:", text.slice(0, 200))
       return null
     }
-    return JSON.parse(match[0])
+    let depth = 0
+    let end = -1
+    for (let i = start; i < cleaned.length; i++) {
+      if (cleaned[i] === "{") depth++
+      else if (cleaned[i] === "}") {
+        depth--
+        if (depth === 0) { end = i; break }
+      }
+    }
+    if (end === -1) {
+      console.error("[parseGradeJSON] Unclosed JSON:", cleaned.slice(0, 200))
+      return null
+    }
+    return JSON.parse(cleaned.slice(start, end + 1))
   } catch (e) {
-    console.error("[parseGradeJSON] Parse error:", e, "Raw text:", text.slice(0, 300))
+    console.error("[parseGradeJSON] Parse error:", e, "Raw:", text.slice(0, 200))
     return null
   }
 }
 
-async function callDeepSeek(prompt: string, model: string): Promise<string> {
+async function callDeepSeek(prompt: string, model: string, maxTokens = 1000): Promise<string> {
   const response = await client.chat.completions.create({
     model,
     messages: [{ role: "user", content: prompt }],
-    max_tokens: 1500,
-    temperature: 0.1, // thap de output on dinh, JSON chinh xac
+    max_tokens: maxTokens,
+    temperature: 0.1,
+    response_format: { type: "json_object" },
   })
-  return response.choices[0]?.message?.content ?? ""
+  const text = response.choices[0]?.message?.content ?? ""
+  console.log("[DeepSeek RAW]", model, text.slice(0, 300))
+  return text
 }
 
 // ============================================================
@@ -66,16 +91,17 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE)
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 1500)
   const data = parseGradeJSON(text)
 
   if (!data) {
-    return defaultResult(questionType, "Khong the phan tich ket qua cham diem.")
+    return defaultResult(questionType, text || "Không thể phân tích kết quả chấm điểm.")
   }
 
   const scores = (data.scores as Record<string, number>) || {}
   const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as Array<{ original: string; corrected: string; explanation: string }>) || []
+  const corrections = (data.corrections as GradeResult["corrections"]) || []
+  const coachingRaw = data.coaching as Record<string, string> | undefined
 
   return {
     question_type: questionType,
@@ -95,6 +121,12 @@ export async function gradeQ51Q52(params: {
       style: feedback.style ?? "",
     },
     corrections,
+    coaching: coachingRaw ? {
+      strength: coachingRaw.strength ?? "",
+      weakness: coachingRaw.weakness ?? "",
+      focus_pattern: coachingRaw.focus_pattern ?? "",
+      level_tip: coachingRaw.level_tip ?? "",
+    } : undefined,
     better_example: (data.better_example as string) ?? undefined,
   }
 }
@@ -114,12 +146,13 @@ export async function gradeQ53(params: {
   const data = parseGradeJSON(text)
 
   if (!data) {
-    return defaultResult("q53", "Khong the phan tich ket qua cham diem.")
+    return defaultResult("q53", "Không thể phân tích kết quả chấm điểm.")
   }
 
   const scores = (data.scores as Record<string, number>) || {}
   const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as Array<{ original: string; corrected: string; explanation: string }>) || []
+  const corrections = (data.corrections as GradeResult["corrections"]) || []
+  const coachingRaw = data.coaching as Record<string, string> | undefined
 
   return {
     question_type: "q53",
@@ -132,13 +165,20 @@ export async function gradeQ53(params: {
     },
     max_scores: { content: 12, organization: 9, language: 9, style: 0, total: 30 },
     feedback: {
-      overall: ((data.char_count_feedback as string) ?? "") + " " + (feedback.overall ?? ""),
+      overall: feedback.overall ?? "",
       content: feedback.content ?? "",
       organization: feedback.organization ?? "",
       language: feedback.language ?? "",
       style: "",
     },
     corrections,
+    coaching: coachingRaw ? {
+      strength: coachingRaw.strength ?? "",
+      weakness: coachingRaw.weakness ?? "",
+      focus_pattern: coachingRaw.focus_pattern ?? "",
+      level_tip: coachingRaw.level_tip ?? "",
+    } : undefined,
+    char_count_feedback: (data.char_count_feedback as string) ?? undefined,
     better_example: (data.better_example as string) ?? undefined,
   }
 }
@@ -158,12 +198,13 @@ export async function gradeQ54(params: {
   const data = parseGradeJSON(text)
 
   if (!data) {
-    return defaultResult("q54", "Khong the phan tich ket qua cham diem.")
+    return defaultResult("q54", "Không thể phân tích kết quả chấm điểm.")
   }
 
   const scores = (data.scores as Record<string, number>) || {}
   const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as Array<{ original: string; corrected: string; explanation: string }>) || []
+  const corrections = (data.corrections as GradeResult["corrections"]) || []
+  const coachingRaw = data.coaching as Record<string, string> | undefined
 
   return {
     question_type: "q54",
@@ -183,7 +224,16 @@ export async function gradeQ54(params: {
       style: feedback.style ?? "",
     },
     corrections,
-    better_example: (data.better_opening as string) ?? undefined,
+    coaching: coachingRaw ? {
+      strength: coachingRaw.strength ?? "",
+      weakness: coachingRaw.weakness ?? "",
+      focus_pattern: coachingRaw.focus_pattern ?? "",
+      level_tip: coachingRaw.level_tip ?? "",
+    } : undefined,
+    char_count_feedback: (data.char_count_feedback as string) ?? undefined,
+    thesis_feedback: (data.thesis_feedback as string) ?? undefined,
+    better_opening: (data.better_opening as string) ?? undefined,
+    better_example: (data.better_example as string) ?? undefined,
   }
 }
 

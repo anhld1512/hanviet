@@ -5,11 +5,10 @@ import { usePathname, useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase-client"
 
 const NAV_ITEMS = [
-  { href: "/dashboard", icon: "🏠", label: "Trang chủ" },
-  { href: "/practice", icon: "✍️", label: "Luyện viết" },
-  { href: "/learning-path", icon: "🗺️", label: "Lộ trình" },
-  { href: "/templates", icon: "📋", label: "Templates" },
-  { href: "/review", icon: "🔍", label: "Ôn lỗi" },
+  { href: "/practice",      icon: "✍️", label: "Luyện viết" },
+  { href: "/mock-exam",     icon: "⏱️", label: "Thi thử",   badge: "NEW" },
+  { href: "/learning-path", icon: "📊", label: "Phân tích" },
+  { href: "/review",        icon: "🃏", label: "Ôn lỗi" },
 ]
 
 export default function Sidebar({ tier = "free" }: { tier?: string }) {
@@ -50,7 +49,12 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
               }`}
             >
               <span className="text-base">{item.icon}</span>
-              <span>{item.label}</span>
+              <span className="flex-1">{item.label}</span>
+              {"badge" in item && item.badge && (
+                <span className="text-[9px] font-bold bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           )
         })}
