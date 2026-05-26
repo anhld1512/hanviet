@@ -75,6 +75,9 @@ ${promptText}
 CHỖ TRỐNG: (${blankKey}) | YÊU CẦU: ${contextHint}
 BÀI VIẾT: "${studentAnswer}"
 
+⚠️ KIỂM TRA SAO CHÉP TRƯỚC KHI CHẤM:
+So sánh BÀI VIẾT với ĐỀ BÀI. Nếu bài viết là đoạn/câu SAO CHÉP NGUYÊN VĂN hoặc GẦN NGUYÊN VĂN từ đề bài (trùng >70% từ) → đây là gian lận, cho tất cả điểm = 0 và ghi rõ "Sao chép từ đề bài — không được tính điểm" trong overall feedback.
+
 === RUBRIC Q51 — 5 điểm ===
 
 NỘI DUNG (2đ):
@@ -141,6 +144,9 @@ ${promptText}
 
 CHỖ TRỐNG: (${blankKey}) | YÊU CẦU: ${contextHint}
 BÀI VIẾT: "${studentAnswer}"
+
+⚠️ KIỂM TRA SAO CHÉP TRƯỚC KHI CHẤM:
+So sánh BÀI VIẾT với VĂN BẢN GỐC. Nếu bài viết là đoạn/câu SAO CHÉP NGUYÊN VĂN hoặc GẦN NGUYÊN VĂN từ văn bản gốc (trùng >70% từ) → đây là gian lận, cho tất cả điểm = 0 và ghi rõ "Sao chép từ đề bài — không được tính điểm" trong overall feedback.
 
 === RUBRIC Q52 — 5 điểm ===
 
