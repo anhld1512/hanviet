@@ -162,8 +162,8 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
       {/* ── Header bar ── */}
       <div className="px-5 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" }}>
         <span className="text-base">✅</span>
-        <span className="text-[13px] font-bold text-white tracking-wide">Quy trình trước khi viết</span>
-        <span className="ml-auto text-[11px] text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
+        <span className="text-sm font-bold text-white tracking-wide">Quy trình trước khi viết</span>
+        <span className="ml-auto text-xs text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
       </div>
 
       {/* ── Steps ── */}
@@ -176,15 +176,15 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
               )}
               <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#f8f9fb" }}>
                 <div className="flex items-center justify-between">
-                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0">
+                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0">
                     {i + 1}
                   </span>
                   {step.time && (
                     <span className="text-[9px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">{step.time}</span>
                   )}
                 </div>
-                <p className="text-[12px] font-bold text-slate-900 leading-snug">{step.label}</p>
-                <p className="text-[11px] text-slate-500 leading-relaxed">{step.detail}</p>
+                <p className="text-xs font-bold text-slate-900 leading-snug">{step.label}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{step.detail}</p>
               </div>
             </div>
           ))}
@@ -195,10 +195,10 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
       <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-2 gap-4 bg-white">
 
         <div>
-          <p className="text-[11px] font-bold text-slate-600 mb-2.5 uppercase tracking-wide">💡 Câu mẫu hay dùng khi viết</p>
+          <p className="text-xs font-bold text-slate-600 mb-2.5 uppercase tracking-wide">💡 Câu mẫu hay dùng khi viết</p>
           <div className="flex flex-wrap gap-1.5">
             {data.patterns.map((p, i) => (
-              <span key={i} className="text-[11px] font-mono bg-slate-50 text-blue-700 border border-slate-200 px-2.5 py-1 rounded-lg">
+              <span key={i} className="text-xs font-mono bg-slate-50 text-blue-700 border border-slate-200 px-2.5 py-1 rounded-lg">
                 {p}
               </span>
             ))}
@@ -206,8 +206,8 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
         </div>
 
         <div className="rounded-xl px-4 py-3" style={{ background: "#fff5f5", border: "1px solid #fecaca" }}>
-          <p className="text-[11px] font-bold text-red-600 mb-1.5 uppercase tracking-wide">⚠️ Lỗi hay gặp nhất — tránh ngay</p>
-          <p className="text-[12px] text-red-700 leading-relaxed">{data.avoid}</p>
+          <p className="text-xs font-bold text-red-600 mb-1.5 uppercase tracking-wide">⚠️ Lỗi hay gặp nhất — tránh ngay</p>
+          <p className="text-xs text-red-700 leading-relaxed">{data.avoid}</p>
         </div>
 
       </div>

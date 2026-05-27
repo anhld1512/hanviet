@@ -32,10 +32,10 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
             한
           </div>
           <div>
-            <div className="font-extrabold text-slate-900 text-[15px] leading-tight tracking-tight">
+            <div className="font-extrabold text-slate-900 text-base leading-tight tracking-tight">
               HanViet
             </div>
-            <div className="text-[11px] text-slate-400 leading-tight font-medium">
+            <div className="text-xs text-slate-400 leading-tight font-medium">
               Writing Coach
             </div>
           </div>
@@ -50,13 +50,13 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 isActive
                   ? "bg-blue-50 text-blue-700"
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
               }`}
             >
-              <span className="text-[15px] w-5 text-center">{item.icon}</span>
+              <span className="text-base w-5 text-center">{item.icon}</span>
               <span className="flex-1 leading-none">{item.label}</span>
               {"badge" in item && item.badge && (
                 <span className="text-[9px] font-bold bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full tracking-wide">
@@ -76,7 +76,7 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
         {tier === "free" && (
           <Link
             href="/pricing"
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
             style={{ background: "linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)" }}
           >
             <span>⚡</span>
@@ -85,7 +85,7 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
         )}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-[12px] font-medium text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
+          className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
         >
           <span>🚪</span>
           <span>Đăng xuất</span>

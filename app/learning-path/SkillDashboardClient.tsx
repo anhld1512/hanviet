@@ -135,16 +135,16 @@ function SkillCard({ stat }: { stat: QtypeStat }) {
 
           {/* Gap to next level */}
           {mastery.nextPct && gapPct > 0 && (
-            <p className="text-[11px] text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Còn <span className="font-bold text-gray-600">{gapPct}%</span> nữa đạt{" "}
               <span className="font-semibold">{mastery.nextLabel}</span>
             </p>
           )}
           {!mastery.nextPct && (
-            <p className="text-[11px] text-green-600 font-semibold mt-1">Đã đạt mức xuất sắc! ✓</p>
+            <p className="text-xs text-green-600 font-semibold mt-1">Đã đạt mức xuất sắc! ✓</p>
           )}
           {isWeak && (
-            <p className="text-[11px] text-red-500 font-semibold mt-1">⚠️ Cần cải thiện (dưới 60%)</p>
+            <p className="text-xs text-red-500 font-semibold mt-1">⚠️ Cần cải thiện (dưới 60%)</p>
           )}
         </>
       ) : (

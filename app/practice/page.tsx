@@ -92,21 +92,21 @@ export default function PracticePage() {
               <span className="text-[10px] font-extrabold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-200 uppercase tracking-widest">
                 TOPIK II Writing
               </span>
-              <span className="text-[11px] text-slate-400 font-medium">100 điểm · Q51–Q54</span>
+              <span className="text-xs text-slate-400 font-medium">100 điểm · Q51–Q54</span>
             </div>
 
             <h1 className="text-[26px] font-extrabold text-slate-900 leading-snug mb-2 tracking-tight">
               Ôn thi TOPIK mà chưa biết<br />
               <span className="text-indigo-600">Writing đang ở mức nào?</span>
             </h1>
-            <p className="text-[13px] text-slate-500 mb-5 leading-relaxed max-w-sm">
+            <p className="text-sm text-slate-500 mb-5 leading-relaxed max-w-sm">
               AI chấm điểm theo rubric NIIED tức thì &middot; Feedback 100% tiếng Việt &middot; Biết điểm yếu để tập trung đúng chỗ
             </p>
 
             <div className="flex items-center gap-2.5 flex-wrap">
               <Link
                 href="/mock-exam"
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[13px] font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
                 style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed)", boxShadow: "0 4px 14px rgba(79,70,229,0.3)" }}
               >
                 ⏱ Thi thử ngay
@@ -115,7 +115,7 @@ export default function PracticePage() {
                 <Link
                   key={q.key}
                   href={q.href}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-bold border-2 bg-white/60 hover:bg-white/90 transition-all"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold border-2 bg-white/60 hover:bg-white/90 transition-all"
                   style={{ borderColor: "#c7d2fe", color: "#4338ca" }}
                 >
                   {q.icon} {q.label}
@@ -129,7 +129,7 @@ export default function PracticePage() {
 
           {/* Right: Score rings */}
           <div className="shrink-0 relative z-10 pl-2">
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
               Best score của bạn
             </p>
             <ScoreRings />
@@ -138,8 +138,8 @@ export default function PracticePage() {
 
         {/* ── Section title ── */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-[15px] font-bold text-slate-900">Chọn dạng bài để luyện</h2>
-          <span className="text-[12px] text-slate-400">4 dạng · tổng 100 điểm</span>
+          <h2 className="text-base font-bold text-slate-900">Chọn dạng bài để luyện</h2>
+          <span className="text-xs text-slate-400">4 dạng · tổng 100 điểm</span>
         </div>
 
         {/* ── 4 Question Cards ── */}
@@ -165,20 +165,20 @@ export default function PracticePage() {
                   </div>
                   <div className="text-right">
                     <span
-                      className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                      className="text-xs font-bold px-2 py-0.5 rounded-full"
                       style={{ background: q.accentBg, color: q.accentText }}
                     >
                       {q.label}
                     </span>
-                    <div className="text-[11px] text-slate-400 mt-0.5">{q.time}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{q.time}</div>
                   </div>
                 </div>
 
                 {/* Title + desc */}
-                <h3 className="text-[15px] font-bold text-slate-900 leading-snug mb-1">
+                <h3 className="text-base font-bold text-slate-900 leading-snug mb-1">
                   {q.title}
                 </h3>
-                <p className="text-[12px] text-slate-500 leading-relaxed flex-1 mb-4">
+                <p className="text-xs text-slate-500 leading-relaxed flex-1 mb-4">
                   {q.desc}
                 </p>
 
@@ -187,7 +187,7 @@ export default function PracticePage() {
                   className="rounded-xl px-3 py-2.5 mb-4"
                   style={{ background: q.accentBg }}
                 >
-                  <p className="text-[11px] leading-relaxed" style={{ color: q.accentText }}>
+                  <p className="text-xs leading-relaxed" style={{ color: q.accentText }}>
                     <span className="font-semibold">💡 </span>
                     {q.tip}
                   </p>
@@ -196,12 +196,12 @@ export default function PracticePage() {
                 {/* CTA + score */}
                 <div className="flex items-center justify-between">
                   <span
-                    className="text-[12px] font-bold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1"
+                    className="text-xs font-bold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1"
                     style={{ color: q.accent }}
                   >
                     Luyện ngay →
                   </span>
-                  <span className="text-[11px] font-semibold text-slate-400">
+                  <span className="text-xs font-semibold text-slate-400">
                     {q.points} điểm
                   </span>
                 </div>

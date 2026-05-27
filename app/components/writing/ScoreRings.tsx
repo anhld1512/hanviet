@@ -41,7 +41,7 @@ function Ring({ color, track, pct, label, href }: {
         </div>
       </div>
       {/* Label */}
-      <span className="text-[12px] font-bold text-slate-500 group-hover:text-slate-800 transition-colors">{label}</span>
+      <span className="text-xs font-bold text-slate-500 group-hover:text-slate-800 transition-colors">{label}</span>
     </Link>
   )
 }
@@ -106,19 +106,19 @@ export default function ScoreRings() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {doneCount < 4 && (
-            <span className="text-[11px] text-indigo-500 font-semibold">
+            <span className="text-xs text-indigo-500 font-semibold">
               {4 - doneCount} loại chưa thử →
             </span>
           )}
           {total > 0 && (
-            <span className="text-[11px] text-slate-400">
+            <span className="text-xs text-slate-400">
               <span className="font-bold text-slate-600">{total}</span> bài viết
             </span>
           )}
         </div>
         <div className="flex items-center gap-1">
           <span className="text-sm">🔥</span>
-          <span className="text-[14px] font-extrabold text-slate-700 leading-none">{streak}</span>
+          <span className="text-sm font-extrabold text-slate-700 leading-none">{streak}</span>
           <span className="text-[10px] text-slate-400 ml-0.5">ngày streak</span>
         </div>
       </div>

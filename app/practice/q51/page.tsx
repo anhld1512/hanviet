@@ -113,10 +113,10 @@ export default function Q51Page() {
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-slate-400 hover:text-slate-600 text-sm font-medium shrink-0">← Chọn đề khác</button>
             <div className="w-px h-4 bg-slate-200 shrink-0" />
-            <span className="text-[11px] bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200 shrink-0">Q51</span>
+            <span className="text-xs bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200 shrink-0">Q51</span>
             <span className="text-sm text-slate-500 truncate">{selected.context}</span>
             <div className="ml-auto flex items-center gap-3 shrink-0">
-              <span className="text-[13px] font-bold" style={{ color: scoreColor }}>{total}/{max} điểm</span>
+              <span className="text-sm font-bold" style={{ color: scoreColor }}>{total}/{max} điểm</span>
               <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div className="h-full rounded-full" style={{ width: `${pct}%`, background: scoreColor }} />
               </div>
@@ -137,7 +137,7 @@ export default function Q51Page() {
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-[11px] font-bold text-gray-300 uppercase tracking-widest">Câu ㄴ</span>
+            <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Câu ㄴ</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
@@ -252,22 +252,22 @@ export default function Q51Page() {
         <div className="w-full">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <Link href="/practice" className="text-[13px] text-slate-400 hover:text-slate-600 font-medium transition-colors">← Luyện viết</Link>
+          <Link href="/practice" className="text-sm text-slate-400 hover:text-slate-600 font-medium transition-colors">← Luyện viết</Link>
           <div className="w-px h-4 bg-slate-200" />
-          <span className="text-[11px] bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200">Q51</span>
-          <span className="font-bold text-slate-900 text-[15px]">Thực dụng văn</span>
+          <span className="text-xs bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200">Q51</span>
+          <span className="font-bold text-slate-900 text-base">Thực dụng văn</span>
           <div className="ml-auto flex items-center gap-3">
-            <span className="text-[13px] text-slate-400">{attempted}/{Q51_PROMPTS.length} đã thử</span>
-            <span className="text-[13px] text-green-600 font-bold">{passed} đề ≥80%</span>
+            <span className="text-sm text-slate-400">{attempted}/{Q51_PROMPTS.length} đã thử</span>
+            <span className="text-sm text-green-600 font-bold">{passed} đề ≥80%</span>
           </div>
         </div>
 
         {/* Tips */}
         <PracticeTips data={TIPS_Q51} />
 
-        <h2 className="text-[13px] font-bold text-slate-900 mb-4 mt-2">
+        <h2 className="text-sm font-bold text-slate-900 mb-4 mt-2">
           Chọn đề để luyện
-          <span className="text-[12px] font-normal text-slate-400 ml-2">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span>
+          <span className="text-xs font-normal text-slate-400 ml-2">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span>
         </h2>
         <PromptGrid
           prompts={Q51_PROMPTS}

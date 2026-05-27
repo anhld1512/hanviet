@@ -245,7 +245,7 @@ export default function ExamClient({
               <div key={q.key} className={`rounded-xl border p-3 ${q.key === "q51" ? "border-green-100 bg-green-50" : q.key === "q52" ? "border-blue-100 bg-blue-50" : q.key === "q53" ? "border-purple-100 bg-purple-50" : "border-orange-100 bg-orange-50"}`}>
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${q.accent}`}>{q.label}</span>
                 <div className="mt-1.5 text-xs text-gray-600 font-semibold">{q.points} điểm</div>
-                <div className="text-[11px] text-gray-400 mt-0.5">
+                <div className="text-xs text-gray-400 mt-0.5">
                   {q.key === "q51" ? "Điền câu (thực dụng)" : q.key === "q52" ? "Điền câu (nghị luận)" : q.key === "q53" ? "Phân tích biểu đồ" : "Bài luận 600-700 chữ"}
                 </div>
               </div>

@@ -106,21 +106,21 @@ export default function PracticeProgress() {
           <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-xl">🔥</div>
           <div>
             <div className="text-[22px] font-extrabold text-slate-900 leading-none">{streak}</div>
-            <div className="text-[11px] text-slate-400 font-medium mt-0.5">Ngày streak</div>
+            <div className="text-xs text-slate-400 font-medium mt-0.5">Ngày streak</div>
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200/80 px-5 py-4 flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">✍️</div>
           <div>
             <div className="text-[22px] font-extrabold text-slate-900 leading-none">{totalAttempted}</div>
-            <div className="text-[11px] text-slate-400 font-medium mt-0.5">Đề đã luyện</div>
+            <div className="text-xs text-slate-400 font-medium mt-0.5">Đề đã luyện</div>
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200/80 px-5 py-4 flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-xl">🎯</div>
           <div>
             <div className="text-[22px] font-extrabold text-slate-900 leading-none">{totalPassed}</div>
-            <div className="text-[11px] text-slate-400 font-medium mt-0.5">Đề đạt ≥80%</div>
+            <div className="text-xs text-slate-400 font-medium mt-0.5">Đề đạt ≥80%</div>
           </div>
         </div>
       </div>
@@ -128,9 +128,9 @@ export default function PracticeProgress() {
       {/* ── Per Q-type progress ── */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider">Tiến độ luyện tập</h2>
+          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Tiến độ luyện tập</h2>
           {totalAttempted === 0 && (
-            <span className="text-[11px] text-slate-400">Chưa có dữ liệu — bắt đầu luyện để xem tiến độ</span>
+            <span className="text-xs text-slate-400">Chưa có dữ liệu — bắt đầu luyện để xem tiến độ</span>
           )}
         </div>
         <div className="grid grid-cols-4 gap-4">
@@ -148,7 +148,7 @@ export default function PracticeProgress() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-base">{q.icon}</span>
-                    <span className="text-[11px] font-extrabold" style={{ color: q.accentText }}>{q.label}</span>
+                    <span className="text-xs font-extrabold" style={{ color: q.accentText }}>{q.label}</span>
                   </div>
                   {s.best !== null && (
                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: s.best >= 80 ? "#dcfce7" : s.best >= 60 ? "#fef3c7" : "#ffedd5", color: bestColor }}>
@@ -159,14 +159,14 @@ export default function PracticeProgress() {
 
                 {/* Title */}
                 <div>
-                  <div className="text-[12px] font-bold text-slate-800 leading-tight">{q.title}</div>
-                  <div className="text-[11px] text-slate-400">{q.time}</div>
+                  <div className="text-xs font-bold text-slate-800 leading-tight">{q.title}</div>
+                  <div className="text-xs text-slate-400">{q.time}</div>
                 </div>
 
                 {/* Progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[11px] text-slate-500">
+                    <span className="text-xs text-slate-500">
                       <span className="font-bold text-slate-700">{s.attempted}</span>/{q.total} đề
                     </span>
                     <span className="text-[10px] text-slate-400">{pct}%</span>
@@ -180,7 +180,7 @@ export default function PracticeProgress() {
                 </div>
 
                 {/* CTA */}
-                <span className="text-[11px] font-bold group-hover:translate-x-0.5 transition-transform" style={{ color: q.accent }}>
+                <span className="text-xs font-bold group-hover:translate-x-0.5 transition-transform" style={{ color: q.accent }}>
                   {s.attempted === 0 ? "Bắt đầu →" : s.attempted === q.total ? "Ôn lại →" : "Tiếp tục →"}
                 </span>
               </Link>
