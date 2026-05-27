@@ -17,38 +17,31 @@ function Ring({ color, track, pct, label, href }: {
   color: string; track: string; pct: number | null; label: string; href: string
 }) {
   const filled = pct ?? 0
-  const displayPct = pct === null ? null : pct
 
   return (
-    <Link href={href} className="flex flex-col items-center gap-1.5 group">
+    <Link href={href} className="flex flex-col items-center gap-2 group">
       {/* Ring */}
       <div
-        className="relative w-[62px] h-[62px] rounded-full transition-transform group-hover:scale-105"
-        style={{
-          background: `conic-gradient(${color} ${filled}%, ${track} 0%)`,
-        }}
+        className="relative w-[80px] h-[80px] rounded-full transition-transform duration-200 group-hover:scale-105"
+        style={{ background: `conic-gradient(${color} ${filled}%, ${track} 0%)` }}
       >
         {/* Inner circle */}
         <div
-          className="absolute inset-[7px] rounded-full flex flex-col items-center justify-center"
-          style={{ background: "rgba(248,249,251,0.95)" }}
+          className="absolute inset-[9px] rounded-full flex flex-col items-center justify-center gap-0.5"
+          style={{ background: "rgba(248,249,251,0.96)" }}
         >
-          {displayPct !== null ? (
-            <span className="text-[13px] font-extrabold leading-none" style={{ color }}>
-              {displayPct}
-            </span>
+          {pct !== null ? (
+            <>
+              <span className="text-[17px] font-extrabold leading-none" style={{ color }}>{pct}</span>
+              <span className="text-[9px] text-slate-400 leading-none font-medium">%</span>
+            </>
           ) : (
-            <span className="text-[16px] leading-none text-slate-300">—</span>
-          )}
-          {displayPct !== null && (
-            <span className="text-[8px] text-slate-400 leading-none">%</span>
+            <span className="text-[20px] leading-none text-slate-300">—</span>
           )}
         </div>
       </div>
       {/* Label */}
-      <span className="text-[11px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors">
-        {label}
-      </span>
+      <span className="text-[12px] font-bold text-slate-500 group-hover:text-slate-800 transition-colors">{label}</span>
     </Link>
   )
 }
@@ -94,9 +87,9 @@ export default function ScoreRings() {
   const doneCount = Object.values(bests).filter(v => v !== null).length
 
   return (
-    <div className="flex flex-col items-end gap-4">
-      {/* 4 rings in 2×2 grid */}
-      <div className="grid grid-cols-2 gap-4">
+    <div className="flex flex-col gap-4">
+      {/* 4 rings — horizontal row */}
+      <div className="flex items-end gap-5">
         {RINGS.map((r) => (
           <Ring
             key={r.key}
@@ -110,21 +103,23 @@ export default function ScoreRings() {
       </div>
 
       {/* Mini stats row */}
-      <div className="flex items-center gap-3 text-right">
-        {total > 0 && (
-          <span className="text-[11px] text-slate-400">
-            <span className="font-bold text-slate-600">{total}</span> bài đã viết
-          </span>
-        )}
-        {doneCount < 4 && (
-          <span className="text-[11px] text-indigo-400 font-medium">
-            {4 - doneCount} loại chưa thử
-          </span>
-        )}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {doneCount < 4 && (
+            <span className="text-[11px] text-indigo-500 font-semibold">
+              {4 - doneCount} loại chưa thử →
+            </span>
+          )}
+          {total > 0 && (
+            <span className="text-[11px] text-slate-400">
+              <span className="font-bold text-slate-600">{total}</span> bài viết
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-1">
-          <span className="text-base">🔥</span>
-          <span className="text-[15px] font-extrabold text-slate-700 leading-none">{streak}</span>
-          <span className="text-[10px] text-slate-400">ngày</span>
+          <span className="text-sm">🔥</span>
+          <span className="text-[14px] font-extrabold text-slate-700 leading-none">{streak}</span>
+          <span className="text-[10px] text-slate-400 ml-0.5">ngày streak</span>
         </div>
       </div>
     </div>

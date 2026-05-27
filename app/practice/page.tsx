@@ -124,9 +124,12 @@ export default function PracticePage() {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="self-stretch w-px bg-indigo-300/50 relative z-10 shrink-0 mx-2" />
+
           {/* Right: Score rings */}
-          <div className="shrink-0 relative z-10 pr-2">
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">
+          <div className="shrink-0 relative z-10 pl-2">
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">
               Best score của bạn
             </p>
             <ScoreRings />
