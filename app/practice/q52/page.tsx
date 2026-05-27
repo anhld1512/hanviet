@@ -47,6 +47,9 @@ export default function Q52Page() {
     setGradeA(null); setGradeB(null); setError(null); setShowHint(null)
   }
 
+  function handleAnswerAChange(v: string) { setAnswerA(v); if (error) setError(null) }
+  function handleAnswerBChange(v: string) { setAnswerB(v); if (error) setError(null) }
+
   function backToList() {
     setSelected(null); setGradeA(null); setGradeB(null); setAnswerA(""); setAnswerB("")
   }
@@ -213,7 +216,7 @@ export default function Q52Page() {
                         <div className="text-blue-600">VD: {blank.example}</div>
                       </div>
                     )}
-                    <WongojiEditor value={value} onChange={setValue} placeholder={`Viết câu cho chỗ trống ${blank.key}...`} questionType="q52" disabled={loading} />
+                    <WongojiEditor value={value} onChange={isA ? handleAnswerAChange : handleAnswerBChange} placeholder={`Viết câu cho chỗ trống ${blank.key}...`} questionType="q52" disabled={loading} />
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-gray-400">{value.length} ký tự</span>
                       {value.length > 0 && (value.trim().endsWith("습니다") || value.trim().endsWith("해요")) && (

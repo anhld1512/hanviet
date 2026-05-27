@@ -171,8 +171,25 @@ export default function WongojiEditor({
               onChange(taRef.current.value)
             }
           }}
+          onKeyDown={(e) => {
+            // Backspace/Delete: luon force-sync du dang compose hay không
+            // Fix: IME stuck → isComposing=true → onInput bi block → xoa khong duoc
+            if ((e.key === "Backspace" || e.key === "Delete") && taRef.current) {
+              isComposingRef.current = false
+              setComposing("")
+              setTimeout(() => {
+                if (taRef.current) onChange(taRef.current.value)
+              }, 0)
+            }
+          }}
           onFocus={handleFocus}
-          onBlur={() => { setFocused(false); setComposing("") }}
+          onBlur={() => {
+            setFocused(false)
+            setComposing("")
+            isComposingRef.current = false
+            // Sync on blur to catch any stuck composition
+            if (taRef.current) onChange(taRef.current.value)
+          }}
           onCompositionStart={() => { isComposingRef.current = true }}
           onCompositionUpdate={e => setComposing(e.data ?? "")}
           onCompositionEnd={() => {
