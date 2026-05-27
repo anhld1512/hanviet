@@ -175,7 +175,7 @@ export default function WongojiEditor({
             // Backspace/Delete khi KHÔNG đang compose → force-sync
             // e.isComposing=true nghĩa là IME đang xử lý (vd: xóa jamo trong 쇼→ㅅ) → không can thiệp
             // e.isComposing=false mà isComposingRef=true → IME bị stuck → force-reset + sync
-            if ((e.key === "Backspace" || e.key === "Delete") && taRef.current && !e.isComposing) {
+            if ((e.key === "Backspace" || e.key === "Delete") && taRef.current && !(e.nativeEvent as KeyboardEvent).isComposing) {
               isComposingRef.current = false
               setComposing("")
               setTimeout(() => {
