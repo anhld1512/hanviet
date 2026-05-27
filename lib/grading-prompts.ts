@@ -99,30 +99,41 @@ THỂ VĂN (1đ) — KHẮT KHE NHẤT:
 
 CÁCH KIỂM TRA: Nhìn vào chữ CUỐI của bài viết "있어요" → kết thúc -요 → 해요체 → style=0
 ${ERROR_GUIDE}
+YÊU CẦU CHẤT LƯỢNG PHẢN HỒI — BẮT BUỘC TUÂN THỦ:
+• feedback.overall: 3-4 câu — tóm tắt toàn diện: câu trả lời có đúng ngữ cảnh không, điểm mạnh cụ thể là gì, điểm yếu chính là gì, đánh giá chung về chất lượng
+• feedback.content: 3-4 câu — phân tích sâu: câu có phù hợp ngữ cảnh trước/sau chỗ trống không, thông tin có đủ và chính xác không, có tự nhiên không, thiếu/thừa gì cụ thể và tại sao ảnh hưởng đến điểm
+• feedback.language: 3-4 câu — phân tích chi tiết: liệt kê lỗi ngữ pháp/từ vựng cụ thể (trích dẫn từ bài viết), giải thích tại sao sai, gợi ý từ/cấu trúc tốt hơn với ví dụ cụ thể
+• feedback.style: 2-3 câu — giải thích rõ: bài dùng thể văn nào (trích dẫn đuôi câu), thể văn yêu cầu là gì và tại sao, cách sửa cụ thể
+• corrections[].explanation: PHẢI CÓ 4-5 câu — (1) lỗi cụ thể là gì, (2) tại sao vi phạm quy tắc ngữ pháp, (3) quy tắc đúng là gì và cách hoạt động, (4) ví dụ thêm về cách dùng đúng, (5) mẹo để nhớ/tránh lỗi này
+• coaching.strength: 2-3 câu — điểm làm tốt cụ thể với dẫn chứng từ bài viết
+• coaching.weakness: 2-3 câu — điểm yếu chính với phân tích cụ thể và tác động đến điểm
+• coaching.focus_pattern: 2-3 câu — pattern cần ôn, giải thích cách dùng đúng, ít nhất 2 ví dụ cụ thể
+• coaching.level_tip: 3-4 câu — lời khuyên thực tế, actionable, có bước cụ thể để cải thiện
+
 Trả về JSON:
 {
   "scores": { "content": <0-2>, "language": <0-2>, "style": <0-1>, "total": <0-5> },
   "feedback": {
-    "overall": "<1-2 câu tóm tắt: điểm mạnh + điểm yếu chính, tiếng Việt>",
-    "content": "<câu có phù hợp ngữ cảnh không? thiếu/thừa gì cụ thể?>",
+    "overall": "<3-4 câu tổng quan: ngữ cảnh + điểm mạnh + điểm yếu + đánh giá chung>",
+    "content": "<3-4 câu phân tích nội dung: phù hợp ngữ cảnh? thông tin đủ? thiếu/thừa gì và tại sao?>",
     "organization": "",
-    "language": "<lỗi ngữ pháp/từ vựng cụ thể + gợi ý từ/cấu trúc tốt hơn>",
-    "style": "<đúng/sai thể văn gì, tác động đến điểm>"
+    "language": "<3-4 câu phân tích ngữ pháp/từ vựng: lỗi cụ thể + trích dẫn + gợi ý cải thiện>",
+    "style": "<2-3 câu: thể văn dùng là gì, yêu cầu là gì, cách sửa cụ thể>"
   },
   "corrections": [
     {
       "original": "<phần bị sai>",
       "corrected": "<sửa lại hoàn chỉnh>",
-      "explanation": "<tại sao sai + cách nhớ, tiếng Việt>",
+      "explanation": "<4-5 câu: lỗi gì → tại sao vi phạm → quy tắc đúng → ví dụ thêm → mẹo nhớ>",
       "type": "<grammar|vocabulary|style|logic|content>",
       "pattern": "<tên cấu trúc ngữ pháp nếu là grammar/vocab>"
     }
   ],
   "coaching": {
-    "strength": "<điểm học sinh làm tốt — cụ thể, tích cực>",
-    "weakness": "<điểm yếu chính — thẳng thắn, xây dựng>",
-    "focus_pattern": "<1 mẫu ngữ pháp cần ôn: 'Ôn lại: [pattern] — [ví dụ]'>",
-    "level_tip": "<lời khuyên thực tế 1-2 câu để cải thiện>"
+    "strength": "<2-3 câu điểm tốt cụ thể với dẫn chứng từ bài viết>",
+    "weakness": "<2-3 câu điểm yếu chính với phân tích và tác động đến điểm>",
+    "focus_pattern": "<2-3 câu: pattern cần ôn + cách dùng đúng + 2 ví dụ cụ thể>",
+    "level_tip": "<3-4 câu lời khuyên actionable với bước cụ thể để cải thiện>"
   },
   "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
@@ -187,13 +198,20 @@ Trả về JSON:
     }
   ],
   "coaching": {
-    "strength": "<điểm tốt cụ thể>",
-    "weakness": "<điểm yếu chính>",
-    "focus_pattern": "<1 cấu trúc/từ học thuật cần ôn: 'Ôn lại: ...' + ví dụ>",
-    "level_tip": "<gợi ý cải thiện cụ thể>"
+    "strength": "<2-3 câu: điểm tốt cụ thể với dẫn chứng từ bài viết>",
+    "weakness": "<2-3 câu: điểm yếu chính với phân tích sâu và tác động>",
+    "focus_pattern": "<2-3 câu: pattern/từ vựng học thuật cần ôn + giải thích cách dùng + 2 ví dụ>",
+    "level_tip": "<3-4 câu lời khuyên actionable để viết văn nghị luận tốt hơn>"
   },
   "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
+
+YÊU CẦU CHẤT LƯỢNG PHẢN HỒI — BẮT BUỘC:
+• feedback.overall: 3-4 câu toàn diện — câu có phù hợp lập luận xung quanh không, điểm mạnh, điểm yếu, đánh giá tổng thể
+• feedback.content: 3-4 câu — câu có kết nối logic với ý trước/sau không, có thể hiện quan điểm đúng không, thiếu/thừa gì
+• feedback.language: 3-4 câu — phân tích từ vựng học thuật: thiếu những từ nào, nên dùng gì thay thế, lỗi cụ thể + trích dẫn
+• feedback.style: 2-3 câu — 다체 đúng/sai, trích dẫn đuôi câu cụ thể, cách sửa
+• corrections[].explanation: 4-5 câu — lỗi gì → tại sao vi phạm → quy tắc đúng → ví dụ thêm → mẹo nhớ
 
 QUAN TRỌNG: Chỉ trả về raw JSON. TUYỆT ĐỐI không dùng markdown code block.`
 }

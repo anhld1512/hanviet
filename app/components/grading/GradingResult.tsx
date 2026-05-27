@@ -6,56 +6,42 @@ interface GradingResultProps {
   result: GradeResult
   onRetry: () => void
   onNext: () => void
+  hideActions?: boolean
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const CRITERION_LABELS: Record<string, string> = {
-  content: "Nội dung",
+  content:      "Nội dung",
   organization: "Cấu trúc",
-  language: "Ngữ pháp & Từ vựng",
-  style: "Thể văn",
+  language:     "Ngữ pháp & Từ vựng",
+  style:        "Thể văn",
 }
 
 const ERROR_TYPE_CONFIG: Record<ErrorCategory, { label: string; color: string; dot: string }> = {
-  grammar:    { label: "Ngữ pháp",  color: "bg-red-100 text-red-700 border-red-200",     dot: "bg-red-400" },
+  grammar:    { label: "Ngữ pháp",  color: "bg-red-100 text-red-700 border-red-200",         dot: "bg-red-400" },
   vocabulary: { label: "Từ vựng",   color: "bg-yellow-100 text-yellow-700 border-yellow-200", dot: "bg-yellow-400" },
-  style:      { label: "Thể văn",   color: "bg-blue-100 text-blue-700 border-blue-200",   dot: "bg-blue-400" },
+  style:      { label: "Thể văn",   color: "bg-blue-100 text-blue-700 border-blue-200",       dot: "bg-blue-400" },
   logic:      { label: "Logic",     color: "bg-orange-100 text-orange-700 border-orange-200", dot: "bg-orange-400" },
   content:    { label: "Nội dung",  color: "bg-purple-100 text-purple-700 border-purple-200", dot: "bg-purple-400" },
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-function ScoreBar({ score, max, label, feedback }: { score: number; max: number; label: string; feedback?: string }) {
-  if (max === 0) return null
-  const pct = (score / max) * 100
-  const color = pct >= 80 ? "bg-green-500" : pct >= 60 ? "bg-yellow-400" : pct >= 40 ? "bg-orange-400" : "bg-red-400"
-  const textColor = pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : pct >= 40 ? "text-orange-500" : "text-red-500"
+// ─── Type scale ───────────────────────────────────────────────────────────────
+// section-header : text-xs  font-bold uppercase tracking-wider  (12px)
+// body           : text-sm  leading-relaxed                     (14px)
+// secondary      : text-xs  leading-relaxed                     (12px)
+// micro-label    : text-[10px] font-extrabold                   (10px)
+// badge          : text-[10px]                                  (10px)
+// korean-display : text-sm  font-mono                           (14px)
 
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center gap-3">
-        <span className="w-36 text-xs font-medium text-gray-600 shrink-0">{label}</span>
-        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className={`h-full rounded-full transition-all duration-700 ${color}`} style={{ width: `${pct}%` }} />
-        </div>
-        <span className={`text-sm font-bold w-12 text-right shrink-0 ${textColor}`}>
-          {score}<span className="text-xs font-normal text-gray-400">/{max}</span>
-        </span>
-      </div>
-      {feedback && (
-        <p className="text-xs text-gray-500 leading-relaxed pl-[156px]">{feedback}</p>
-      )}
-    </div>
-  )
-}
-
-function ErrorCard({ correction }: { correction: GradeResult["corrections"][number] }) {
+// ─── ErrorCard ────────────────────────────────────────────────────────────────
+function ErrorCard({ correction, index }: { correction: GradeResult["corrections"][number]; index: number }) {
   const typeConfig = correction.type ? ERROR_TYPE_CONFIG[correction.type] : null
 
   return (
-    <div className="border border-gray-100 rounded-xl p-4 bg-white hover:border-gray-200 transition-colors">
-      {/* Header: type badge + pattern */}
-      <div className="flex items-center gap-2 mb-3">
+    <div className="rounded-xl overflow-hidden border border-gray-100">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 border-b border-gray-100">
+        <span className="text-xs font-bold text-gray-400 w-4">#{index + 1}</span>
         {typeConfig && (
           <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${typeConfig.color}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${typeConfig.dot}`} />
@@ -63,192 +49,212 @@ function ErrorCard({ correction }: { correction: GradeResult["corrections"][numb
           </span>
         )}
         {correction.pattern && (
-          <span className="text-[10px] font-mono bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full border border-gray-200">
+          <span className="text-[10px] font-mono bg-white text-gray-600 px-2 py-0.5 rounded-full border border-gray-200">
             {correction.pattern}
           </span>
         )}
       </div>
 
-      {/* Sai → Đúng */}
-      <div className="space-y-1.5 mb-3">
-        <div className="flex items-start gap-2">
-          <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded shrink-0 mt-0.5">SAI</span>
-          <span className="text-sm text-red-700 line-through leading-relaxed font-mono">{correction.original}</span>
+      {/* SAI → ĐÚNG */}
+      <div className="p-4 bg-white space-y-2.5">
+        <div className="flex items-start gap-3">
+          <span className="shrink-0 mt-0.5 text-[10px] font-extrabold bg-red-100 text-red-600 px-2 py-0.5 rounded-md">SAI</span>
+          <span className="text-sm text-red-700 line-through font-mono leading-relaxed">{correction.original}</span>
         </div>
-        <div className="flex items-start gap-2">
-          <span className="text-[10px] font-bold bg-green-100 text-green-600 px-1.5 py-0.5 rounded shrink-0 mt-0.5">ĐÚNG</span>
-          <span className="text-sm text-green-700 font-semibold leading-relaxed font-mono">{correction.corrected}</span>
+        <div className="flex items-start gap-3">
+          <span className="shrink-0 mt-0.5 text-[10px] font-extrabold bg-green-100 text-green-600 px-2 py-0.5 rounded-md">ĐÚNG</span>
+          <span className="text-sm text-green-800 font-semibold font-mono leading-relaxed">{correction.corrected}</span>
+        </div>
+
+        {/* Explanation */}
+        <div className="mt-1 pt-3 border-t border-gray-50">
+          <p className="text-xs text-gray-600 leading-relaxed">{correction.explanation}</p>
         </div>
       </div>
-
-      {/* Explanation */}
-      <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-50 pt-2">{correction.explanation}</p>
     </div>
   )
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function GradingResult({ result, onRetry, onNext }: GradingResultProps) {
-  const { scores, max_scores, feedback, corrections, better_example, coaching, char_count_feedback, thesis_feedback, better_opening } = result
-  const pct = max_scores.total > 0 ? Math.round((scores.total / max_scores.total) * 100) : 0
+export default function GradingResult({ result, onRetry, onNext, hideActions }: GradingResultProps) {
+  const {
+    scores, max_scores, feedback, corrections,
+    better_example, coaching, char_count_feedback,
+    thesis_feedback, better_opening,
+  } = result
 
-  const scoreColor = pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : pct >= 40 ? "text-orange-500" : "text-red-500"
+  const pct = max_scores.total > 0 ? Math.round((scores.total / max_scores.total) * 100) : 0
+  const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : pct >= 40 ? "#ea580c" : "#dc2626"
   const scoreEmoji = pct >= 80 ? "🎉" : pct >= 60 ? "😊" : pct >= 40 ? "😐" : "😓"
-  const scoreVerdict = pct >= 80 ? "Rất tốt! Đúng tiêu chuẩn chất lượng cao." : pct >= 60 ? "Khá tốt. Còn một số điểm cần cải thiện." : "Cần luyện thêm. Đọc kỹ phân tích bên dưới."
+  const scoreVerdict =
+    pct >= 80 ? "Xuất sắc — đạt tiêu chuẩn cao!" :
+    pct >= 60 ? "Khá tốt — còn vài chỗ cần chỉnh." :
+    pct >= 40 ? "Cần luyện thêm — đọc kỹ từng lỗi bên dưới." :
+    "Cần cải thiện nhiều — đừng nản, phân tích chi tiết bên dưới."
+
+  // Criteria to show (skip if max=0)
+  const criteria = [
+    { key: "content",      label: CRITERION_LABELS.content,      score: scores.content,      max: max_scores.content,      fb: feedback.content },
+    { key: "organization", label: CRITERION_LABELS.organization,  score: scores.organization, max: max_scores.organization, fb: feedback.organization },
+    { key: "language",     label: CRITERION_LABELS.language,      score: scores.language,     max: max_scores.language,     fb: feedback.language },
+    { key: "style",        label: CRITERION_LABELS.style,         score: scores.style,        max: max_scores.style,        fb: feedback.style },
+  ].filter(c => c.max > 0)
 
   return (
-    <div className="space-y-4 max-w-2xl mx-auto">
+    <div className="space-y-4">
 
-      {/* ── 1. Score header ── */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
-        <div className="text-3xl mb-2">{scoreEmoji}</div>
-        <div className={`text-5xl font-extrabold mb-1 ${scoreColor}`}>
-          {scores.total}
-          <span className="text-2xl text-gray-300 font-normal">/{max_scores.total}</span>
-        </div>
-        <p className="text-sm text-gray-500 mb-4">{scoreVerdict}</p>
-        {feedback.overall && (
-          <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4 text-left">
-            {feedback.overall}
-          </p>
-        )}
-        {char_count_feedback && (
-          <div className="mt-3 text-xs text-gray-500 bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-2 text-left">
-            📏 {char_count_feedback}
-          </div>
-        )}
-      </div>
-
-      {/* ── 2. Coach: strength + weakness ── */}
-      {coaching && (
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-green-50 border border-green-100 rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-base">💪</span>
-              <span className="text-xs font-bold text-green-700 uppercase tracking-wide">Điểm mạnh</span>
+      {/* ── Row 1: Score + Overall feedback ─────────────────────────────────── */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-6">
+        {/* Score */}
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="text-4xl leading-none">{scoreEmoji}</span>
+          <div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[40px] font-extrabold leading-none" style={{ color: scoreColor }}>{scores.total}</span>
+              <span className="text-lg text-gray-300">/{max_scores.total}</span>
             </div>
-            <p className="text-sm text-green-800 leading-relaxed">{coaching.strength}</p>
-          </div>
-          <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-base">⚠️</span>
-              <span className="text-xs font-bold text-orange-700 uppercase tracking-wide">Cần cải thiện</span>
-            </div>
-            <p className="text-sm text-orange-800 leading-relaxed">{coaching.weakness}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{scoreVerdict}</p>
           </div>
         </div>
-      )}
-
-      {/* ── 3. Criteria breakdown ── */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-bold text-gray-900 mb-5">Chi tiết từng tiêu chí</h3>
-        <div className="space-y-5">
-          <ScoreBar score={scores.content} max={max_scores.content} label={CRITERION_LABELS.content} feedback={feedback.content} />
-          {max_scores.organization > 0 && (
-            <ScoreBar score={scores.organization} max={max_scores.organization} label={CRITERION_LABELS.organization} feedback={feedback.organization} />
+        <div className="w-px self-stretch bg-gray-100 shrink-0" />
+        {/* Overall feedback */}
+        <div className="flex-1 min-w-0">
+          {feedback.overall && (
+            <p className="text-sm text-gray-600 leading-relaxed">{feedback.overall}</p>
           )}
-          <ScoreBar score={scores.language} max={max_scores.language} label={CRITERION_LABELS.language} feedback={feedback.language} />
-          {max_scores.style > 0 && (
-            <ScoreBar score={scores.style} max={max_scores.style} label={CRITERION_LABELS.style} feedback={feedback.style} />
+          {char_count_feedback && (
+            <div className="mt-2 text-xs text-gray-500 bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-2">
+              📏 {char_count_feedback}
+            </div>
           )}
         </div>
       </div>
 
-      {/* ── 4. Errors ── */}
-      {corrections.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-gray-900">Lỗi cần sửa <span className="text-sm font-normal text-gray-400 ml-1">({corrections.length})</span></h3>
-            {/* Legend */}
-            <div className="flex gap-2">
-              {(["grammar", "vocabulary", "style", "logic"] as ErrorCategory[]).map(type => {
-                const hasType = corrections.some(c => c.type === type)
-                if (!hasType) return null
-                const cfg = ERROR_TYPE_CONFIG[type]
-                return (
-                  <span key={type} className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${cfg.color}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                    {cfg.label}
+      {/* ── Row 2: Criteria ──────────────────────────────────────────────────── */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5">
+        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+          <span>🔍</span> Vì sao bạn được {scores.total}/{max_scores.total} điểm?
+        </h3>
+
+        {/* Criteria cards — items-start so each card only as tall as its content */}
+        <div className="flex gap-3 items-start">
+          {criteria.map(c => {
+            const lost = c.max - c.score
+            const isFull = c.score === c.max
+            const isZero = c.score === 0 && c.max > 0
+            const bgBorder = isFull ? "bg-green-50 border-green-100" : isZero ? "bg-red-50 border-red-100" : "bg-orange-50 border-orange-100"
+            const icon = isFull ? "✅" : isZero ? "❌" : "⚡"
+            const scoreTextColor = isFull ? "text-green-600" : isZero ? "text-red-600" : "text-orange-500"
+            return (
+              <div key={c.key} className={`flex-1 rounded-xl border p-3 ${bgBorder}`}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                    <span className="text-sm">{icon}</span>{c.label}
                   </span>
-                )
-              })}
+                  <span className={`text-sm font-bold tabular-nums ${scoreTextColor}`}>
+                    {c.score}<span className="text-[10px] font-normal text-gray-400">/{c.max}</span>
+                  </span>
+                </div>
+                {c.fb && (
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    {lost > 0 && !isFull
+                      ? <><span className="font-semibold text-gray-700">Mất {lost}đ — </span>{c.fb}</>
+                      : c.fb}
+                  </p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ── Row 3: Errors + Coaching side by side ────────────────────────────── */}
+      {(corrections.length > 0 || coaching) && (
+        <div className="grid grid-cols-2 gap-4">
+          {/* Errors */}
+          {corrections.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-100 p-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span>✏️</span> Sai ở vị trí nào?
+                <span className="ml-auto text-[10px] font-normal bg-gray-100 px-2 py-0.5 rounded-full">{corrections.length} lỗi</span>
+              </h3>
+              <div className="space-y-3">
+                {corrections.map((c, i) => <ErrorCard key={i} correction={c} index={i} />)}
+              </div>
             </div>
-          </div>
-          <div className="space-y-3">
-            {corrections.map((c, i) => <ErrorCard key={i} correction={c} />)}
-          </div>
+          )}
+
+          {/* Coaching */}
+          {coaching && (
+            <div className="rounded-2xl border border-indigo-100 overflow-hidden flex flex-col">
+              <div className="bg-indigo-50 px-5 py-3 border-b border-indigo-100">
+                <h3 className="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>🎯</span> Làm gì để điểm cao hơn?
+                </h3>
+              </div>
+              <div className="bg-white p-5 space-y-4 flex-1">
+                <div className="flex items-start gap-3">
+                  <span className="text-lg shrink-0">📚</span>
+                  <div>
+                    <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Cần ôn lại</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-lg shrink-0">🚀</span>
+                  <div>
+                    <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Bước tiếp theo</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
+                  </div>
+                </div>
+                {(better_example || better_opening) && (
+                  <div className="pt-3 border-t border-gray-100">
+                    <p className="text-xs font-bold text-indigo-600 mb-2 uppercase tracking-wide">✨ Câu mẫu tham khảo</p>
+                    {better_example && (
+                      <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed">
+                        {better_example}
+                      </div>
+                    )}
+                    {better_opening && (
+                      <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed mt-2">
+                        {better_opening}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* ── 5. AI Coach tip ── */}
-      {coaching && (
-        <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-lg">💬</span>
-            <h3 className="font-bold text-indigo-900">Lời khuyên từ AI Coach</h3>
-          </div>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3 bg-white rounded-xl p-3 border border-indigo-100">
-              <span className="text-base shrink-0">📚</span>
-              <div>
-                <p className="text-xs font-bold text-indigo-600 mb-0.5">Cần ôn lại</p>
-                <p className="text-sm text-indigo-900 leading-relaxed">{coaching.focus_pattern}</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-white rounded-xl p-3 border border-indigo-100">
-              <span className="text-base shrink-0">🎯</span>
-              <div>
-                <p className="text-xs font-bold text-indigo-600 mb-0.5">Bước tiếp theo</p>
-                <p className="text-sm text-indigo-900 leading-relaxed">{coaching.level_tip}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── 6. Q54 extras ── */}
+      {/* ── Q54 thesis feedback ──────────────────────────────────────────────── */}
       {thesis_feedback && (
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <h3 className="font-bold text-gray-900 mb-2">🧠 Phân tích luận điểm (Thesis)</h3>
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <span>🧠</span> Phân tích luận điểm (Thesis)
+          </h3>
           <p className="text-sm text-gray-700 leading-relaxed">{thesis_feedback}</p>
         </div>
       )}
 
-      {/* ── 7. Better example / opening ── */}
-      {(better_example || better_opening) && (
-        <div className="bg-white rounded-2xl border border-blue-100 p-5">
-          <h3 className="font-bold text-gray-900 mb-3">✨ Câu mẫu gợi ý</h3>
-          {better_example && (
-            <div className="bg-blue-50 rounded-xl p-3 mb-2">
-              <p className="text-sm text-blue-800 font-medium leading-relaxed">{better_example}</p>
-            </div>
-          )}
-          {better_opening && (
-            <>
-              <p className="text-xs text-gray-500 mb-1">Gợi ý mở bài:</p>
-              <div className="bg-blue-50 rounded-xl p-3">
-                <p className="text-sm text-blue-800 font-medium leading-relaxed">{better_opening}</p>
-              </div>
-            </>
-          )}
+      {/* ── Actions ──────────────────────────────────────────────────────────── */}
+      {!hideActions && (
+        <div className="flex gap-3 pt-1">
+          <button
+            onClick={onRetry}
+            className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
+          >
+            Làm lại đề này
+          </button>
+          <button
+            onClick={onNext}
+            className="flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-colors text-sm"
+          >
+            Đề tiếp theo →
+          </button>
         </div>
       )}
-
-      {/* ── 8. Actions ── */}
-      <div className="flex gap-3">
-        <button
-          onClick={onRetry}
-          className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
-        >
-          Làm lại đề này
-        </button>
-        <button
-          onClick={onNext}
-          className="flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-colors text-sm"
-        >
-          Đề tiếp theo →
-        </button>
-      </div>
     </div>
   )
 }

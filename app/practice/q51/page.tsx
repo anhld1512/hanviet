@@ -104,38 +104,65 @@ export default function Q51Page() {
     const total = gradeA.scores.total + gradeB.scores.total
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
+    const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : "#ea580c"
     return (
       <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
-        <div className="w-full">
+          {/* Breadcrumb + tổng điểm */}
           <div className="flex items-center gap-3 mb-6">
-            <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
-            <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded-full">Q51</span>
-            <span className="text-sm text-gray-500 truncate max-w-xs">{selected.context}</span>
-            <div className="ml-auto flex items-center gap-2">
-              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{total}/{max}</span>
-              <span className="text-xs text-gray-400">điểm</span>
+            <button onClick={backToList} className="text-slate-400 hover:text-slate-600 text-sm font-medium shrink-0">← Chọn đề khác</button>
+            <div className="w-px h-4 bg-slate-200 shrink-0" />
+            <span className="text-[11px] bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200 shrink-0">Q51</span>
+            <span className="text-sm text-slate-500 truncate">{selected.context}</span>
+            <div className="ml-auto flex items-center gap-3 shrink-0">
+              <span className="text-[13px] font-bold" style={{ color: scoreColor }}>{total}/{max} điểm</span>
+              <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${pct}%`, background: scoreColor }} />
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">ㄱ</span>
-                <span className="text-sm text-gray-700 font-medium">Câu trả lời: <span className="text-gray-500 font-normal">{answerA}</span></span>
-              </div>
-              <GradingResult result={gradeA} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} />
+
+          {/* ── Đoạn 1: Câu ㄱ ── */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shrink-0">ㄱ</span>
+              <span className="text-sm font-semibold text-gray-700">Câu trả lời của bạn:</span>
+              <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerA}</span>
+              <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeA.scores.total}/{gradeA.max_scores.total} điểm</span>
             </div>
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">ㄴ</span>
-                <span className="text-sm text-gray-700 font-medium">Câu trả lời: <span className="text-gray-500 font-normal">{answerB}</span></span>
-              </div>
-              <GradingResult result={gradeB} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} />
-            </div>
+            <GradingResult result={gradeA} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
           </div>
-        </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-[11px] font-bold text-gray-300 uppercase tracking-widest">Câu ㄴ</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          {/* ── Đoạn 2: Câu ㄴ ── */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shrink-0">ㄴ</span>
+              <span className="text-sm font-semibold text-gray-700">Câu trả lời của bạn:</span>
+              <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerB}</span>
+              <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeB.scores.total}/{gradeB.max_scores.total} điểm</span>
+            </div>
+            <GradingResult result={gradeB} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
+          </div>
+
+          {/* Shared CTA */}
+          <div className="flex gap-3 pb-10">
+            <button onClick={() => { setGradeA(null); setGradeB(null) }}
+              className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm">
+              Làm lại đề này
+            </button>
+            <button onClick={backToList}
+              className="flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-colors text-sm">
+              Đề tiếp theo →
+            </button>
+          </div>
         </main>
       </div>
     )
@@ -145,6 +172,7 @@ export default function Q51Page() {
   if (selected) {
     return (
       <div className="flex min-h-screen bg-[#f8f9fb]">
+        {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
