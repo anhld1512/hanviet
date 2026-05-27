@@ -9,6 +9,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q51_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q51 } from "@/app/components/writing/PracticeTips"
 import PromptGrid from "@/app/components/writing/PromptGrid"
@@ -89,7 +90,7 @@ export default function Q51Page() {
           feedback: { overall: rA.feedback.overall + " | " + rB.feedback.overall, content: "", organization: "", language: "", style: "" },
           corrections: [...rA.corrections, ...rB.corrections],
         }
-        saveSubmission({ questionType: "q51", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined })
+        trackActivity(); saveSubmission({ questionType: "q51", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined })
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"

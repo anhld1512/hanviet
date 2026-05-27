@@ -9,6 +9,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q54_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q54 } from "@/app/components/writing/PracticeTips"
 import PromptGrid from "@/app/components/writing/PromptGrid"
@@ -57,7 +58,7 @@ export default function Q54Page() {
       const pct = Math.round((result.scores.total / result.max_scores.total) * 100)
       saveBestPct("q54", selected.id, pct)
       setScores((prev) => ({ ...prev, [selected.id]: Math.max(prev[selected.id] ?? 0, pct) }))
-      saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result })
+      trackActivity(); saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result })
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
       if (msg === "free_limit_reached") { setShowUpgrade(true); return }
