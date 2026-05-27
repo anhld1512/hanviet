@@ -11,10 +11,10 @@ const QUESTION_TYPES = [
     time: "3–5 phút",
     tip: "Đọc ngữ cảnh trước-sau chỗ trống, match verb ending",
     icon: "✉️",
-    accent: "#22c55e",       // green-500
-    accentBg: "#f0fdf4",     // green-50
-    accentText: "#15803d",   // green-700
-    accentBorder: "#bbf7d0", // green-200
+    accent: "#22c55e",
+    accentBg: "#f0fdf4",
+    accentText: "#15803d",
+    accentBorder: "#bbf7d0",
     href: "/practice/q51",
   },
   {
@@ -84,14 +84,70 @@ export default function PracticePage() {
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
 
-        {/* ── Header ── */}
-        <div className="mb-8">
-          <h1 className="text-[28px] font-extrabold text-slate-900 tracking-tight leading-snug">
-            Luyện viết
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Chọn câu hỏi để bắt đầu luyện · AI chấm điểm tức thì theo chuẩn TOPIK II
-          </p>
+        {/* ── Hero Banner ── */}
+        <div
+          className="rounded-2xl p-8 mb-8 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #ede9fe 100%)",
+            border: "1px solid #c7d2fe",
+          }}
+        >
+          {/* Decorative blobs */}
+          <div
+            className="absolute -top-12 -right-12 w-64 h-64 rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, #6366f1, transparent)" }}
+          />
+          <div
+            className="absolute -bottom-8 right-32 w-40 h-40 rounded-full opacity-15"
+            style={{ background: "radial-gradient(circle, #8b5cf6, transparent)" }}
+          />
+
+          <div className="relative">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[11px] font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-200 uppercase tracking-wide">
+                TOPIK II Writing
+              </span>
+              <span className="text-[11px] text-slate-400 font-medium">100 điểm · Q51–Q54</span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-[26px] font-extrabold text-slate-900 leading-tight mb-2 tracking-tight max-w-xl">
+              Ôn thi TOPIK mà chưa biết Writing<br />
+              <span className="text-indigo-600">đang ở mức nào?</span>
+            </h1>
+            <p className="text-[13px] text-slate-500 mb-6 max-w-lg leading-relaxed">
+              Luyện từng câu hỏi, AI chấm điểm theo rubric NIIED tức thì, feedback 100% tiếng Việt.
+              Biết điểm yếu để tập trung đúng chỗ.
+            </p>
+
+            {/* CTA row */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link
+                href="/mock-exam"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+                style={{ background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", boxShadow: "0 4px 14px rgba(79,70,229,0.35)" }}
+              >
+                <span>⏱</span> Thi thử ngay
+              </Link>
+              {QUESTION_TYPES.map((q) => (
+                <Link
+                  key={q.key}
+                  href={q.href}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[12px] font-bold border-2 transition-all hover:bg-white/60"
+                  style={{ borderColor: "#c7d2fe", color: "#4338ca", background: "rgba(255,255,255,0.5)" }}
+                >
+                  {q.icon} {q.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Section title ── */}
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-[15px] font-bold text-slate-900">Chọn dạng bài để luyện</h2>
+          <span className="text-[12px] text-slate-400">4 dạng · tổng 100 điểm</span>
         </div>
 
         {/* ── 4 Question Cards ── */}
@@ -127,9 +183,9 @@ export default function PracticePage() {
                 </div>
 
                 {/* Title + desc */}
-                <h2 className="text-[15px] font-bold text-slate-900 leading-snug mb-1">
+                <h3 className="text-[15px] font-bold text-slate-900 leading-snug mb-1">
                   {q.title}
-                </h2>
+                </h3>
                 <p className="text-[12px] text-slate-500 leading-relaxed flex-1 mb-4">
                   {q.desc}
                 </p>
