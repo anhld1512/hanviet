@@ -24,6 +24,7 @@ export default function Q52Page() {
   const [showHint, setShowHint] = useState<string | null>(null)
   const [scores, setScores] = useState<Record<number, number | null>>({})
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [activeTab, setActiveTab] = useState<"A" | "B">("A")
 
   useEffect(() => {
     const s: Record<number, number | null> = {}
@@ -113,7 +114,6 @@ export default function Q52Page() {
     const total = gradeA.scores.total + gradeB.scores.total
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
-    const [activeTab, setActiveTab] = useState<"A" | "B">("A")
     const activeGrade = activeTab === "A" ? gradeA : gradeB
     const activeAnswer = activeTab === "A" ? answerA : answerB
     const activeScore = activeTab === "A" ? gradeA.scores.total : gradeB.scores.total
