@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import PracticeProgress from "@/app/components/writing/PracticeProgress"
 
 const QUESTION_TYPES = [
   {
@@ -64,19 +65,6 @@ const QUESTION_TYPES = [
   },
 ]
 
-const STYLE_INFO = [
-  { q: "Q51", style: "습니다체", note: "Thể trang trọng", accent: "#22c55e", bg: "#f0fdf4" },
-  { q: "Q52", style: "다/ㄴ다체", note: "Văn viết học thuật", accent: "#3b82f6", bg: "#eff6ff" },
-  { q: "Q53", style: "다/ㄴ다체", note: "Văn viết học thuật", accent: "#a855f7", bg: "#faf5ff" },
-  { q: "Q54", style: "합쇼체", note: "Bắt buộc — sai bị trừ điểm", accent: "#f97316", bg: "#fff7ed" },
-]
-
-const SCORE_DIST = [
-  { q: "Q51", pts: 10, color: "#22c55e" },
-  { q: "Q52", pts: 10, color: "#3b82f6" },
-  { q: "Q53", pts: 30, color: "#a855f7" },
-  { q: "Q54", pts: 50, color: "#f97316" },
-]
 
 export default function PracticePage() {
   return (
@@ -218,64 +206,9 @@ export default function PracticePage() {
           ))}
         </div>
 
-        {/* ── Bottom 2-col info ── */}
-        <div className="grid grid-cols-2 gap-5">
+        {/* ── Progress Section ── */}
+        <PracticeProgress />
 
-          {/* Thể văn */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6">
-            <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">
-              Thể văn bắt buộc
-            </h2>
-            <div className="grid grid-cols-2 gap-3">
-              {STYLE_INFO.map((item) => (
-                <div
-                  key={item.q}
-                  className="flex items-center gap-3 p-3 rounded-xl"
-                  style={{ background: item.bg }}
-                >
-                  <span
-                    className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white/80"
-                    style={{ color: item.accent }}
-                  >
-                    {item.q}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[13px] font-bold text-slate-900 truncate">{item.style}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{item.note}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Phân bố điểm */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6">
-            <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">
-              Phân bố điểm Writing
-            </h2>
-            <div className="space-y-3.5">
-              {SCORE_DIST.map((item) => (
-                <div key={item.q} className="flex items-center gap-3">
-                  <span className="text-[11px] font-bold text-slate-500 w-8">{item.q}</span>
-                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${item.pts}%`, background: item.color }}
-                    />
-                  </div>
-                  <span className="text-[11px] font-bold text-slate-700 w-14 text-right">
-                    {item.pts} điểm
-                  </span>
-                </div>
-              ))}
-              <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
-                <span className="text-[11px] text-slate-400">Tổng điểm Writing</span>
-                <span className="text-sm font-extrabold text-slate-900">100 điểm</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
       </main>
     </div>
   )
