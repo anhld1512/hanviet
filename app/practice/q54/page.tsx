@@ -69,7 +69,7 @@ export default function Q54Page() {
   if (gradeResult && selected) {
     const pct = Math.round((gradeResult.scores.total / gradeResult.max_scores.total) * 100)
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
@@ -94,7 +94,7 @@ export default function Q54Page() {
   if (selected) {
     const charCount = answer.replace(/\n/g, "").length
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
@@ -165,7 +165,7 @@ export default function Q54Page() {
   const passed = Q54_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#f8f9fb]">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">

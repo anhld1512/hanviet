@@ -104,7 +104,7 @@ export default function Q51Page() {
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
@@ -143,7 +143,7 @@ export default function Q51Page() {
   // ── Editor view ──
   if (selected) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
@@ -216,27 +216,30 @@ export default function Q51Page() {
   const passed = Q51_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#f8f9fb]">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
         <div className="w-full">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
-          <div className="w-px h-4 bg-gray-200" />
-          <span className="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded-full">Q51</span>
-          <span className="font-bold text-gray-900">Thực dụng văn</span>
-          <div className="ml-auto flex items-center gap-3 text-sm">
-            <span className="text-gray-400">{attempted}/{Q51_PROMPTS.length} đã thử</span>
-            <span className="text-green-600 font-semibold">{passed} đề ≥80%</span>
+          <Link href="/practice" className="text-[13px] text-slate-400 hover:text-slate-600 font-medium transition-colors">← Luyện viết</Link>
+          <div className="w-px h-4 bg-slate-200" />
+          <span className="text-[11px] bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200">Q51</span>
+          <span className="font-bold text-slate-900 text-[15px]">Thực dụng văn</span>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="text-[13px] text-slate-400">{attempted}/{Q51_PROMPTS.length} đã thử</span>
+            <span className="text-[13px] text-green-600 font-bold">{passed} đề ≥80%</span>
           </div>
         </div>
 
         {/* Tips */}
         <PracticeTips data={TIPS_Q51} />
 
-        <h2 className="font-bold text-gray-900 mb-4">Chọn đề để luyện <span className="text-sm font-normal text-gray-400 ml-1">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span></h2>
+        <h2 className="text-[13px] font-bold text-slate-900 mb-4 mt-2">
+          Chọn đề để luyện
+          <span className="text-[12px] font-normal text-slate-400 ml-2">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span>
+        </h2>
         <PromptGrid
           prompts={Q51_PROMPTS}
           scores={scores}

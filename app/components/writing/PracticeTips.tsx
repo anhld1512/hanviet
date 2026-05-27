@@ -157,61 +157,57 @@ export const TIPS_Q54: PracticeTipsData = {
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function PracticeTips({ data }: { data: PracticeTipsData }) {
   return (
-    <div className="mb-6 rounded-2xl border border-blue-200 overflow-hidden shadow-sm">
+    <div className="mb-6 rounded-2xl border border-slate-200 overflow-hidden" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.04)" }}>
 
       {/* ── Header bar ── */}
-      <div className="bg-blue-600 px-5 py-3 flex items-center gap-2">
+      <div className="px-5 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" }}>
         <span className="text-base">✅</span>
-        <span className="text-sm font-bold text-white tracking-wide">Quy trình trước khi viết</span>
-        <span className="ml-auto text-xs text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
+        <span className="text-[13px] font-bold text-white tracking-wide">Quy trình trước khi viết</span>
+        <span className="ml-auto text-[11px] text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
       </div>
 
       {/* ── Steps ── */}
-      <div className="bg-gradient-to-b from-blue-50 to-white px-5 py-5">
-        <div className="grid grid-cols-5 gap-4">
+      <div className="bg-white px-5 py-5">
+        <div className="grid grid-cols-5 gap-3">
           {data.steps.map((step, i) => (
             <div key={i} className="relative flex gap-3">
-              {/* Arrow between steps */}
               {i < data.steps.length - 1 && (
-                <span className="absolute -right-3 top-3 text-blue-300 text-lg select-none z-10">›</span>
+                <span className="absolute -right-2 top-3.5 text-slate-300 text-base select-none z-10">›</span>
               )}
-              {/* Card */}
-              <div className="flex-1 bg-white rounded-xl border border-blue-100 p-3.5 shadow-sm flex flex-col gap-2">
+              <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#f8f9fb" }}>
                 <div className="flex items-center justify-between">
-                  <span className="w-7 h-7 rounded-full bg-blue-500 text-white text-sm font-extrabold flex items-center justify-center shrink-0">
+                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0">
                     {i + 1}
                   </span>
                   {step.time && (
-                    <span className="text-[10px] font-semibold text-blue-500 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">{step.time}</span>
+                    <span className="text-[9px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">{step.time}</span>
                   )}
                 </div>
-                <p className="text-sm font-bold text-gray-900 leading-snug">{step.label}</p>
-                <p className="text-xs text-gray-500 leading-relaxed">{step.detail}</p>
+                <p className="text-[12px] font-bold text-slate-900 leading-snug">{step.label}</p>
+                <p className="text-[11px] text-slate-500 leading-relaxed">{step.detail}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── Patterns + Avoid: 2 equal columns ── */}
-      <div className="bg-white border-t border-gray-100 px-5 py-4 grid grid-cols-2 gap-4">
+      {/* ── Patterns + Avoid ── */}
+      <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-2 gap-4 bg-white">
 
-        {/* Câu mẫu hay dùng */}
         <div>
-          <p className="text-xs font-bold text-gray-700 mb-2.5">💡 Câu mẫu hay dùng khi viết</p>
+          <p className="text-[11px] font-bold text-slate-600 mb-2.5 uppercase tracking-wide">💡 Câu mẫu hay dùng khi viết</p>
           <div className="flex flex-wrap gap-1.5">
             {data.patterns.map((p, i) => (
-              <span key={i} className="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-lg">
+              <span key={i} className="text-[11px] font-mono bg-slate-50 text-blue-700 border border-slate-200 px-2.5 py-1 rounded-lg">
                 {p}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Lỗi hay gặp nhất */}
-        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-          <p className="text-xs font-bold text-red-600 mb-1.5">⚠️ Lỗi hay gặp nhất — tránh ngay</p>
-          <p className="text-sm text-red-700 leading-relaxed">{data.avoid}</p>
+        <div className="rounded-xl px-4 py-3" style={{ background: "#fff5f5", border: "1px solid #fecaca" }}>
+          <p className="text-[11px] font-bold text-red-600 mb-1.5 uppercase tracking-wide">⚠️ Lỗi hay gặp nhất — tránh ngay</p>
+          <p className="text-[12px] text-red-700 leading-relaxed">{data.avoid}</p>
         </div>
 
       </div>

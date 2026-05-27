@@ -119,7 +119,7 @@ export default function Q52Page() {
     const activeScore = activeTab === "A" ? gradeA.scores.total : gradeB.scores.total
     const activeMax = activeTab === "A" ? gradeA.max_scores.total : gradeB.max_scores.total
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
           <div className="max-w-3xl">
@@ -174,7 +174,7 @@ export default function Q52Page() {
   // Editor view
   if (selected) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
@@ -247,7 +247,7 @@ export default function Q52Page() {
   const passed = Q52_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#f8f9fb]">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
