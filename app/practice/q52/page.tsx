@@ -121,7 +121,8 @@ export default function Q52Page() {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8 max-w-3xl">
+        <main className="ml-56 flex-1 p-8">
+          <div className="max-w-3xl">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
@@ -164,6 +165,7 @@ export default function Q52Page() {
             <span className={`ml-auto text-sm font-bold ${Math.round((activeScore/activeMax)*100) >= 80 ? "text-green-600" : "text-orange-500"}`}>{activeScore}/{activeMax}</span>
           </div>
           <GradingResult result={activeGrade} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} />
+          </div>
         </main>
       </div>
     )
@@ -175,7 +177,7 @@ export default function Q52Page() {
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
-        <div className="max-w-5xl mx-auto">
+        <div className="w-full">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
             <div className="w-px h-4 bg-gray-200" />
@@ -249,7 +251,7 @@ export default function Q52Page() {
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
-        <div className="max-w-5xl mx-auto">
+        <div className="w-full">
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
           <div className="w-px h-4 bg-gray-200" />
