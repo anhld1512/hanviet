@@ -106,7 +106,7 @@ export default function Q51Page() {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8">
+        <main className="ml-56 flex-1 p-8 max-w-[1280px]">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
             <div className="w-px h-4 bg-gray-200" />
@@ -143,7 +143,7 @@ export default function Q51Page() {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8">
+        <main className="ml-56 flex-1 p-8 max-w-[1280px]">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
             <div className="w-px h-4 bg-gray-200" />
@@ -215,7 +215,7 @@ export default function Q51Page() {
     <div className="flex min-h-screen bg-gray-50">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <main className="ml-56 flex-1 p-8 max-w-[1280px]">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>

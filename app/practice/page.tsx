@@ -47,7 +47,7 @@ export default function PracticePage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <main className="ml-56 flex-1 p-8 max-w-[1280px]">
 
         {/* Header */}
         <div className="mb-8">
