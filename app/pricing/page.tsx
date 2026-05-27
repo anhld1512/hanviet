@@ -179,7 +179,18 @@ export default async function PricingPage() {
               </ul>
 
               {/* CTA */}
-              {plan.ctaDisabled ? (
+              {isPro ? (
+                // User is Pro: show "Đang dùng" on Pro plans, muted on Free
+                plan.name === "Free" ? (
+                  <div className="text-center text-sm py-3 rounded-xl font-semibold bg-gray-100 text-gray-300">
+                    Gói cơ bản
+                  </div>
+                ) : (
+                  <div className={`text-center text-sm py-3 rounded-xl font-semibold ${plan.highlight ? "bg-blue-500 text-blue-100" : "bg-green-50 text-green-600 border border-green-200"}`}>
+                    ✓ Đang dùng
+                  </div>
+                )
+              ) : plan.ctaDisabled ? (
                 <div className={`text-center text-sm py-3 rounded-xl font-semibold ${plan.highlight ? "bg-blue-500 text-blue-100" : "bg-gray-100 text-gray-400"}`}>
                   {plan.cta}
                 </div>

@@ -367,7 +367,7 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
                       onClick={() => setIsFlipped(true)}
                       className="px-5 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-xl transition-all"
                     >
-                      Lật xem đáp án ↻
+                      Lật xem đáp án →
                     </button>
                   )}
                 </div>

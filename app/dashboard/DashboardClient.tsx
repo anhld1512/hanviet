@@ -86,7 +86,7 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar tier={profile.subscription_tier} />
+      <Sidebar />
 
       {/* Main content */}
       <main className="ml-56 flex-1 min-h-screen p-8">

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase-client"
 
 const NAV_ITEMS = [
@@ -11,9 +12,26 @@ const NAV_ITEMS = [
   { href: "/review",        icon: "🃏",  label: "Ôn lỗi" },
 ]
 
-export default function Sidebar({ tier = "free" }: { tier?: string }) {
+export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const [isPro, setIsPro] = useState(true) // default true to avoid flash of upgrade button
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return
+      supabase
+        .from("user_profiles")
+        .select("subscription_tier, is_pro")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          const pro = data?.subscription_tier === "pro" || data?.is_pro === true
+          setIsPro(pro)
+        })
+    })
+  }, [])
 
   async function handleLogout() {
     const supabase = createClient()
@@ -73,7 +91,7 @@ export default function Sidebar({ tier = "free" }: { tier?: string }) {
 
       {/* ── Bottom ── */}
       <div className="px-2.5 pb-4 space-y-1.5">
-        {tier === "free" && (
+        {!isPro && (
           <Link
             href="/pricing"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
