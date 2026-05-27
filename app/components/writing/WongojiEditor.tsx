@@ -172,9 +172,10 @@ export default function WongojiEditor({
             }
           }}
           onKeyDown={(e) => {
-            // Backspace/Delete: luon force-sync du dang compose hay không
-            // Fix: IME stuck → isComposing=true → onInput bi block → xoa khong duoc
-            if ((e.key === "Backspace" || e.key === "Delete") && taRef.current) {
+            // Backspace/Delete khi KHÔNG đang compose → force-sync
+            // e.isComposing=true nghĩa là IME đang xử lý (vd: xóa jamo trong 쇼→ㅅ) → không can thiệp
+            // e.isComposing=false mà isComposingRef=true → IME bị stuck → force-reset + sync
+            if ((e.key === "Backspace" || e.key === "Delete") && taRef.current && !e.isComposing) {
               isComposingRef.current = false
               setComposing("")
               setTimeout(() => {
