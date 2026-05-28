@@ -5,6 +5,7 @@ import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import GradingResult from "@/app/components/grading/GradingResult"
+import GradingLoader from "@/app/components/grading/GradingLoader"
 import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q52_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
@@ -182,6 +183,7 @@ export default function Q52Page() {
   if (selected) {
     return (
       <div className="flex min-h-screen bg-[#f8f9fb]">
+        {loading && <GradingLoader />}
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
