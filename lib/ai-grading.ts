@@ -16,8 +16,10 @@ const client = new OpenAI({
   },
 })
 
-// MODEL_SIMPLE: Gemini 2.0 Flash — sub-5s tren OpenRouter, du chat luong cho Q51/Q52 (1 cau ngan)
-// MODEL_ADVANCED: DeepSeek V4 Flash — can suy luan sau hon cho Q53/Q54 (bai luan dai)
+// MODEL_SIMPLE: Gemini 2.0 Flash — nhanh (sub-10s), chat luong tot cho Q51/Q52 (1 cau ngan)
+//   Test: V3 cho 5/5 voi cau SAI noi dung (앞바퀴 vs 뒷바퀴) — khong dung duoc
+//   Gemini detect dung loi noi dung, toc do on dinh hon DeepSeek tren OpenRouter
+// MODEL_ADVANCED: DeepSeek V4 Flash — reasoning model cho Q53/Q54 (bai luan dai, can phan tich sau)
 const MODEL_SIMPLE = "google/gemini-2.0-flash-001"
 const MODEL_ADVANCED = "deepseek/deepseek-v4-flash"
 
@@ -101,8 +103,8 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  // Q51/Q52 chi cham 1 cau ngan — 800 tokens la du, giam de model tra loi nhanh hon
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 800)
+  // Gemini 2.0 Flash verbose hon DeepSeek — can 1500 tokens de JSON khong bi truncate
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 1500)
   const data = parseGradeJSON(text)
 
   if (!data) {
