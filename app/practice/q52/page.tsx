@@ -62,8 +62,11 @@ export default function Q52Page() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question_type: "q52", prompt_text: selected!.text_kr, blank_key: blankKey, student_answer: answer, context_hint: hint }),
     })
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error || "Lỗi máy chủ") }
-    return res.json()
+    const text = await res.text()
+    let data: Record<string, unknown>
+    try { data = JSON.parse(text) } catch { throw new Error("Máy chủ gặp sự cố. Vui lòng thử lại.") }
+    if (!res.ok) throw new Error((data.error as string) || "Lỗi máy chủ")
+    return data as unknown as GradeResult
   }
 
   async function handleSubmit() {

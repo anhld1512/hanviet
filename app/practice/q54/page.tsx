@@ -53,8 +53,11 @@ export default function Q54Page() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question_type: "q54", topic: selected.topic ?? selected.text_kr, student_essay: answer }),
       })
-      if (!res.ok) { const e = await res.json(); throw new Error(e.error || "Lỗi máy chủ") }
-      const result: GradeResult = await res.json()
+      const text = await res.text()
+      let data: Record<string, unknown>
+      try { data = JSON.parse(text) } catch { throw new Error("Máy chủ gặp sự cố. Vui lòng thử lại.") }
+      if (!res.ok) throw new Error((data.error as string) || "Lỗi máy chủ")
+      const result = data as unknown as GradeResult
       setGradeResult(result)
       const pct = Math.round((result.scores.total / result.max_scores.total) * 100)
       saveBestPct("q54", selected.id, pct)
