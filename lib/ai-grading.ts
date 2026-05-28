@@ -16,10 +16,9 @@ const client = new OpenAI({
   },
 })
 
-// V4 Flash: reasoning model, 13B active params, nhanh + re hon V3
-// Fix content:null: bo response_format json_object (ko tuong thich voi reasoning models)
-// Parser da xu ly output tu do (strip markdown, bracket-count JSON)
-const MODEL_SIMPLE = "deepseek/deepseek-v4-flash"
+// MODEL_SIMPLE: Gemini 2.0 Flash — sub-5s tren OpenRouter, du chat luong cho Q51/Q52 (1 cau ngan)
+// MODEL_ADVANCED: DeepSeek V4 Flash — can suy luan sau hon cho Q53/Q54 (bai luan dai)
+const MODEL_SIMPLE = "google/gemini-2.0-flash-001"
 const MODEL_ADVANCED = "deepseek/deepseek-v4-flash"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
@@ -102,7 +101,8 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 3000)
+  // Q51/Q52 chi cham 1 cau ngan — 800 tokens la du, giam de model tra loi nhanh hon
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 800)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -153,7 +153,7 @@ export async function gradeQ53(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ53Prompt(chartDescription, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 3000)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -205,7 +205,7 @@ export async function gradeQ54(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ54Prompt(topic, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 3000)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
   const data = parseGradeJSON(text)
 
   if (!data) {
