@@ -146,7 +146,7 @@ export async function gradeQ53(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ53Prompt(chartDescription, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -198,7 +198,7 @@ export async function gradeQ54(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ54Prompt(topic, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
   const data = parseGradeJSON(text)
 
   if (!data) {
