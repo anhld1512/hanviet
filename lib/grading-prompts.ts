@@ -45,6 +45,7 @@ export type GradeResult = {
   char_count_feedback?: string
   thesis_feedback?: string
   better_opening?: string
+  isError?: boolean             // true khi API fail — render error state thay vì score 0
 }
 
 // ─── Shared error classification guide ────────────────────────────────────────

@@ -264,5 +264,6 @@ function defaultResult(type: "q51" | "q52" | "q53" | "q54", message: string): Gr
     max_scores: maxMap[type],
     feedback: { overall: message, content: "", organization: "", language: "", style: "" },
     corrections: [],
+    isError: true,
   }
 }

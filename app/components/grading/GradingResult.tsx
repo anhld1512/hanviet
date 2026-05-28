@@ -75,8 +75,36 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
   )
 }
 
+// ─── Error state ──────────────────────────────────────────────────────────────
+function GradingError({ onRetry, hideActions }: { onRetry: () => void; hideActions?: boolean }) {
+  return (
+    <div className="bg-white rounded-2xl border border-red-100 p-6 flex flex-col items-center gap-4 text-center">
+      <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-2xl">⚠️</div>
+      <div>
+        <p className="text-sm font-semibold text-gray-800">Có lỗi kỹ thuật khi chấm bài</p>
+        <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+          Máy chủ AI gặp sự cố tạm thời. Bài viết của bạn vẫn được lưu — hãy thử lại.
+        </p>
+      </div>
+      {!hideActions && (
+        <button
+          onClick={onRetry}
+          className="px-5 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors"
+        >
+          Thử lại ngay
+        </button>
+      )}
+    </div>
+  )
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function GradingResult({ result, onRetry, onNext, hideActions }: GradingResultProps) {
+  // API error — hiển thị lỗi rõ ràng, không render score 0 như kết quả thật
+  if (result.isError) {
+    return <GradingError onRetry={onRetry} hideActions={hideActions} />
+  }
+
   const {
     scores, max_scores, feedback, corrections,
     better_example, coaching, char_count_feedback,
