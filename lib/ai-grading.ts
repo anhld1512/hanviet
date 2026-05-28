@@ -95,7 +95,7 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 1500)
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 2000)
   const data = parseGradeJSON(text)
 
   if (!data) {
