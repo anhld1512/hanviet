@@ -16,10 +16,11 @@ const client = new OpenAI({
   },
 })
 
-// OpenRouter model names — dung chat model (khong phai reasoning model)
-// deepseek-v4-pro la reasoning model, tra content:null → parse fail
-const MODEL_SIMPLE = "deepseek/deepseek-chat-v3-0324"
-const MODEL_ADVANCED = "deepseek/deepseek-chat-v3-0324"
+// V4 Flash: reasoning model, 13B active params, nhanh + re hon V3
+// Fix content:null: bo response_format json_object (ko tuong thich voi reasoning models)
+// Parser da xu ly output tu do (strip markdown, bracket-count JSON)
+const MODEL_SIMPLE = "deepseek/deepseek-v4-flash"
+const MODEL_ADVANCED = "deepseek/deepseek-v4-flash"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {
@@ -67,9 +68,12 @@ async function callDeepSeek(prompt: string, model: string, maxTokens = 1000): Pr
     messages: [{ role: "user", content: prompt }],
     max_tokens: maxTokens,
     temperature: 0.1,
-    response_format: { type: "json_object" },
+    // Khong dung response_format json_object — reasoning models tra content:null voi param nay
+    // Parser xu ly output tu do (strip markdown, bracket-count JSON)
   })
-  const text = response.choices[0]?.message?.content ?? ""
+  const msg = response.choices[0]?.message
+  // Fallback sang reasoning_content neu content null (reasoning model edge case)
+  const text = msg?.content ?? (msg as unknown as Record<string, string>)?.reasoning_content ?? ""
   console.log("[DeepSeek RAW]", model, text.slice(0, 300))
   return text
 }
