@@ -62,7 +62,7 @@ function parseGradeJSON(text: string): Record<string, unknown> | null {
   }
 }
 
-async function callDeepSeek(prompt: string, model: string, maxTokens = 1000): Promise<string> {
+async function callDeepSeek(prompt: string, model: string, maxTokens = 1000, retries = 1): Promise<string> {
   const response = await client.chat.completions.create({
     model,
     messages: [{ role: "user", content: prompt }],
@@ -75,6 +75,13 @@ async function callDeepSeek(prompt: string, model: string, maxTokens = 1000): Pr
   // Fallback sang reasoning_content neu content null (reasoning model edge case)
   const text = msg?.content ?? (msg as unknown as Record<string, string>)?.reasoning_content ?? ""
   console.log("[DeepSeek RAW]", model, text.slice(0, 300))
+
+  // Retry mot lan neu response rong (transient API error)
+  if (!text && retries > 0) {
+    console.warn("[callDeepSeek] Empty response, retrying...")
+    return callDeepSeek(prompt, model, maxTokens, retries - 1)
+  }
+
   return text
 }
 
@@ -95,7 +102,7 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 2000)
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 3000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -146,7 +153,7 @@ export async function gradeQ53(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ53Prompt(chartDescription, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 3000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -198,7 +205,7 @@ export async function gradeQ54(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ54Prompt(topic, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 3000)
   const data = parseGradeJSON(text)
 
   if (!data) {
