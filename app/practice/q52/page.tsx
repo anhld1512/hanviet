@@ -25,7 +25,6 @@ export default function Q52Page() {
   const [showHint, setShowHint] = useState<string | null>(null)
   const [scores, setScores] = useState<Record<number, number | null>>({})
   const [showUpgrade, setShowUpgrade] = useState(false)
-  const [activeTab, setActiveTab] = useState<"A" | "B">("A")
 
   useEffect(() => {
     const s: Record<number, number | null> = {}
@@ -115,57 +114,64 @@ export default function Q52Page() {
     const total = gradeA.scores.total + gradeB.scores.total
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
-    const activeGrade = activeTab === "A" ? gradeA : gradeB
-    const activeAnswer = activeTab === "A" ? answerA : answerB
-    const activeScore = activeTab === "A" ? gradeA.scores.total : gradeB.scores.total
-    const activeMax = activeTab === "A" ? gradeA.max_scores.total : gradeB.max_scores.total
+    const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : "#ea580c"
     return (
       <div className="flex min-h-screen bg-[#f8f9fb]">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
-          <div className="max-w-3xl">
-          {/* Header */}
+          {/* Breadcrumb + tổng điểm */}
           <div className="flex items-center gap-3 mb-6">
-            <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
-            <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q52</span>
-            <span className="text-sm text-gray-500 truncate max-w-xs">{selected.context}</span>
-            <div className="ml-auto flex items-center gap-2">
-              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{total}/{max}</span>
-              <span className="text-xs text-gray-400">điểm tổng</span>
+            <button onClick={backToList} className="text-slate-400 hover:text-slate-600 text-sm font-medium shrink-0">← Chọn đề khác</button>
+            <div className="w-px h-4 bg-slate-200 shrink-0" />
+            <span className="text-xs bg-blue-100 text-blue-700 font-extrabold px-2.5 py-1 rounded-full border border-blue-200 shrink-0">Q52</span>
+            <span className="text-sm text-slate-500 truncate">{selected.context}</span>
+            <div className="ml-auto flex items-center gap-3 shrink-0">
+              <span className="text-sm font-bold" style={{ color: scoreColor }}>{total}/{max} điểm</span>
+              <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${pct}%`, background: scoreColor }} />
+              </div>
             </div>
           </div>
 
-          {/* Score summary bar */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 mb-5 flex gap-4">
-            {[
-              { key: "A", label: "ㄱ", answer: answerA, score: gradeA.scores.total, max: gradeA.max_scores.total },
-              { key: "B", label: "ㄴ", answer: answerB, score: gradeB.scores.total, max: gradeB.max_scores.total },
-            ].map((item) => {
-              const p = Math.round((item.score / item.max) * 100)
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => setActiveTab(item.key as "A" | "B")}
-                  className={`flex-1 text-left rounded-xl p-3 border-2 transition-all ${activeTab === item.key ? "border-blue-400 bg-blue-50" : "border-transparent bg-gray-50 hover:bg-gray-100"}`}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">{item.label}</span>
-                    <span className={`text-sm font-bold ${p >= 80 ? "text-green-600" : p >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{item.score}/{item.max} điểm</span>
-                  </div>
-                  <p className="text-xs text-gray-500 truncate">{item.answer}</p>
-                </button>
-              )
-            })}
+          {/* ── Câu ㄱ ── */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shrink-0">ㄱ</span>
+              <span className="text-sm font-semibold text-gray-700">Câu trả lời của bạn:</span>
+              <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerA}</span>
+              <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeA.scores.total}/{gradeA.max_scores.total} điểm</span>
+            </div>
+            <GradingResult result={gradeA} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
           </div>
 
-          {/* Active tab result */}
-          <div className="mb-3 flex items-center gap-2">
-            <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">{activeTab === "A" ? "ㄱ" : "ㄴ"}</span>
-            <span className="text-sm font-semibold text-gray-700">{activeAnswer}</span>
-            <span className={`ml-auto text-sm font-bold ${Math.round((activeScore/activeMax)*100) >= 80 ? "text-green-600" : "text-orange-500"}`}>{activeScore}/{activeMax}</span>
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Câu ㄴ</span>
+            <div className="flex-1 h-px bg-gray-200" />
           </div>
-          <GradingResult result={activeGrade} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} />
+
+          {/* ── Câu ㄴ ── */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shrink-0">ㄴ</span>
+              <span className="text-sm font-semibold text-gray-700">Câu trả lời của bạn:</span>
+              <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerB}</span>
+              <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeB.scores.total}/{gradeB.max_scores.total} điểm</span>
+            </div>
+            <GradingResult result={gradeB} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
+          </div>
+
+          {/* Shared CTA */}
+          <div className="flex gap-3 pb-10">
+            <button onClick={() => { setGradeA(null); setGradeB(null) }}
+              className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm">
+              Làm lại đề này
+            </button>
+            <button onClick={backToList}
+              className="flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-colors text-sm">
+              Đề tiếp theo →
+            </button>
           </div>
         </main>
       </div>
