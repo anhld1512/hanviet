@@ -68,9 +68,12 @@ async function callDeepSeek(prompt: string, model: string, maxTokens = 1000, ret
     // Parser xu ly output tu do (strip markdown, bracket-count JSON)
   })
   const msg = response.choices[0]?.message
-  // Fallback sang reasoning_content neu content null (reasoning model edge case)
-  const text = msg?.content ?? (msg as unknown as Record<string, string>)?.reasoning_content ?? ""
-  console.log("[DeepSeek RAW]", model, text.slice(0, 300))
+  // Direct DeepSeek API: reasoning models tra content="" (empty string, khong phai null)
+  // Dung || thay vi ?? de bat ca empty string, fallback sang reasoning_content
+  const rawContent = msg?.content
+  const rawReasoning = (msg as unknown as Record<string, string>)?.reasoning_content
+  const text = rawContent || rawReasoning || ""
+  console.log("[DeepSeek RAW] content:", rawContent?.slice(0, 100), "| reasoning:", rawReasoning?.slice(0, 100))
 
   // Retry mot lan neu response rong (transient API error)
   if (!text && retries > 0) {
@@ -98,8 +101,9 @@ export async function gradeQ51Q52(params: {
       ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
       : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
 
-  // Gemini 2.0 Flash verbose hon DeepSeek — can 1500 tokens de JSON khong bi truncate
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 1500)
+  // DeepSeek reasoning model: thinking tokens + content tokens deu tinh chung vao max_tokens
+  // V4 Flash thinking ~2000-3000 tokens + JSON output ~1500 tokens => can >= 8000
+  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 8000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -150,7 +154,8 @@ export async function gradeQ53(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ53Prompt(chartDescription, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
+  // DeepSeek V4 Pro: thinking ~3000 + essay grading JSON ~2000 => can >= 8000
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 8000)
   const data = parseGradeJSON(text)
 
   if (!data) {
@@ -202,7 +207,8 @@ export async function gradeQ54(params: {
   const charCount = studentEssay.replace(/\n/g, "").length
 
   const prompt = buildQ54Prompt(topic, studentEssay, charCount)
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 2000)
+  // DeepSeek V4 Pro: thinking ~3000 + essay grading JSON ~2000 => can >= 8000
+  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 8000)
   const data = parseGradeJSON(text)
 
   if (!data) {
