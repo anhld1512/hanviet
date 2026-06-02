@@ -9,19 +9,14 @@ import {
 
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-  defaultHeaders: {
-    "HTTP-Referer": "https://hanviet.app",
-    "X-Title": "HanViet Writing Coach",
-  },
+  baseURL: "https://api.deepseek.com",
 })
 
-// MODEL_SIMPLE: Gemini 2.0 Flash — nhanh (sub-10s), chat luong tot cho Q51/Q52 (1 cau ngan)
-//   Test: V3 cho 5/5 voi cau SAI noi dung (앞바퀴 vs 뒷바퀴) — khong dung duoc
-//   Gemini detect dung loi noi dung, toc do on dinh hon DeepSeek tren OpenRouter
-// MODEL_ADVANCED: DeepSeek V4 Flash — reasoning model cho Q53/Q54 (bai luan dai, can phan tich sau)
-const MODEL_SIMPLE = "google/gemini-2.0-flash-001"
-const MODEL_ADVANCED = "deepseek/deepseek-v4-flash"
+// Direct DeepSeek API (khong qua OpenRouter) — nhanh hon, cache hit re hon nhieu
+// MODEL_SIMPLE: V4 Flash — Q51/Q52 (1 cau ngan), nhanh, du chat luong
+// MODEL_ADVANCED: V4 Pro — Q53/Q54 (bai luan dai), 49B active params, chat luong cao hon
+const MODEL_SIMPLE = "deepseek-v4-flash"
+const MODEL_ADVANCED = "deepseek-v4-pro"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {
