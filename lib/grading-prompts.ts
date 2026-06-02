@@ -108,8 +108,8 @@ YÊU CẦU CHẤT LƯỢNG PHẢN HỒI — BẮT BUỘC TUÂN THỦ:
 • corrections[].explanation: PHẢI CÓ 4-5 câu — (1) lỗi cụ thể là gì, (2) tại sao vi phạm quy tắc ngữ pháp, (3) quy tắc đúng là gì và cách hoạt động, (4) ví dụ thêm về cách dùng đúng, (5) mẹo để nhớ/tránh lỗi này
 • coaching.strength: 2-3 câu — điểm làm tốt cụ thể với dẫn chứng từ bài viết
 • coaching.weakness: 2-3 câu — điểm yếu chính với phân tích cụ thể và tác động đến điểm
-• coaching.focus_pattern: 2-3 câu — pattern cần ôn, giải thích cách dùng đúng, ít nhất 2 ví dụ cụ thể
-• coaching.level_tip: 3-4 câu — lời khuyên thực tế, actionable, có bước cụ thể để cải thiện
+• coaching.focus_pattern: 2-3 câu — pattern cần ôn, giải thích cách dùng đúng, ít nhất 2 ví dụ cụ thể. KHÔNG ĐỂ TRỐNG.
+• coaching.level_tip: 3-4 câu — lời khuyên thực tế, actionable, có bước cụ thể để cải thiện. KHÔNG ĐỂ TRỐNG.
 
 Trả về JSON:
 {
@@ -133,8 +133,8 @@ Trả về JSON:
   "coaching": {
     "strength": "<2-3 câu điểm tốt cụ thể với dẫn chứng từ bài viết>",
     "weakness": "<2-3 câu điểm yếu chính với phân tích và tác động đến điểm>",
-    "focus_pattern": "<2-3 câu: pattern cần ôn + cách dùng đúng + 2 ví dụ cụ thể>",
-    "level_tip": "<3-4 câu lời khuyên actionable với bước cụ thể để cải thiện>"
+    "focus_pattern": "<2-3 câu: pattern cần ôn + cách dùng đúng + 2 ví dụ cụ thể. KHÔNG ĐỂ TRỐNG>",
+    "level_tip": "<3-4 câu lời khuyên actionable với bước cụ thể để cải thiện. KHÔNG ĐỂ TRỐNG>"
   },
   "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
@@ -201,8 +201,8 @@ Trả về JSON:
   "coaching": {
     "strength": "<2-3 câu: điểm tốt cụ thể với dẫn chứng từ bài viết>",
     "weakness": "<2-3 câu: điểm yếu chính với phân tích sâu và tác động>",
-    "focus_pattern": "<2-3 câu: pattern/từ vựng học thuật cần ôn + giải thích cách dùng + 2 ví dụ>",
-    "level_tip": "<3-4 câu lời khuyên actionable để viết văn nghị luận tốt hơn>"
+    "focus_pattern": "<2-3 câu: pattern/từ vựng học thuật cần ôn + giải thích cách dùng + 2 ví dụ. KHÔNG ĐỂ TRỐNG>",
+    "level_tip": "<3-4 câu lời khuyên actionable để viết văn nghị luận tốt hơn. KHÔNG ĐỂ TRỐNG>"
   },
   "better_example": "<câu mẫu tốt hơn bằng tiếng Hàn>"
 }
@@ -273,8 +273,8 @@ Trả về JSON:
   "coaching": {
     "strength": "<điểm tốt nhất của bài>",
     "weakness": "<điểm yếu chính>",
-    "focus_pattern": "<1 cấu trúc phân tích biểu đồ cần ôn: 'Ôn lại: N이/가 X%를 차지하다 — ví dụ...'>",
-    "level_tip": "<lời khuyên cụ thể để cải thiện>"
+    "focus_pattern": "<1 cấu trúc phân tích biểu đồ cần ôn: 'Ôn lại: N이/가 X%를 차지하다 — ví dụ...'. KHÔNG ĐỂ TRỐNG>",
+    "level_tip": "<lời khuyên cụ thể để cải thiện. KHÔNG ĐỂ TRỐNG>"
   },
   "better_example": "<1-2 câu mẫu cho phần yếu nhất, tiếng Hàn>"
 }
@@ -347,8 +347,8 @@ Trả về JSON:
   "coaching": {
     "strength": "<điểm mạnh nhất của bài luận>",
     "weakness": "<điểm yếu chính ảnh hưởng điểm nhất>",
-    "focus_pattern": "<1 kỹ năng/cấu trúc cần ôn: 'Ôn lại: [pattern] — [ví dụ cụ thể]'>",
-    "level_tip": "<lời khuyên cụ thể để nâng điểm lên 1 bậc>"
+    "focus_pattern": "<1 kỹ năng/cấu trúc cần ôn: 'Ôn lại: [pattern] — [ví dụ cụ thể]'. KHÔNG ĐỂ TRỐNG>",
+    "level_tip": "<lời khuyên cụ thể để nâng điểm lên 1 bậc. KHÔNG ĐỂ TRỐNG>"
   },
   "thesis_feedback": "<phân tích câu thesis: có rõ ràng và đặc sắc không? gợi ý cải thiện>",
   "better_opening": "<gợi ý mở bài tốt hơn nếu cần, tiếng Hàn>"

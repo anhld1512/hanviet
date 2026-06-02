@@ -221,20 +221,24 @@ export default function GradingResult({ result, onRetry, onNext, hideActions }: 
                 </h3>
               </div>
               <div className="bg-white p-5 space-y-4 flex-1">
-                <div className="flex items-start gap-3">
-                  <span className="text-lg shrink-0">📚</span>
-                  <div>
-                    <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Cần ôn lại</p>
-                    <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
+                {coaching.focus_pattern && (
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg shrink-0">📚</span>
+                    <div>
+                      <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Cần ôn lại</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-lg shrink-0">🚀</span>
-                  <div>
-                    <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Bước tiếp theo</p>
-                    <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
+                )}
+                {coaching.level_tip && (
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg shrink-0">🚀</span>
+                    <div>
+                      <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Bước tiếp theo</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
+                    </div>
                   </div>
-                </div>
+                )}
                 {(better_example || better_opening) && (
                   <div className="pt-3 border-t border-gray-100">
                     <p className="text-xs font-bold text-indigo-600 mb-2 uppercase tracking-wide">✨ Câu mẫu tham khảo</p>
