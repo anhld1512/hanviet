@@ -113,15 +113,15 @@ export async function GET(req: NextRequest) {
   if (!userPrompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
 
   try {
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const res = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-chat-v3-0324",
-        max_tokens: 1200,
+        model: "deepseek-v4-flash",
+        max_tokens: 4000,
         temperature: 1.1,
         messages: [
           {
