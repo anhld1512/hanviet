@@ -146,7 +146,7 @@ export default function Q53Page() {
               <span className="text-xs text-gray-400">điểm</span>
             </div>
           </div>
-          <GradingResult result={gradeResult} onRetry={() => setGradeResult(null)} onNext={backToList} />
+          <GradingResult result={gradeResult} onRetry={() => setGradeResult(null)} onNext={backToList} userAnswer={answer} />
         </div>
         </main>
       </div>
