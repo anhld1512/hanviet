@@ -7,6 +7,7 @@ import type { GradeResult } from "@/lib/grading-prompts"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import UpgradeModal from "@/app/components/UpgradeModal"
 import { saveSubmission } from "@/lib/save-submission"
+import { Timer, Zap } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 type Prompts = { q51: WritingPrompt; q52: WritingPrompt; q53: WritingPrompt; q54: WritingPrompt }
@@ -23,10 +24,10 @@ type ExamResults = {
 // ─── Constants ───────────────────────────────────────────────────────────────
 const EXAM_SECONDS = 50 * 60 // 50 minutes
 const Q_TABS: { key: QKey; label: string; points: number; color: string; accent: string }[] = [
-  { key: "q51", label: "Q51", points: 10,  color: "green",  accent: "bg-green-100 text-green-700" },
+  { key: "q51", label: "Q51", points: 10,  color: "green",  accent: "bg-blue-100 text-blue-700" },
   { key: "q52", label: "Q52", points: 10,  color: "blue",   accent: "bg-blue-100 text-blue-700" },
-  { key: "q53", label: "Q53", points: 30,  color: "purple", accent: "bg-purple-100 text-purple-700" },
-  { key: "q54", label: "Q54", points: 50,  color: "orange", accent: "bg-orange-100 text-orange-700" },
+  { key: "q53", label: "Q53", points: 30,  color: "purple", accent: "bg-blue-100 text-blue-700" },
+  { key: "q54", label: "Q54", points: 50,  color: "orange", accent: "bg-gray-100 text-blue-700" },
 ]
 
 function fmtTime(s: number) {
@@ -36,11 +37,11 @@ function fmtTime(s: number) {
 }
 
 function levelEstimate(total: number): { label: string; color: string; desc: string } {
-  if (total >= 85) return { label: "Level 6", color: "text-emerald-600", desc: "Xuất sắc — có thể đạt Level 6" }
-  if (total >= 70) return { label: "Level 5-6", color: "text-green-600", desc: "Tốt — vùng Level 5, có thể lên 6" }
+  if (total >= 85) return { label: "Level 6", color: "text-blue-600", desc: "Xuất sắc — có thể đạt Level 6" }
+  if (total >= 70) return { label: "Level 5-6", color: "text-blue-600", desc: "Tốt — vùng Level 5, có thể lên 6" }
   if (total >= 55) return { label: "Level 4-5", color: "text-blue-600", desc: "Khá — vùng Level 4, hướng tới 5" }
-  if (total >= 40) return { label: "Level 3-4", color: "text-yellow-600", desc: "Trung bình — pass được Level 3" }
-  return { label: "Cần cố gắng", color: "text-orange-500", desc: "Chưa đủ điểm pass — cần luyện thêm" }
+  if (total >= 40) return { label: "Level 3-4", color: "text-gray-600", desc: "Trung bình — pass được Level 3" }
+  return { label: "Cần cố gắng", color: "text-blue-500", desc: "Chưa đủ điểm pass — cần luyện thêm" }
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -213,10 +214,10 @@ export default function ExamClient({
 
   const scoreBreakdown = results.q51 && results.q52 && results.q53 && results.q54
     ? [
-        { key: "Q51", earned: results.q51.a.scores.total + results.q51.b.scores.total, max: 10, color: "bg-green-500" },
+        { key: "Q51", earned: results.q51.a.scores.total + results.q51.b.scores.total, max: 10, color: "bg-blue-500" },
         { key: "Q52", earned: results.q52.a.scores.total + results.q52.b.scores.total, max: 10, color: "bg-blue-500" },
-        { key: "Q53", earned: results.q53.scores.total, max: 30, color: "bg-purple-500" },
-        { key: "Q54", earned: results.q54.scores.total, max: 50, color: "bg-orange-500" },
+        { key: "Q53", earned: results.q53.scores.total, max: 30, color: "bg-blue-500" },
+        { key: "Q54", earned: results.q54.scores.total, max: 50, color: "bg-gray-500" },
       ]
     : []
 
@@ -234,7 +235,9 @@ export default function ExamClient({
         {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm max-w-lg w-full p-8">
           <div className="text-center mb-8">
-            <div className="text-5xl mb-4">⏱️</div>
+            <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-4 mx-auto">
+              <Timer size={28} className="text-gray-500" />
+            </div>
             <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Thi thử TOPIK II Viết</h1>
             <p className="text-gray-500">Mô phỏng đúng cấu trúc đề thi thật — 4 câu · 50 phút · 100 điểm</p>
           </div>
@@ -242,7 +245,7 @@ export default function ExamClient({
           {/* Exam overview */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             {Q_TABS.map((q) => (
-              <div key={q.key} className={`rounded-xl border p-3 ${q.key === "q51" ? "border-green-100 bg-green-50" : q.key === "q52" ? "border-blue-100 bg-blue-50" : q.key === "q53" ? "border-purple-100 bg-purple-50" : "border-orange-100 bg-orange-50"}`}>
+              <div key={q.key} className={`rounded-xl border p-3 ${q.key === "q51" ? "border-blue-100 bg-blue-50" : q.key === "q52" ? "border-blue-100 bg-blue-50" : q.key === "q53" ? "border-blue-100 bg-blue-50" : "border-gray-100 bg-gray-50"}`}>
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${q.accent}`}>{q.label}</span>
                 <div className="mt-1.5 text-xs text-gray-600 font-semibold">{q.points} điểm</div>
                 <div className="text-xs text-gray-400 mt-0.5">
@@ -253,8 +256,8 @@ export default function ExamClient({
           </div>
 
           {/* Rules */}
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 text-xs text-amber-800 space-y-1">
-            <div className="font-bold mb-2">📋 Quy tắc thi thử:</div>
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6 text-xs text-gray-700 space-y-1">
+            <div className="font-bold mb-2">Quy tắc thi thử:</div>
             <div>• Không có gợi ý — như thi thật</div>
             <div>• Đồng hồ đếm ngược 50 phút, tự nộp khi hết giờ</div>
             <div>• Có thể chuyển qua lại giữa các câu</div>
@@ -265,14 +268,14 @@ export default function ExamClient({
           {!isPro && (
             <div className="flex items-center justify-between bg-gray-50 rounded-xl p-3 mb-5 text-xs">
               <span className="text-gray-500">Lượt chấm còn lại tháng này:</span>
-              <span className={`font-bold ${remaining <= 1 ? "text-red-500" : remaining <= 2 ? "text-orange-500" : "text-gray-900"}`}>
+              <span className={`font-bold ${remaining <= 1 ? "text-red-500" : remaining <= 2 ? "text-blue-500" : "text-gray-900"}`}>
                 {remaining}/{FREE_LIMIT}
               </span>
             </div>
           )}
           {isPro && (
             <div className="flex items-center gap-2 bg-blue-50 rounded-xl p-3 mb-5 text-xs text-blue-700">
-              <span>⚡</span><span className="font-semibold">Pro — không giới hạn lượt chấm</span>
+              <Zap size={13} /><span className="font-semibold">Pro — không giới hạn lượt chấm</span>
             </div>
           )}
 
@@ -282,7 +285,7 @@ export default function ExamClient({
               onClick={() => { setActivePrompts(prompts); setPromptMode("bank") }}
               className={`rounded-xl border-2 p-3 text-left transition-all ${promptMode === "bank" ? "border-gray-900 bg-gray-50" : "border-gray-200 hover:border-gray-300"}`}
             >
-              <div className="text-sm font-bold text-gray-900 mb-0.5">🎲 Đề ngẫu nhiên</div>
+              <div className="text-sm font-bold text-gray-900 mb-0.5">Đề ngẫu nhiên</div>
               <div className="text-xs text-gray-500">Chọn từ bank đề TOPIK có sẵn</div>
             </button>
             <button
@@ -292,7 +295,7 @@ export default function ExamClient({
             >
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span className="text-sm font-bold text-gray-900">
-                  {generatingAI ? "Đang tạo..." : "✨ Đề AI mới"}
+                  {generatingAI ? "Đang tạo..." : "Đề AI mới"}
                 </span>
                 {promptMode === "ai" && <span className="text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded-full">Đang dùng</span>}
               </div>
@@ -305,10 +308,10 @@ export default function ExamClient({
           {/* Topic preview */}
           {promptMode === "ai" && (
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4 space-y-1.5">
-              <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wide mb-2">✨ Đề AI vừa tạo</p>
+              <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wide mb-2">Đề AI vừa tạo</p>
               {(["q51","q52","q53","q54"] as QKey[]).map(q => (
                 <div key={q} className="flex items-start gap-2 text-xs text-gray-700">
-                  <span className={`shrink-0 font-bold px-1.5 py-0.5 rounded text-[10px] ${q === "q51" ? "bg-green-100 text-green-700" : q === "q52" ? "bg-blue-100 text-blue-700" : q === "q53" ? "bg-purple-100 text-purple-700" : "bg-orange-100 text-orange-700"}`}>{q.toUpperCase()}</span>
+                  <span className={`shrink-0 font-bold px-1.5 py-0.5 rounded text-[10px] ${q === "q51" ? "bg-blue-100 text-blue-700" : q === "q52" ? "bg-blue-100 text-blue-700" : q === "q53" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-blue-700"}`}>{q.toUpperCase()}</span>
                   <span className="text-gray-600 leading-relaxed">{activePrompts[q].context}</span>
                 </div>
               ))}
@@ -329,7 +332,7 @@ export default function ExamClient({
                 onClick={() => setShowUpgrade(true)}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-colors"
               >
-                ⚡ Nâng cấp Pro để thi thử
+                Nâng cấp Pro để thi thử
               </button>
             )}
             <button onClick={() => router.push("/practice")} className="text-center text-sm text-gray-400 hover:text-gray-600 transition-colors">
@@ -346,13 +349,15 @@ export default function ExamClient({
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-5xl mb-6 animate-pulse">🤖</div>
+          <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-6 mx-auto animate-pulse">
+            <span className="text-xl font-black text-gray-400">AI</span>
+          </div>
           <h2 className="text-xl font-extrabold text-gray-900 mb-2">AI đang chấm bài...</h2>
           <p className="text-sm text-gray-500 mb-8">Đang phân tích cả 4 câu cùng lúc · vài giây nữa thôi</p>
           <div className="flex justify-center gap-2">
             {Q_TABS.map((q, i) => (
               <div key={q.key} className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-semibold transition-all duration-500 ${i <= gradingStep ? q.accent : "bg-gray-100 text-gray-400"}`}>
-                {i < gradingStep ? "✓" : i === gradingStep ? "⏳" : "○"} {q.label}
+                {i < gradingStep ? "✓" : i === gradingStep ? "···" : "○"} {q.label}
               </div>
             ))}
           </div>
@@ -421,7 +426,7 @@ export default function ExamClient({
                   >
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${qt.accent}`}>{qt.label}</span>
                     <span className="text-sm text-gray-600 flex-1 text-left">{prompts[qt.key as QKey].context}</span>
-                    <span className={`text-base font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>
+                    <span className={`text-base font-extrabold ${pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>
                       {earned}/{qt.points}
                     </span>
                     <span className="text-gray-300 text-sm">{isExpanded ? "▲" : "▼"}</span>
@@ -481,13 +486,13 @@ export default function ExamClient({
               }}
               className="flex-1 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
             >
-              🔄 Thi lại
+              Thi lại
             </button>
             <button
               onClick={() => router.push("/review")}
               className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition-colors text-sm"
             >
-              📊 Xem phân tích lỗi →
+              Xem phân tích lỗi →
             </button>
           </div>
         </div>
@@ -517,7 +522,7 @@ export default function ExamClient({
                   : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
               }`}
             >
-              {doneMap[q.key] && <span className="text-green-500">✓</span>}
+              {doneMap[q.key] && <span className="text-blue-500">✓</span>}
               {q.label}
               <span className="opacity-60">{q.points}đ</span>
             </button>
@@ -527,7 +532,7 @@ export default function ExamClient({
         {/* Progress pips */}
         <div className="flex gap-1 ml-2">
           {Q_TABS.map((q) => (
-            <div key={q.key} className={`w-2 h-2 rounded-full transition-colors ${doneMap[q.key] ? "bg-green-400" : "bg-gray-200"}`} />
+            <div key={q.key} className={`w-2 h-2 rounded-full transition-colors ${doneMap[q.key] ? "bg-blue-400" : "bg-gray-200"}`} />
           ))}
         </div>
 
@@ -557,7 +562,7 @@ export default function ExamClient({
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700">Q51</span>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q51</span>
                 <span className="text-sm text-gray-500">{activePrompts.q51.context}</span>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q51.text_kr}</div>
@@ -567,13 +572,13 @@ export default function ExamClient({
               {[{ key: "ㄱ", val: ans51A, set: setAns51A }, { key: "ㄴ", val: ans51B, set: setAns51B }].map(({ key, val, set }) => (
                 <div key={key} className="bg-white rounded-2xl border border-gray-100 p-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="w-7 h-7 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">{key}</span>
+                    <span className="w-7 h-7 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">{key}</span>
                     <span className="text-xs text-gray-400">{val.length} ký tự</span>
                   </div>
                   <WongojiEditor value={val} onChange={set} placeholder={`Viết câu cho chỗ trống ${key}...`} questionType="q51" />
                 </div>
               ))}
-              <button onClick={() => setActiveQ("q52")} className="w-full text-center text-sm text-green-600 font-semibold py-2 hover:bg-green-50 rounded-xl transition-colors">
+              <button onClick={() => setActiveQ("q52")} className="w-full text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
                 Câu tiếp theo: Q52 →
               </button>
             </div>
@@ -613,7 +618,7 @@ export default function ExamClient({
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700">Q53</span>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q53</span>
                 <span className="text-sm text-gray-500">{activePrompts.q53.context}</span>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q53.text_kr}</div>
@@ -622,13 +627,13 @@ export default function ExamClient({
               <div className="bg-white rounded-2xl border border-gray-100 p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-gray-900 text-sm">Bài viết của bạn</h3>
-                  <span className={`text-sm font-bold ${ans53.replace(/\n/g,"").length < 200 ? "text-orange-500" : ans53.replace(/\n/g,"").length > 300 ? "text-yellow-600" : "text-green-600"}`}>
+                  <span className={`text-sm font-bold ${ans53.replace(/\n/g,"").length < 200 ? "text-blue-500" : ans53.replace(/\n/g,"").length > 300 ? "text-gray-600" : "text-blue-600"}`}>
                     {ans53.replace(/\n/g,"").length} chữ
                   </span>
                 </div>
                 <WongojiEditor value={ans53} onChange={setAns53} minChars={200} maxChars={320} questionType="q53" placeholder="Phân tích biểu đồ... (200–300 chữ)" />
               </div>
-              <button onClick={() => setActiveQ("q54")} className="w-full text-center text-sm text-purple-600 font-semibold py-2 hover:bg-purple-50 rounded-xl transition-colors">
+              <button onClick={() => setActiveQ("q54")} className="w-full text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
                 Câu tiếp theo: Q54 →
               </button>
             </div>
@@ -641,12 +646,12 @@ export default function ExamClient({
             <div className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">Q54</span>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-blue-700">Q54</span>
                   <span className="text-sm text-gray-500">{activePrompts.q54.context}</span>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q54.text_kr}</div>
                 {activePrompts.q54.topic && (
-                  <div className="mt-3 bg-orange-50 rounded-xl p-3 text-sm text-orange-800 font-medium leading-relaxed whitespace-pre-line">{activePrompts.q54.topic}</div>
+                  <div className="mt-3 bg-gray-50 rounded-xl p-3 text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-line">{activePrompts.q54.topic}</div>
                 )}
               </div>
             </div>
@@ -657,10 +662,10 @@ export default function ExamClient({
                   <div className="flex items-center gap-3">
                     <div className="flex gap-1">
                       {[600, 650, 700].map((t) => (
-                        <span key={t} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${ans54.replace(/\n/g,"").length >= t ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400"}`}>{t}</span>
+                        <span key={t} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${ans54.replace(/\n/g,"").length >= t ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-400"}`}>{t}</span>
                       ))}
                     </div>
-                    <span className={`text-sm font-bold ${ans54.replace(/\n/g,"").length < 600 ? "text-orange-500" : ans54.replace(/\n/g,"").length > 700 ? "text-yellow-600" : "text-green-600"}`}>
+                    <span className={`text-sm font-bold ${ans54.replace(/\n/g,"").length < 600 ? "text-blue-500" : ans54.replace(/\n/g,"").length > 700 ? "text-gray-600" : "text-blue-600"}`}>
                       {ans54.replace(/\n/g,"").length} chữ
                     </span>
                   </div>

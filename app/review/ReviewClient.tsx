@@ -20,10 +20,10 @@ type Card = Correction & { qType: string; date: string; id: string }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const Q_BADGE: Record<string, string> = {
-  q51: "bg-green-100 text-green-700",
+  q51: "bg-blue-100 text-blue-700",
   q52: "bg-blue-100 text-blue-700",
-  q53: "bg-purple-100 text-purple-700",
-  q54: "bg-orange-100 text-orange-700",
+  q53: "bg-blue-100 text-blue-700",
+  q54: "bg-gray-100 text-blue-700",
   mock_exam: "bg-gray-800 text-white",
 }
 const Q_LABEL: Record<string, string> = {
@@ -85,7 +85,7 @@ function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean
 
         {/* Back */}
         <div
-          className="absolute inset-0 bg-white rounded-2xl border-2 border-green-100 p-7 flex flex-col justify-center"
+          className="absolute inset-0 bg-white rounded-2xl border-2 border-blue-100 p-7 flex flex-col justify-center"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="flex items-center gap-2 mb-4">
@@ -100,14 +100,14 @@ function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean
             <span className="text-xs font-bold text-red-400 mt-0.5 shrink-0">SAI</span>
             <span className="text-sm text-red-600 font-mono line-through leading-relaxed">{card.original}</span>
           </div>
-          <div className="flex items-start gap-3 mb-4 p-3 bg-green-50 rounded-xl">
-            <span className="text-xs font-bold text-green-500 mt-0.5 shrink-0">ĐÚNG</span>
-            <span className="text-sm text-green-700 font-mono font-semibold leading-relaxed">{card.corrected}</span>
+          <div className="flex items-start gap-3 mb-4 p-3 bg-blue-50 rounded-xl">
+            <span className="text-xs font-bold text-blue-500 mt-0.5 shrink-0">ĐÚNG</span>
+            <span className="text-sm text-blue-700 font-mono font-semibold leading-relaxed">{card.corrected}</span>
           </div>
 
           {/* Giải thích */}
           <div className="p-3 bg-blue-50 rounded-xl">
-            <p className="text-xs font-semibold text-blue-600 mb-1">💡 Giải thích</p>
+            <p className="text-xs font-semibold text-blue-600 mb-1">Giải thích</p>
             <p className="text-sm text-blue-800 leading-relaxed">{card.explanation}</p>
           </div>
         </div>
@@ -225,7 +225,9 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
         <Sidebar />
         <main className="ml-56 flex-1 p-8 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">🃏</div>
+            <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
+                <span className="text-2xl font-black text-gray-300">?</span>
+              </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Chưa có lỗi nào để ôn</h2>
             <p className="text-gray-500 text-sm mb-6">Luyện viết và nộp bài — AI sẽ ghi lại các lỗi để bạn ôn tập</p>
             <Link href="/practice" className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-xl">
@@ -246,7 +248,7 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
           <div className="w-px h-4 bg-gray-200" />
-          <span className="font-bold text-gray-900">🃏 Ôn lỗi</span>
+          <span className="font-bold text-gray-900">Ôn lỗi</span>
           <span className="text-sm text-gray-400">— Flashcard từ các bài AI đã chấm</span>
           <div className="ml-auto flex items-center gap-2 text-xs text-gray-400">
             <span>← → Space để điều hướng</span>
@@ -261,17 +263,17 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
               <div className="text-xs text-gray-500 mt-1">Bài đã luyện</div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-              <div className={`text-2xl font-extrabold ${avgPct >= 80 ? "text-green-500" : avgPct >= 60 ? "text-yellow-500" : "text-orange-500"}`}>
+              <div className={`text-2xl font-extrabold ${avgPct >= 80 ? "text-blue-500" : avgPct >= 60 ? "text-gray-500" : "text-blue-500"}`}>
                 {avgPct}%
               </div>
               <div className="text-xs text-gray-500 mt-1">Điểm trung bình</div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-              <div className="text-2xl font-extrabold text-green-500">{knownCount}</div>
+              <div className="text-2xl font-extrabold text-blue-500">{knownCount}</div>
               <div className="text-xs text-gray-500 mt-1">Đã thuộc</div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-              <div className="text-2xl font-extrabold text-orange-400">{remaining}</div>
+              <div className="text-2xl font-extrabold text-blue-400">{remaining}</div>
               <div className="text-xs text-gray-500 mt-1">Còn cần ôn</div>
             </div>
           </div>
@@ -299,9 +301,9 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
             <div className="flex items-center gap-2">
               <button
                 onClick={handleShuffle}
-                className={`text-xs px-3 py-1.5 rounded-xl font-semibold border transition-all ${isShuffled ? "bg-indigo-50 border-indigo-200 text-indigo-600" : "bg-white border-gray-200 text-gray-500 hover:border-gray-300"}`}
+                className={`text-xs px-3 py-1.5 rounded-xl font-semibold border transition-all ${isShuffled ? "bg-blue-50 border-blue-200 text-blue-600" : "bg-white border-gray-200 text-gray-500 hover:border-gray-300"}`}
               >
-                🔀 Trộn bài
+                Trộn bài
               </button>
               {knownCount > 0 && (
                 <button onClick={resetKnown} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
@@ -314,7 +316,9 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
           {/* Main flashcard area */}
           {total === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-              <div className="text-4xl mb-3">✅</div>
+              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+                  <span className="text-blue-400 font-bold text-lg">✓</span>
+                </div>
               <p className="text-gray-500 text-sm">
                 {tab === "all" ? "Chưa có lỗi nào được ghi nhận" : `Không có lỗi nào cho ${tab.toUpperCase()}`}
               </p>
@@ -325,7 +329,7 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-green-400 rounded-full transition-all duration-300"
+                    className="h-full bg-blue-400 rounded-full transition-all duration-300"
                     style={{ width: `${total > 0 ? (knownCount / total) * 100 : 0}%` }}
                   />
                 </div>
@@ -352,11 +356,11 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
                         onClick={handleUnknown}
                         className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-sm rounded-xl border border-red-100 transition-all"
                       >
-                        😅 Chưa nhớ
+                        Chưa nhớ
                       </button>
                       <button
                         onClick={handleKnown}
-                        className="px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold text-sm rounded-xl transition-all"
+                        className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm rounded-xl transition-all"
                       >
                         ✓ Đã thuộc!
                       </button>
@@ -385,7 +389,7 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
                       key={i}
                       onClick={() => { setIsFlipped(false); setIdx(i) }}
                       className={`w-2 h-2 rounded-full transition-all ${
-                        i === idx ? "bg-gray-800 w-4" : known.has(c.id) ? "bg-green-300" : "bg-gray-200 hover:bg-gray-300"
+                        i === idx ? "bg-gray-800 w-4" : known.has(c.id) ? "bg-blue-300" : "bg-gray-200 hover:bg-gray-300"
                       }`}
                     />
                   ))}
@@ -407,11 +411,11 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
                     </span>
                     <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${pct >= 80 ? "bg-green-400" : pct >= 60 ? "bg-yellow-400" : "bg-orange-400"}`}
+                        className={`h-full rounded-full ${pct >= 80 ? "bg-blue-400" : pct >= 60 ? "bg-gray-400" : "bg-blue-400"}`}
                         style={{ width: `${Math.min(pct, 100)}%` }}
                       />
                     </div>
-                    <span className={`text-xs font-bold shrink-0 w-12 text-right ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>
+                    <span className={`text-xs font-bold shrink-0 w-12 text-right ${pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>
                       {s.total_score}/{s.max_score}
                     </span>
                     <span className="text-xs text-gray-400 shrink-0">{formatDate(s.created_at)}</span>

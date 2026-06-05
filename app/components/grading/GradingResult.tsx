@@ -20,10 +20,10 @@ const CRITERION_LABELS: Record<string, string> = {
 
 const ERROR_TYPE_CONFIG: Record<ErrorCategory, { label: string; color: string; dot: string }> = {
   grammar:    { label: "Ngữ pháp",  color: "bg-red-100 text-red-700 border-red-200",         dot: "bg-red-400" },
-  vocabulary: { label: "Từ vựng",   color: "bg-yellow-100 text-yellow-700 border-yellow-200", dot: "bg-yellow-400" },
+  vocabulary: { label: "Từ vựng",   color: "bg-gray-100 text-gray-700 border-gray-200", dot: "bg-gray-400" },
   style:      { label: "Thể văn",   color: "bg-blue-100 text-blue-700 border-blue-200",       dot: "bg-blue-400" },
-  logic:      { label: "Logic",     color: "bg-orange-100 text-orange-700 border-orange-200", dot: "bg-orange-400" },
-  content:    { label: "Nội dung",  color: "bg-purple-100 text-purple-700 border-purple-200", dot: "bg-purple-400" },
+  logic:      { label: "Logic",     color: "bg-gray-100 text-blue-700 border-gray-200", dot: "bg-blue-400" },
+  content:    { label: "Nội dung",  color: "bg-blue-100 text-blue-700 border-blue-200", dot: "bg-blue-400" },
 }
 
 // ─── EssayWithHighlights ──────────────────────────────────────────────────────
@@ -71,10 +71,10 @@ function EssayWithHighlights({ essay, corrections }: { essay: string; correction
             <span
               key={i}
               onClick={() => scrollToError(seg.correction!.index)}
-              className="rounded-sm px-0.5 bg-amber-100 border-b-2 border-amber-400 cursor-pointer hover:bg-amber-200 transition-colors"
+              className="rounded-sm px-0.5 bg-gray-100 border-b-2 border-blue-400 cursor-pointer hover:bg-blue-100 transition-colors"
             >
               {seg.text}
-              <sup className="ml-0.5 text-[9px] font-extrabold text-amber-600">{seg.correction.index + 1}</sup>
+              <sup className="ml-0.5 text-[9px] font-extrabold text-blue-600">{seg.correction.index + 1}</sup>
             </span>
           )
         })}
@@ -113,8 +113,8 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
           <span className="text-sm text-red-700 line-through font-mono leading-relaxed">{correction.original}</span>
         </div>
         <div className="flex items-start gap-2">
-          <span className="shrink-0 text-[10px] font-extrabold bg-green-100 text-green-600 px-1.5 py-0.5 rounded-md mt-0.5">ĐÚNG</span>
-          <span className="text-sm text-green-800 font-semibold font-mono leading-relaxed">{correction.corrected}</span>
+          <span className="shrink-0 text-[10px] font-extrabold bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md mt-0.5">ĐÚNG</span>
+          <span className="text-sm text-blue-800 font-semibold font-mono leading-relaxed">{correction.corrected}</span>
         </div>
         <p className="text-xs text-gray-500 leading-relaxed pt-1 border-t border-gray-50">{correction.explanation}</p>
       </div>
@@ -126,7 +126,7 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
 function GradingError({ onRetry, hideActions }: { onRetry: () => void; hideActions?: boolean }) {
   return (
     <div className="bg-white rounded-2xl border border-red-100 p-6 flex flex-col items-center gap-4 text-center">
-      <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-2xl">⚠️</div>
+      <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-sm font-bold text-red-400">!</div>
       <div>
         <p className="text-sm font-semibold text-gray-800">Có lỗi kỹ thuật khi chấm bài</p>
         <p className="text-xs text-gray-500 mt-1 leading-relaxed">Máy chủ AI gặp sự cố tạm thời. Bài viết vẫn được lưu — hãy thử lại.</p>
@@ -153,8 +153,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
   } = result
 
   const pct = max_scores.total > 0 ? Math.round((scores.total / max_scores.total) * 100) : 0
-  const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : pct >= 40 ? "#ea580c" : "#dc2626"
-  const scoreEmoji = pct >= 80 ? "🎉" : pct >= 60 ? "😊" : pct >= 40 ? "😐" : "😓"
+  const scoreColor = pct >= 80 ? "#0066CC" : pct >= 60 ? "#6B7280" : pct >= 40 ? "#6B7280" : "#dc2626"
   const scoreVerdict = pct >= 80 ? "Xuất sắc!" : pct >= 60 ? "Khá tốt" : pct >= 40 ? "Cần luyện thêm" : "Cần cải thiện"
 
   const criteria = [
@@ -184,7 +183,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
         <div className="sticky top-4">
           <div className="bg-white rounded-2xl border border-gray-100 p-5" style={{ maxHeight: "calc(100vh - 7rem)", overflowY: "auto" }}>
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-              <span>📝</span> Bài viết của bạn
+              Bài viết của bạn
             </h3>
             <EssayWithHighlights essay={userAnswer} corrections={corrections} />
           </div>
@@ -197,15 +196,14 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
             {/* Score row */}
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl leading-none">{scoreEmoji}</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-[46px] font-extrabold leading-none" style={{ color: scoreColor }}>{scores.total}</span>
                 <span className="text-xl text-gray-300">/{max_scores.total}</span>
                 <span className="text-base font-semibold text-gray-500">{scoreVerdict}</span>
               </div>
               {char_count_feedback && (
-                <span className="ml-auto text-xs bg-yellow-50 text-yellow-700 border border-yellow-200 px-2.5 py-1 rounded-lg shrink-0">
-                  📏 {char_count_feedback.split('，')[0].split(',')[0].split('.')[0]}
+                <span className="ml-auto text-xs bg-gray-50 text-gray-700 border border-gray-200 px-2.5 py-1 rounded-lg shrink-0">
+                  {char_count_feedback.split('，')[0].split(',')[0].split('.')[0]}
                 </span>
               )}
             </div>
@@ -231,8 +229,8 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
                 const cpct = c.max > 0 ? c.score / c.max : 0
                 const isFull = c.score === c.max
                 const isLow = cpct < 0.6
-                const scoreTextColor = isFull ? "text-green-600" : isLow ? "text-red-500" : "text-yellow-600"
-                const icon = isFull ? "✅" : isLow ? "❌" : "⚡"
+                const scoreTextColor = isFull ? "text-blue-600" : isLow ? "text-red-500" : "text-gray-600"
+                const icon = isFull ? "✓" : isLow ? "✗" : "·"
                 const lost = c.max - c.score
                 return (
                   <div key={c.key} className="bg-gray-50 rounded-xl px-3.5 py-3">
@@ -258,7 +256,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
           {corrections.length > 0 && (
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-500 mb-3 flex items-center gap-1.5">
-                <span>✏️</span> Sai ở đâu?
+                Sai ở đâu?
                 <span className="ml-auto text-xs font-normal bg-gray-100 px-2 py-0.5 rounded-full">{corrections.length} lỗi</span>
               </h3>
               <div className="space-y-2.5">
@@ -269,30 +267,30 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
 
           {/* Coaching condensed */}
           {coaching && (
-            <div className="bg-white rounded-2xl border border-indigo-100 p-5 space-y-3.5">
-              <h3 className="text-sm font-bold text-indigo-600 flex items-center gap-1.5">
-                <span>🎯</span> Làm gì để cải thiện?
+            <div className="bg-white rounded-2xl border border-blue-100 p-5 space-y-3.5">
+              <h3 className="text-sm font-bold text-blue-600 flex items-center gap-1.5">
+                Làm gì để cải thiện?
               </h3>
               {coaching.focus_pattern && (
                 <div className="flex gap-3">
-                  <span className="text-lg shrink-0">📚</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5" />
                   <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
                 </div>
               )}
               {coaching.level_tip && (
                 <div className="flex gap-3">
-                  <span className="text-lg shrink-0">🚀</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
                   <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
                 </div>
               )}
               {(better_example || better_opening) && (
-                <div className="pt-3 border-t border-indigo-50">
-                  <p className="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-2">✨ Câu mẫu</p>
+                <div className="pt-3 border-t border-blue-50">
+                  <p className="text-xs font-bold text-blue-500 uppercase tracking-wide mb-2">Câu mẫu</p>
                   {better_example && (
-                    <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed">{better_example}</div>
+                    <div className="bg-blue-50 rounded-xl px-4 py-3 font-mono text-sm text-blue-900 leading-relaxed">{better_example}</div>
                   )}
                   {better_opening && (
-                    <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed mt-2">{better_opening}</div>
+                    <div className="bg-blue-50 rounded-xl px-4 py-3 font-mono text-sm text-blue-900 leading-relaxed mt-2">{better_opening}</div>
                   )}
                 </div>
               )}
@@ -303,7 +301,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
           {thesis_feedback && (
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <h3 className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-1.5">
-                <span>🧠</span> Luận điểm (Thesis)
+                Luận điểm (Thesis)
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed">{thesis_feedback}</p>
             </div>
@@ -322,7 +320,6 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
       {/* Score + overall */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-6">
         <div className="flex items-center gap-3 shrink-0">
-          <span className="text-4xl leading-none">{scoreEmoji}</span>
           <div>
             <div className="flex items-baseline gap-1">
               <span className="text-[40px] font-extrabold leading-none" style={{ color: scoreColor }}>{scores.total}</span>
@@ -335,7 +332,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
         <div className="flex-1 min-w-0">
           {feedback.overall && <p className="text-sm text-gray-600 leading-relaxed">{feedback.overall}</p>}
           {char_count_feedback && (
-            <div className="mt-2 text-xs text-gray-500 bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-2">📏 {char_count_feedback}</div>
+            <div className="mt-2 text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2">{char_count_feedback}</div>
           )}
         </div>
       </div>
@@ -343,16 +340,16 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
       {/* Criteria */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-          <span>🔍</span> Vì sao bạn được {scores.total}/{max_scores.total} điểm?
+          Vì sao bạn được {scores.total}/{max_scores.total} điểm?
         </h3>
         <div className="flex gap-3 items-start">
           {criteria.map(c => {
             const lost = c.max - c.score
             const isFull = c.score === c.max
             const isZero = c.score === 0 && c.max > 0
-            const bgBorder = isFull ? "bg-green-50 border-green-100" : isZero ? "bg-red-50 border-red-100" : "bg-orange-50 border-orange-100"
-            const icon = isFull ? "✅" : isZero ? "❌" : "⚡"
-            const scoreTextColor = isFull ? "text-green-600" : isZero ? "text-red-600" : "text-orange-500"
+            const bgBorder = isFull ? "bg-blue-50 border-blue-100" : isZero ? "bg-red-50 border-red-100" : "bg-gray-50 border-gray-100"
+            const icon = isFull ? "✓" : isZero ? "✗" : "·"
+            const scoreTextColor = isFull ? "text-blue-600" : isZero ? "text-red-600" : "text-blue-500"
             return (
               <div key={c.key} className={`flex-1 rounded-xl border p-3 ${bgBorder}`}>
                 <div className="flex items-center justify-between mb-1.5">
@@ -380,7 +377,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
           {corrections.length > 0 && (
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <span>✏️</span> Sai ở vị trí nào?
+                Sai ở vị trí nào?
                 <span className="ml-auto text-[10px] font-normal bg-gray-100 px-2 py-0.5 rounded-full">{corrections.length} lỗi</span>
               </h3>
               <div className="space-y-3">
@@ -389,39 +386,39 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
             </div>
           )}
           {coaching && (
-            <div className="rounded-2xl border border-indigo-100 overflow-hidden flex flex-col">
-              <div className="bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-                <h3 className="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <span>🎯</span> Làm gì để điểm cao hơn?
+            <div className="rounded-2xl border border-blue-100 overflow-hidden flex flex-col">
+              <div className="bg-blue-50 px-5 py-3 border-b border-blue-100">
+                <h3 className="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
+                  Làm gì để điểm cao hơn?
                 </h3>
               </div>
               <div className="bg-white p-5 space-y-4 flex-1">
                 {coaching.focus_pattern && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">📚</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5" />
                     <div>
-                      <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Cần ôn lại</p>
+                      <p className="text-xs font-bold text-blue-600 mb-1 uppercase tracking-wide">Cần ôn lại</p>
                       <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
                     </div>
                   </div>
                 )}
                 {coaching.level_tip && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">🚀</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
                     <div>
-                      <p className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wide">Bước tiếp theo</p>
+                      <p className="text-xs font-bold text-blue-600 mb-1 uppercase tracking-wide">Bước tiếp theo</p>
                       <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
                     </div>
                   </div>
                 )}
                 {(better_example || better_opening) && (
                   <div className="pt-3 border-t border-gray-100">
-                    <p className="text-xs font-bold text-indigo-600 mb-2 uppercase tracking-wide">✨ Câu mẫu tham khảo</p>
+                    <p className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wide">Câu mẫu tham khảo</p>
                     {better_example && (
-                      <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed">{better_example}</div>
+                      <div className="bg-blue-50 rounded-xl px-4 py-3 font-mono text-sm text-blue-900 leading-relaxed">{better_example}</div>
                     )}
                     {better_opening && (
-                      <div className="bg-indigo-50 rounded-xl px-4 py-3 font-mono text-sm text-indigo-900 leading-relaxed mt-2">{better_opening}</div>
+                      <div className="bg-blue-50 rounded-xl px-4 py-3 font-mono text-sm text-blue-900 leading-relaxed mt-2">{better_opening}</div>
                     )}
                   </div>
                 )}
@@ -434,7 +431,7 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
       {thesis_feedback && (
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-            <span>🧠</span> Phân tích luận điểm (Thesis)
+            Phân tích luận điểm (Thesis)
           </h3>
           <p className="text-sm text-gray-700 leading-relaxed">{thesis_feedback}</p>
         </div>
