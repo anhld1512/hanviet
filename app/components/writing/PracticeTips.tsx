@@ -161,17 +161,42 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
   const [open, setOpen] = useState(false)
 
   return (
+    <>
+      <style>{`
+        @keyframes tip-badge-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+          50%       { box-shadow: 0 0 0 4px rgba(59,130,246,0.18); }
+        }
+        @keyframes tip-arrow-bounce {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(3px); }
+        }
+      `}</style>
+
     <div className="mb-5 rounded-xl border border-slate-200 overflow-hidden bg-white" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.04)" }}>
 
       {/* ── Toggle bar — luôn hiển thị ── */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left"
+        className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left group"
       >
-        <span className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full shrink-0">Mẹo</span>
+        {/* Badge với glow pulse khi đang đóng */}
+        <span
+          className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full shrink-0"
+          style={!open ? { animation: "tip-badge-glow 2s ease-in-out infinite" } : {}}
+        >
+          Mẹo
+        </span>
         <span className="text-sm font-semibold text-slate-700">Quy trình trước khi viết</span>
         <span className="text-xs text-slate-400 ml-1">— {data.steps.length} bước · câu mẫu · lỗi cần tránh</span>
-        <span className="ml-auto text-slate-400 text-sm">{open ? "▲" : "▼"}</span>
+
+        {/* Arrow bounce khi đang đóng */}
+        <span
+          className="ml-auto text-blue-400 text-sm"
+          style={!open ? { display: "inline-block", animation: "tip-arrow-bounce 1.4s ease-in-out infinite" } : { color: "#94a3b8" }}
+        >
+          {open ? "▲" : "▼"}
+        </span>
       </button>
 
       {/* ── Nội dung — chỉ hiện khi open ── */}
@@ -223,5 +248,6 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
       )}
 
     </div>
+    </>
   )
 }

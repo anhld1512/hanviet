@@ -60,37 +60,45 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
   return (
     <div className="space-y-3">
 
-      {/* ── AI generate — slim strip ── */}
+      {/* ── AI generate — light sweep strip ── */}
+      <style>{`
+        @keyframes light-sweep {
+          0%   { transform: translateX(-120%); }
+          40%  { transform: translateX(120%); }
+          100% { transform: translateX(120%); }
+        }
+        @keyframes generating-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
+        }
+      `}</style>
+
       <button
         onClick={handleGenerate}
         disabled={generating}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 hover:border-blue-200 transition-all text-left disabled:opacity-60 group"
+        className="relative w-full overflow-hidden flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 transition-all text-left disabled:opacity-60 group"
       >
-        {/* Animated sparkle icon */}
-        <span
-          className="text-base shrink-0 select-none"
-          style={
-            generating
-              ? {}
-              : {
-                  display: "inline-block",
-                  animation: "sparkle-pulse 2s ease-in-out infinite",
-                }
-          }
-        >
+        {/* Light sweep overlay */}
+        {!generating && (
+          <span
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%)",
+              animation: "light-sweep 3.5s ease-in-out infinite",
+            }}
+          />
+        )}
+
+        {/* Sparkle icon */}
+        <span className="text-base shrink-0 select-none relative z-10 text-blue-500">
           {generating ? "⏳" : "✦"}
         </span>
 
-        <style>{`
-          @keyframes sparkle-pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-            30% { transform: scale(1.35) rotate(15deg); opacity: 0.85; }
-            60% { transform: scale(0.9) rotate(-10deg); opacity: 1; }
-          }
-        `}</style>
-
-        <div className="flex-1 min-w-0">
-          <span className="text-sm font-semibold text-blue-800">
+        <div className="flex-1 min-w-0 relative z-10">
+          <span
+            className="text-sm font-semibold text-blue-800"
+            style={generating ? { animation: "generating-pulse 1.2s ease-in-out infinite" } : {}}
+          >
             {generating ? "Đang tạo đề..." : "Tạo đề AI ngẫu nhiên"}
           </span>
           {!generating && (
@@ -99,7 +107,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
             </span>
           )}
         </div>
-        <span className="text-sm font-bold text-blue-600 shrink-0 group-hover:translate-x-0.5 transition-transform">
+        <span className="text-sm font-bold text-blue-600 shrink-0 relative z-10 group-hover:translate-x-0.5 transition-transform">
           Tạo →
         </span>
       </button>
