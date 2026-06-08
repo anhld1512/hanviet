@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ProcessStep = {
   label: string     // tên bước ngắn
@@ -156,61 +158,69 @@ export const TIPS_Q54: PracticeTipsData = {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function PracticeTips({ data }: { data: PracticeTipsData }) {
+  const [open, setOpen] = useState(false)
+
   return (
-    <div className="mb-6 rounded-2xl border border-slate-200 overflow-hidden" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.04)" }}>
+    <div className="mb-5 rounded-xl border border-slate-200 overflow-hidden bg-white" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.04)" }}>
 
-      {/* ── Header bar ── */}
-      <div className="px-5 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #0066CC 0%, #0066CC 100%)" }}>
-        <span className="text-base">✅</span>
-        <span className="text-sm font-bold text-white tracking-wide">Quy trình trước khi viết</span>
-        <span className="ml-auto text-xs text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
-      </div>
+      {/* ── Toggle bar — luôn hiển thị ── */}
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left"
+      >
+        <span className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full shrink-0">Mẹo</span>
+        <span className="text-sm font-semibold text-slate-700">Quy trình trước khi viết</span>
+        <span className="text-xs text-slate-400 ml-1">— {data.steps.length} bước · câu mẫu · lỗi cần tránh</span>
+        <span className="ml-auto text-slate-400 text-sm">{open ? "▲" : "▼"}</span>
+      </button>
 
-      {/* ── Steps ── */}
-      <div className="bg-white px-5 py-5">
-        <div className="grid grid-cols-5 gap-3">
-          {data.steps.map((step, i) => (
-            <div key={i} className="relative flex gap-3">
-              {i < data.steps.length - 1 && (
-                <span className="absolute -right-2 top-3.5 text-slate-300 text-base select-none z-10">›</span>
-              )}
-              <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#FAFAFA" }}>
-                <div className="flex items-center justify-between">
-                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0">
-                    {i + 1}
-                  </span>
-                  {step.time && (
-                    <span className="text-[9px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">{step.time}</span>
+      {/* ── Nội dung — chỉ hiện khi open ── */}
+      {open && (
+        <>
+          {/* Steps */}
+          <div className="border-t border-slate-100 bg-white px-5 py-5">
+            <div className="grid grid-cols-5 gap-3">
+              {data.steps.map((step, i) => (
+                <div key={i} className="relative flex gap-3">
+                  {i < data.steps.length - 1 && (
+                    <span className="absolute -right-2 top-3.5 text-slate-300 text-base select-none z-10">›</span>
                   )}
+                  <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#FAFAFA" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0">
+                        {i + 1}
+                      </span>
+                      {step.time && (
+                        <span className="text-[9px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">{step.time}</span>
+                      )}
+                    </div>
+                    <p className="text-xs font-bold text-slate-900 leading-snug">{step.label}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed">{step.detail}</p>
+                  </div>
                 </div>
-                <p className="text-xs font-bold text-slate-900 leading-snug">{step.label}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{step.detail}</p>
+              ))}
+            </div>
+          </div>
+
+          {/* Patterns + Avoid */}
+          <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-2 gap-4 bg-white">
+            <div>
+              <p className="text-xs font-bold text-slate-600 mb-2.5 uppercase tracking-wide">Câu mẫu hay dùng</p>
+              <div className="flex flex-wrap gap-1.5">
+                {data.patterns.map((p, i) => (
+                  <span key={i} className="text-xs font-mono bg-slate-50 text-blue-700 border border-slate-200 px-2.5 py-1 rounded-lg">
+                    {p}
+                  </span>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Patterns + Avoid ── */}
-      <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-2 gap-4 bg-white">
-
-        <div>
-          <p className="text-xs font-bold text-slate-600 mb-2.5 uppercase tracking-wide">💡 Câu mẫu hay dùng khi viết</p>
-          <div className="flex flex-wrap gap-1.5">
-            {data.patterns.map((p, i) => (
-              <span key={i} className="text-xs font-mono bg-slate-50 text-blue-700 border border-slate-200 px-2.5 py-1 rounded-lg">
-                {p}
-              </span>
-            ))}
+            <div className="rounded-xl px-4 py-3" style={{ background: "#fff5f5", border: "1px solid #fecaca" }}>
+              <p className="text-xs font-bold text-red-600 mb-1.5 uppercase tracking-wide">Lỗi hay gặp — tránh ngay</p>
+              <p className="text-xs text-red-700 leading-relaxed">{data.avoid}</p>
+            </div>
           </div>
-        </div>
-
-        <div className="rounded-xl px-4 py-3" style={{ background: "#fff5f5", border: "1px solid #fecaca" }}>
-          <p className="text-xs font-bold text-red-600 mb-1.5 uppercase tracking-wide">⚠️ Lỗi hay gặp nhất — tránh ngay</p>
-          <p className="text-xs text-red-700 leading-relaxed">{data.avoid}</p>
-        </div>
-
-      </div>
+        </>
+      )}
 
     </div>
   )

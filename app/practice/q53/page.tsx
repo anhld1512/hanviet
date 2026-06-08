@@ -231,7 +231,6 @@ export default function Q53Page() {
             <span className="text-blue-600 font-semibold">{passed} đề ≥80%</span>
           </div>
         </div>
-        <PracticeTips data={TIPS_Q53} />
         <h2 className="font-bold text-gray-900 mb-4">Chọn đề để luyện <span className="text-sm font-normal text-gray-400 ml-1">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span></h2>
         <PromptGrid
           prompts={Q53_PROMPTS}
@@ -260,6 +259,7 @@ export default function Q53Page() {
             )
           }}
         />
+        <div className="mt-6"><PracticeTips data={TIPS_Q53} /></div>
         </div>
       </main>
     </div>
