@@ -217,9 +217,9 @@ export default function LandingPage() {
           style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(20px)" }}>
           <nav className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[11px] font-black tracking-tight"
-                style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
-                TP
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black"
+                style={{ background: "linear-gradient(145deg, #001A44 0%, #0055CC 100%)", fontSize: "18px", fontFamily: "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif" }}>
+                산
               </div>
               <span className="font-extrabold text-[#1D1D1F] text-base tracking-tight">ToPeak</span>
               <span className="text-[#AEAEB2] text-xs hidden sm:inline">TOPIK to Peak</span>
@@ -859,9 +859,9 @@ export default function LandingPage() {
           style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F0F4FF 100%)" }}>
           <div className="max-w-6xl mx-auto px-5 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[10px] font-black tracking-tight"
-                style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
-                TP
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black"
+                style={{ background: "linear-gradient(145deg, #001A44 0%, #0055CC 100%)", fontSize: "15px", fontFamily: "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif" }}>
+                산
               </div>
               <span className="text-sm font-bold text-[#1D1D1F]">ToPeak</span>
             </div>

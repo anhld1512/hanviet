@@ -27,9 +27,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col items-center justify-center px-4">
       {/* Logo */}
       <div className="mb-8 text-center">
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white text-sm font-black tracking-tight mx-auto mb-3"
-          style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
-          TP
+        <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black mx-auto mb-3"
+          style={{ background: "linear-gradient(145deg, #001A44 0%, #0055CC 100%)", fontSize: "30px", fontFamily: "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif", boxShadow: "0 8px 24px rgba(0,60,200,0.35)" }}>
+          산
         </div>
         <h1 className="text-2xl font-extrabold text-gray-900">ToPeak</h1>
         <p className="text-gray-500 text-sm mt-1">TOPIK to Peak — Lên đỉnh TOPIK</p>
