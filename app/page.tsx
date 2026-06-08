@@ -278,7 +278,7 @@ export default function LandingPage() {
                     color: "#0066CC",
                   }}>
                   <CheckCircle size={12} strokeWidth={2.5} />
-                  AI chấm theo rubric NIIED chính thức
+                  AI chấm theo rubric chính thức của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK)
                 </div>
 
                 <h1 className="anim-1 font-extrabold tracking-tight leading-[1.06] text-[#1D1D1F] mb-5"
@@ -288,7 +288,7 @@ export default function LandingPage() {
                 </h1>
 
                 <p className="anim-2 text-lg text-[#6E6E73] leading-relaxed mb-8 max-w-[440px]">
-                  App luyện viết Q51-54 duy nhất cho người Việt. AI chấm tức thì, feedback 100% tiếng Việt, rubric NIIED chuẩn.
+                  App luyện viết Q51-54 duy nhất cho người Việt. AI chấm tức thì, feedback 100% tiếng Việt, rubric chuẩn của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK).
                 </p>
 
                 <div className="anim-3 flex flex-wrap items-center gap-3 mb-5">
@@ -383,7 +383,7 @@ export default function LandingPage() {
                 <div>
                   <h3 className="text-2xl font-extrabold mb-3 leading-snug tracking-tight"
                     style={{ color: "#FFFFFF" }}>
-                    Chấm <span style={{ color: "#93C5FD" }}>4 tiêu chí NIIED</span> tách biệt — không gộp chung một điểm
+                    Chấm <span style={{ color: "#93C5FD" }}>4 tiêu chí của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK)</span> tách biệt — không gộp chung một điểm
                   </h3>
                   <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(186,220,255,0.90)" }}>
                     Biết chính xác bạn yếu <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Nội dung</strong>, <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Cấu trúc</strong>, <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Ngữ pháp</strong> hay <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Phong cách</strong> — và tập trung luyện đúng chỗ.
@@ -399,7 +399,7 @@ export default function LandingPage() {
                     <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
                       <path d="M2 2h8v8M10 2 4 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    Bảng điểm chính thức NIIED (PDF)
+                    Bảng điểm chính thức của NIIED (PDF)
                   </a>
                 </div>
               </div>
@@ -489,16 +489,16 @@ export default function LandingPage() {
                 {
                   num: "01",
                   concern: "AI có chấm đúng như giáo viên không? Tôi sợ học sai.",
-                  answer: "AI dùng đúng rubric NIIED — không tự đoán",
-                  detail: "4 tiêu chí Nội dung, Tổ chức, Ngữ pháp, Phong cách là cố định do NIIED ban hành. AI áp dụng đúng bảng này — cùng tiêu chuẩn hội đồng thi dùng.",
-                  tag: "Xem bảng điểm chính thức NIIED (PDF)",
+                  answer: "AI dùng đúng rubric của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK) — không tự đoán",
+                  detail: "4 tiêu chí Nội dung, Tổ chức, Ngữ pháp, Phong cách là cố định do NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK) ban hành. AI áp dụng đúng bảng này — cùng tiêu chuẩn hội đồng thi dùng.",
+                  tag: "Xem bảng điểm chính thức của NIIED (PDF)",
                   tagHref: "https://exam.topik.go.kr/nasdata/webnas/raonkeditordata/uploadId/2024/02/20240227_175504804_07236.pdf",
                 },
                 {
                   num: "02",
                   concern: "Thầy tôi chấm 34 điểm, AI chấm 38 điểm — cái nào đúng?",
                   answer: "AI nhất quán 100% — không có cảm tính",
-                  detail: "Giáo viên cũng có cảm tính riêng. Điểm thi thật do hội đồng NIIED quyết định theo rubric cố định — AI dùng đúng rubric đó, mỗi bài đều như nhau.",
+                  detail: "Giáo viên cũng có cảm tính riêng. Điểm thi thật do hội đồng NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK) quyết định theo rubric cố định — AI dùng đúng rubric đó, mỗi bài đều như nhau.",
                   tag: "Consistent, không cảm tính",
                   tagHref: null,
                 },
@@ -603,7 +603,7 @@ export default function LandingPage() {
                 {
                   step: "02", Icon: Zap, color: "#FF6B00", bg: "#FFF4EA",
                   title: "AI chấm tức thì",
-                  desc: "Nhận điểm 4 tiêu chí NIIED, gợi ý cải thiện cụ thể, so sánh bài mẫu ngay lập tức.",
+                  desc: "Nhận điểm 4 tiêu chí của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK), gợi ý cải thiện cụ thể, so sánh bài mẫu ngay lập tức.",
                 },
                 {
                   step: "03", Icon: BarChart2, color: "#34C759", bg: "#E8F9EE",
@@ -661,7 +661,7 @@ export default function LandingPage() {
                   ["Giá / tháng",           "từ 149.000đ",       "250.000 - 700.000đ",  "Miễn phí (giới hạn)"],
                   ["Thời gian chờ kết quả", "5 giây",            "3 - 7 ngày",           "Tức thì"],
                   ["Ngôn ngữ feedback",     "Tiếng Việt 100%",   "Tiếng Việt",           "Tiếng Anh"],
-                  ["4 tiêu chí NIIED",      "check",             "check",                "x"],
+                  ["4 tiêu chí NIIED (Viện GDQT Hàn Quốc)",      "check",             "check",                "x"],
                   ["원고지 thật",            "check",             "x",                    "x"],
                   ["Lộ trình cá nhân",      "check",             "x",                    "x"],
                   ["Thi thử đầy đủ",        "check",             "check",                "x"],

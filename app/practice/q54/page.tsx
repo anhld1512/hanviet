@@ -157,7 +157,7 @@ export default function Q54Page() {
                   {loading ? "AI đang chấm bài..." : "Nộp bài — AI chấm ngay"}
                 </button>
               </div>
-              <p className="text-center text-xs text-gray-400">Tối đa 50 điểm · AI chấm theo rubric NIIED</p>
+              <p className="text-center text-xs text-gray-400">Tối đa 50 điểm · AI chấm theo rubric của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK)</p>
             </div>
           </div>
         </div>

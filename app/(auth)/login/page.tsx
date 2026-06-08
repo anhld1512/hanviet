@@ -40,7 +40,7 @@ export default function LoginPage() {
         <div className="text-center mb-6">
           <h2 className="text-xl font-bold text-gray-900">Bắt đầu luyện viết</h2>
           <p className="text-gray-500 text-sm mt-2">
-            AI chấm điểm Q51-54 theo rubric NIIED
+            AI chấm điểm Q51-54 theo rubric của NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK)
             <br />
             Feedback 100% tiếng Việt
           </p>
