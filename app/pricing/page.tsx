@@ -133,9 +133,10 @@ export default async function PricingPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
+  // select("*") so the page doesn't break if subscription_plan column hasn't been migrated yet
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("subscription_tier, is_pro, subscription_plan, pro_expires_at, display_name")
+    .select("*")
     .eq("id", user.id)
     .single()
 

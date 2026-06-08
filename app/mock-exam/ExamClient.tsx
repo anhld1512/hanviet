@@ -335,7 +335,10 @@ export default function ExamClient({
                 Nâng cấp Pro để thi thử
               </button>
             )}
-            <button onClick={() => router.push("/practice")} className="text-center text-sm text-gray-400 hover:text-gray-600 transition-colors">
+            <button
+              onClick={() => router.push("/practice")}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+            >
               ← Quay lại
             </button>
           </div>
@@ -374,7 +377,12 @@ export default function ExamClient({
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
-            <button onClick={() => router.push("/practice")} className="text-gray-400 hover:text-gray-600 text-sm">← Trang chủ</button>
+            <button
+              onClick={() => router.push("/practice")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+            >
+              ← Trang chủ
+            </button>
             <div className="w-px h-4 bg-gray-200" />
             <span className="text-sm font-semibold text-gray-700">Kết quả thi thử</span>
           </div>
