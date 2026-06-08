@@ -1,6 +1,5 @@
 // Usage tracking for free tier gate
-// Free users: 5 grading sessions / month
-// Pro users: unlimited
+// Priority: Pro (unlimited) > Bonus gradings > Free 5/month
 
 import { createClient } from "@/lib/supabase-server"
 
@@ -9,41 +8,48 @@ export const FREE_LIMIT = 5
 export type UsageStatus = {
   allowed: boolean
   isPro: boolean
-  used: number
-  remaining: number
+  used: number        // monthly used (non-pro)
+  remaining: number   // monthly remaining
+  bonus: number       // bonus gradings from vouchers
 }
 
 export async function checkUsage(): Promise<UsageStatus> {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { allowed: false, isPro: false, used: FREE_LIMIT, remaining: 0 }
+    if (!user) return { allowed: false, isPro: false, used: FREE_LIMIT, remaining: 0, bonus: 0 }
 
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("subscription_tier, is_pro, monthly_gradings, grading_month, pro_expires_at")
+      .select("subscription_tier, is_pro, monthly_gradings, grading_month, pro_expires_at, bonus_gradings")
       .eq("id", user.id)
       .single()
 
-    if (!profile) return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT }
+    if (!profile) return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT, bonus: 0 }
 
-    // Check pro status
+    // Pro: unlimited
     const isPro =
       profile.subscription_tier === "pro" ||
       profile.is_pro === true ||
       (profile.pro_expires_at && new Date(profile.pro_expires_at) > new Date())
 
-    if (isPro) return { allowed: true, isPro: true, used: 0, remaining: 999 }
+    if (isPro) return { allowed: true, isPro: true, used: 0, remaining: 999, bonus: 0 }
 
-    // Check monthly usage — reset if new month
-    const currentMonth = new Date().toISOString().slice(0, 7) // "2025-05"
+    const bonus = profile.bonus_gradings ?? 0
+
+    // Bonus gradings: use first before monthly free
+    if (bonus > 0) {
+      return { allowed: true, isPro: false, used: 0, remaining: 0, bonus }
+    }
+
+    // Monthly free limit
+    const currentMonth = new Date().toISOString().slice(0, 7)
     const used = profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0
     const remaining = Math.max(0, FREE_LIMIT - used)
 
-    return { allowed: remaining > 0, isPro: false, used, remaining }
+    return { allowed: remaining > 0, isPro: false, used, remaining, bonus: 0 }
   } catch {
-    // Fail open — don't block on DB error
-    return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT }
+    return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT, bonus: 0 }
   }
 }
 
@@ -53,31 +59,40 @@ export async function incrementUsage(): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const currentMonth = new Date().toISOString().slice(0, 7)
-
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("monthly_gradings, grading_month, subscription_tier, is_pro")
+      .select("monthly_gradings, grading_month, subscription_tier, is_pro, pro_expires_at, bonus_gradings")
       .eq("id", user.id)
       .single()
 
     if (!profile) return
 
     const isPro =
-      profile.subscription_tier === "pro" || profile.is_pro === true
-    if (isPro) return // Don't track pro usage
+      profile.subscription_tier === "pro" ||
+      profile.is_pro === true ||
+      (profile.pro_expires_at && new Date(profile.pro_expires_at) > new Date())
+    if (isPro) return
 
+    // Deduct bonus first
+    const bonus = profile.bonus_gradings ?? 0
+    if (bonus > 0) {
+      await supabase
+        .from("user_profiles")
+        .update({ bonus_gradings: bonus - 1 })
+        .eq("id", user.id)
+      return
+    }
+
+    // Deduct from monthly
+    const currentMonth = new Date().toISOString().slice(0, 7)
     const currentCount =
       profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0
 
     await supabase
       .from("user_profiles")
-      .update({
-        monthly_gradings: currentCount + 1,
-        grading_month: currentMonth,
-      })
+      .update({ monthly_gradings: currentCount + 1, grading_month: currentMonth })
       .eq("id", user.id)
   } catch {
-    // Silently fail — don't block grading
+    // Silently fail
   }
 }

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase-client"
-import { PenLine, Timer, BarChart2, RotateCcw, Zap, LogOut } from "lucide-react"
+import { PenLine, Timer, BarChart2, RotateCcw, Zap, LogOut, Gift } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 const NAV_ITEMS: { href: string; Icon: LucideIcon; label: string; badge?: string }[] = [
@@ -18,6 +18,7 @@ export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const [isPro, setIsPro] = useState(true)
+  const [bonus, setBonus] = useState(0)
 
   useEffect(() => {
     const supabase = createClient()
@@ -25,11 +26,12 @@ export default function Sidebar() {
       if (!user) return
       supabase
         .from("user_profiles")
-        .select("subscription_tier, is_pro")
+        .select("subscription_tier, is_pro, bonus_gradings")
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
           setIsPro(data?.subscription_tier === "pro" || data?.is_pro === true)
+          setBonus(data?.bonus_gradings ?? 0)
         })
     })
   }, [])
@@ -90,6 +92,15 @@ export default function Sidebar() {
 
       {/* Bottom */}
       <div className="px-2.5 pb-4 space-y-1.5">
+        {/* Bonus gradings indicator */}
+        {!isPro && bonus > 0 && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-100">
+            <Gift size={13} className="text-amber-500 shrink-0" />
+            <span className="text-xs font-semibold text-amber-700">
+              {bonus} lượt bonus còn lại
+            </span>
+          </div>
+        )}
         {!isPro && (
           <Link
             href="/pricing"
