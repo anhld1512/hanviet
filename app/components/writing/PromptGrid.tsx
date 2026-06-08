@@ -116,32 +116,32 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
             <button
               key={p.id}
               onClick={() => onSelect(p)}
-              className="text-left rounded-xl border border-gray-200 bg-white px-3 py-2.5 hover:border-blue-300 hover:shadow-sm transition-all group"
+              className="text-left rounded-xl border border-gray-200 bg-white px-3.5 py-3 hover:border-blue-300 hover:shadow-sm transition-all group"
             >
               {/* Top row: difficulty + score */}
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-1">
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${difficultyColor(p.difficulty)}`}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${difficultyColor(p.difficulty)}`}>
                     {difficultyLabel(p.difficulty)}
                   </span>
                   {isNewest && (
-                    <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full">Mới</span>
+                    <span className="text-[11px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full">Mới</span>
                   )}
                 </div>
                 <ScoreDot pct={pct} />
               </div>
 
               {/* Title */}
-              <p className="text-xs font-semibold text-gray-900 leading-snug mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
+              <p className="text-sm font-semibold text-gray-900 leading-snug mb-1.5 group-hover:text-blue-700 transition-colors line-clamp-2">
                 {p.context}
               </p>
 
               {renderExtra?.(p)}
 
               {/* Source + CTA */}
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-[11px] text-gray-400">{p.source}</span>
-                <span className="text-[11px] font-medium text-gray-400 group-hover:text-blue-500 transition-colors">
+              <div className="flex items-center justify-between mt-2.5">
+                <span className="text-xs text-gray-400">{p.source}</span>
+                <span className="text-xs font-medium text-gray-400 group-hover:text-blue-500 transition-colors">
                   {pct !== null ? "Luyện lại →" : "Bắt đầu →"}
                 </span>
               </div>
