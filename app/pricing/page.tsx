@@ -181,12 +181,12 @@ export default async function PricingPage() {
             Luyện viết TOPIK không giới hạn
           </h1>
           <p className="text-[#6E6E73] text-lg max-w-xl mx-auto">
-            Công cụ luyện viết TOPIK II duy nhất cho người Việt — AI chấm điểm theo rubric của NIIED (Viện Giáo dục Quốc tế Hàn Quốc),
+            Công cụ luyện viết TOPIK II duy nhất cho người Việt — AI chấm điểm theo rubric của Viện Giáo dục Quốc tế Hàn Quốc (NIIED),
             giải thích bằng tiếng Việt.
           </p>
           {/* Social proof */}
           <div className="flex items-center justify-center gap-6 mt-6 text-sm text-[#6E6E73]">
-            <span>✓ AI chấm theo rubric chính thức của NIIED (Viện Giáo dục Quốc tế Hàn Quốc)</span>
+            <span>✓ AI chấm theo rubric chính thức của Viện Giáo dục Quốc tế Hàn Quốc (NIIED)</span>
             <span className="hidden sm:inline text-gray-300">|</span>
             <span>✓ Phản hồi bằng tiếng Việt</span>
             <span className="hidden sm:inline text-gray-300">|</span>
@@ -408,7 +408,7 @@ export default async function PricingPage() {
               <tbody className="divide-y divide-gray-50">
                 {[
                   ["Luyện Q51 · Q52 · Q53 · Q54", "✓", "✓"],
-                  ["AI chấm điểm theo rubric NIIED (Viện Giáo dục Quốc tế Hàn Quốc)", "✓", "✓"],
+                  ["AI chấm điểm theo rubric Viện Giáo dục Quốc tế Hàn Quốc (NIIED)", "✓", "✓"],
                   ["Tips & cấu trúc từng câu", "✓", "✓"],
                   ["Số lượt chấm", "5 lần/tháng", "Không giới hạn"],
                   ["Thi thử full 50 phút (4 câu)", "✗", "✓"],

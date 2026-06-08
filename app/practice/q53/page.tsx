@@ -202,7 +202,7 @@ export default function Q53Page() {
                 className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
                 {loading ? "AI đang chấm bài..." : "Nộp bài — AI chấm ngay"}
               </button>
-              <p className="text-center text-xs text-gray-400">Tối đa 30 điểm · AI chấm theo rubric của NIIED (Viện Giáo dục Quốc tế Hàn Quốc)</p>
+              <p className="text-center text-xs text-gray-400">Tối đa 30 điểm · AI chấm theo rubric của Viện Giáo dục Quốc tế Hàn Quốc (NIIED)</p>
             </div>
           </div>
         </div>
