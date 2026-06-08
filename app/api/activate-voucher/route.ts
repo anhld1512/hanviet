@@ -32,19 +32,24 @@ export async function POST(req: NextRequest) {
 
     // 3. Kiểm tra còn slot
     if (voucher.used_count >= voucher.max_uses) {
-      return NextResponse.json({ error: "Mã voucher đã hết slot (${voucher.max_uses}/${voucher.max_uses})" }, { status: 400 })
+      return NextResponse.json(
+        { error: `Mã voucher đã hết slot (${voucher.used_count}/${voucher.max_uses})` },
+        { status: 400 }
+      )
     }
 
-    // 4. Kiểm tra user đã dùng code này chưa
-    const { data: existing } = await admin
+    // 4. Insert redemption TRƯỚC — unique constraint (voucher_code, user_id) chặn race condition
+    //    Nếu user đã dùng rồi hoặc 2 request cùng lúc → insert fail → trả lỗi ngay
+    const { error: insertErr } = await admin
       .from("voucher_redemptions")
-      .select("id")
-      .eq("voucher_code", normalizedCode)
-      .eq("user_id", user.id)
-      .single()
+      .insert({ voucher_code: normalizedCode, user_id: user.id })
 
-    if (existing) {
-      return NextResponse.json({ error: "Bạn đã dùng mã voucher này rồi" }, { status: 409 })
+    if (insertErr) {
+      // unique violation = đã dùng rồi
+      if (insertErr.code === "23505") {
+        return NextResponse.json({ error: "Bạn đã dùng mã voucher này rồi" }, { status: 409 })
+      }
+      throw insertErr
     }
 
     // 5. Cộng bonus vào user_profiles
@@ -61,15 +66,11 @@ export async function POST(req: NextRequest) {
       .update({ bonus_gradings: currentBonus + voucher.bonus_gradings })
       .eq("id", user.id)
 
-    // 6. Tăng used_count + ghi redemption
+    // 6. Tăng used_count
     await admin
       .from("vouchers")
       .update({ used_count: voucher.used_count + 1 })
       .eq("code", normalizedCode)
-
-    await admin
-      .from("voucher_redemptions")
-      .insert({ voucher_code: normalizedCode, user_id: user.id })
 
     const slotsLeft = voucher.max_uses - voucher.used_count - 1
 
