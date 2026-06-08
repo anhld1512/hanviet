@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "HanViet Writing Coach - Luyện viết TOPIK II Q51-54 với AI",
+  title: "ToPeak — TOPIK to Peak. Lên đỉnh TOPIK",
   description:
-    "App luyện viết TOPIK II chuyên sâu cho người Việt. AI chấm điểm tức thì theo rubric NIIED, feedback 100% tiếng Việt. Tập trung Q51-54.",
+    "App luyện viết TOPIK II chuyên sâu cho người Việt. AI chấm điểm tức thì theo rubric NIIED, feedback 100% tiếng Việt. Lên đỉnh TOPIK cùng ToPeak.",
 }
 
 export default function RootLayout({

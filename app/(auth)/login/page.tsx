@@ -27,9 +27,12 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col items-center justify-center px-4">
       {/* Logo */}
       <div className="mb-8 text-center">
-        <div className="text-4xl mb-3">✍️</div>
-        <h1 className="text-2xl font-extrabold text-gray-900">HanViet</h1>
-        <p className="text-gray-500 text-sm mt-1">Writing Coach TOPIK II</p>
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white text-sm font-black tracking-tight mx-auto mb-3"
+          style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
+          TP
+        </div>
+        <h1 className="text-2xl font-extrabold text-gray-900">ToPeak</h1>
+        <p className="text-gray-500 text-sm mt-1">TOPIK to Peak — Lên đỉnh TOPIK</p>
       </div>
 
       {/* Card */}
@@ -94,7 +97,7 @@ export default function LoginPage() {
         <p className="text-xs text-gray-400">
           Điểm Writing TB thí sinh: <strong className="text-gray-600">33/100</strong>
           {" "}— Tăng lên{" "}
-          <strong className="text-blue-600">70+ điểm</strong> với HanViet
+          <strong className="text-blue-600">70+ điểm</strong> với ToPeak
         </p>
       </div>
     </div>

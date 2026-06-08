@@ -158,7 +158,7 @@ export default function AdminClient({ stats, recentUsers }: { stats: Stats; rece
         <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
         <div className="w-px h-4 bg-gray-200" />
         <span className="font-bold text-gray-900">🛠️ Admin Panel</span>
-        <span className="ml-auto text-xs text-gray-400">HanViet Writing Coach</span>
+        <span className="ml-auto text-xs text-gray-400">ToPeak</span>
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-8">

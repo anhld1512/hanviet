@@ -7,13 +7,13 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "HanViet Writing Coach — Luyện viết TOPIK II Q51-54",
+  title: "ToPeak — TOPIK to Peak. Lên đỉnh TOPIK",
   description: "App luyện viết TOPIK II chuyên sâu cho người Việt. AI chấm điểm tức thì theo rubric NIIED, feedback 100% tiếng Việt. Miễn phí 5 lượt/tháng.",
   openGraph: {
-    title: "HanViet Writing Coach — Luyện viết TOPIK II Q51-54",
-    description: "AI chấm bài viết tiếng Hàn tức thì, feedback tiếng Việt, rubric NIIED chính thức.",
+    title: "ToPeak — TOPIK to Peak. Lên đỉnh TOPIK",
+    description: "AI chấm bài viết TOPIK II tức thì, feedback tiếng Việt, rubric NIIED chính thức.",
     url: "https://hanviet-ten.vercel.app",
-    siteName: "HanViet Writing Coach",
+    siteName: "ToPeak",
     locale: "vi_VN",
     type: "website",
   },
@@ -217,12 +217,12 @@ export default function LandingPage() {
           style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(20px)" }}>
           <nav className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-black"
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[11px] font-black tracking-tight"
                 style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
-                한
+                TP
               </div>
-              <span className="font-extrabold text-[#1D1D1F] text-base tracking-tight">HanViet</span>
-              <span className="text-[#AEAEB2] text-xs hidden sm:inline">Writing Coach</span>
+              <span className="font-extrabold text-[#1D1D1F] text-base tracking-tight">ToPeak</span>
+              <span className="text-[#AEAEB2] text-xs hidden sm:inline">TOPIK to Peak</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-7">
@@ -568,7 +568,7 @@ export default function LandingPage() {
               style={{ background: "linear-gradient(135deg, #EFF6FF 0%, #E0EEFF 100%)" }}>
               <Star size={18} className="text-[#0066CC] shrink-0" fill="#0066CC" stroke="none" />
               <p className="text-sm text-[#1D1D1F] leading-relaxed">
-                <strong>HanViet không thay thế giáo viên</strong> — mà giúp bạn luyện nhiều hơn,
+                <strong>ToPeak không thay thế giáo viên</strong> — mà giúp bạn luyện nhiều hơn,
                 đúng hướng hơn giữa các buổi học.
               </p>
             </div>
@@ -650,7 +650,7 @@ export default function LandingPage() {
                   <th className="text-left px-6 py-4 text-[#6E6E73] font-semibold">Tiêu chí</th>
                   <th className="px-6 py-4 font-extrabold text-center"
                     style={{ background: "rgba(0,102,204,0.06)", color: "#0066CC" }}>
-                    HanViet ✦
+                    ToPeak ✦
                   </th>
                   <th className="px-6 py-4 text-[#6E6E73] font-semibold text-center">Trung tâm offline</th>
                   <th className="px-6 py-4 text-[#6E6E73] font-semibold text-center">Easy6</th>
@@ -859,11 +859,11 @@ export default function LandingPage() {
           style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F0F4FF 100%)" }}>
           <div className="max-w-6xl mx-auto px-5 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-black"
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[10px] font-black tracking-tight"
                 style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
-                한
+                TP
               </div>
-              <span className="text-sm font-bold text-[#1D1D1F]">HanViet Writing Coach</span>
+              <span className="text-sm font-bold text-[#1D1D1F]">ToPeak</span>
             </div>
             <div className="flex items-center gap-6 text-xs text-[#AEAEB2]">
               <Link href="/pricing"  className="hover:text-[#6E6E73] transition-colors">Bảng giá</Link>
@@ -871,7 +871,7 @@ export default function LandingPage() {
               <Link href="/login"    className="hover:text-[#6E6E73] transition-colors">Đăng nhập</Link>
             </div>
             <p className="text-xs text-[#AEAEB2]">
-              TOPIK II Writing Coach cho người Việt
+              TOPIK to Peak — Lên đỉnh TOPIK
             </p>
           </div>
         </footer>

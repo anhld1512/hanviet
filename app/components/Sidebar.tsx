@@ -49,16 +49,16 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-5 pt-5 pb-4" style={{ borderBottom: "1px solid var(--sidebar-border)" }}>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-            style={{ background: "#004F99" }}>
-            한
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[11px] font-black tracking-tight"
+            style={{ background: "linear-gradient(135deg, #004F99 0%, #0066CC 100%)" }}>
+            TP
           </div>
           <div>
             <div className="font-extrabold text-base leading-tight" style={{ color: "#1D1D1F", letterSpacing: "-0.02em" }}>
-              HanViet
+              ToPeak
             </div>
             <div className="text-xs leading-tight font-medium" style={{ color: "#AEAEB2" }}>
-              Writing Coach
+              TOPIK to Peak
             </div>
           </div>
         </div>
