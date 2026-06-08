@@ -59,78 +59,85 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
   return (
     <div className="space-y-3">
-
-      {/* ── AI generate — breathing glow strip ── */}
       <style>{`
         @keyframes ai-breathe {
           0%, 100% {
-            box-shadow: 0 0 0 0 rgba(59,130,246,0), 0 1px 3px rgba(59,130,246,0.08);
-            border-color: rgb(191,219,254);
-            background-color: rgb(239,246,255);
+            box-shadow: 0 0 0 0 rgba(59,130,246,0), 0 2px 6px rgba(59,130,246,0.08);
+            border-color: rgb(147,197,253);
           }
           50% {
-            box-shadow: 0 0 18px 3px rgba(59,130,246,0.22), 0 1px 3px rgba(59,130,246,0.1);
-            border-color: rgb(96,165,250);
-            background-color: rgb(219,234,254);
+            box-shadow: 0 0 22px 4px rgba(59,130,246,0.2), 0 2px 6px rgba(59,130,246,0.12);
+            border-color: rgb(59,130,246);
           }
         }
         @keyframes ai-sparkle-spin {
           0%   { transform: rotate(0deg) scale(1);    opacity: 1; }
-          25%  { transform: rotate(20deg) scale(1.2); opacity: 0.9; }
+          25%  { transform: rotate(20deg) scale(1.25); opacity: 0.9; }
           50%  { transform: rotate(0deg) scale(1);    opacity: 1; }
-          75%  { transform: rotate(-15deg) scale(1.1);opacity: 0.95; }
+          75%  { transform: rotate(-15deg) scale(1.1); opacity: 0.95; }
           100% { transform: rotate(0deg) scale(1);    opacity: 1; }
         }
         @keyframes generating-pulse {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.55; }
+          50% { opacity: 0.5; }
         }
       `}</style>
 
-      <button
-        onClick={handleGenerate}
-        disabled={generating}
-        className="relative w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left disabled:opacity-60 group transition-colors"
-        style={!generating ? {
-          animation: "ai-breathe 3s ease-in-out infinite",
-        } : {
-          borderColor: "rgb(191,219,254)",
-          backgroundColor: "rgb(239,246,255)",
-        }}
-      >
-        {/* Sparkle icon — wiggles in sync with breathe */}
-        <span
-          className="text-base shrink-0 select-none text-blue-500"
-          style={!generating ? {
-            display: "inline-block",
-            animation: "ai-sparkle-spin 3s ease-in-out infinite",
-          } : {}}
-        >
-          {generating ? "⏳" : "✦"}
-        </span>
+      {/* ── Grid: AI card đầu tiên + prompt cards ── */}
+      <div className="grid grid-cols-3 gap-2.5">
 
-        <div className="flex-1 min-w-0">
-          <span
-            className="text-sm font-semibold text-blue-800"
+        {/* ── AI generate card ── */}
+        <button
+          onClick={handleGenerate}
+          disabled={generating}
+          className="text-left rounded-xl border px-3.5 py-3 disabled:opacity-60 group flex flex-col transition-colors"
+          style={{
+            background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+            animation: !generating ? "ai-breathe 3s ease-in-out infinite" : "none",
+            borderColor: "rgb(147,197,253)",
+          }}
+        >
+          {/* Top row — badge + sparkle */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-blue-600 bg-white/70 border border-blue-200 px-2 py-0.5 rounded-full">
+              AI tạo
+            </span>
+            <span
+              className="text-base text-blue-500 select-none"
+              style={!generating ? {
+                display: "inline-block",
+                animation: "ai-sparkle-spin 3s ease-in-out infinite",
+              } : {}}
+            >
+              {generating ? "⏳" : "✦"}
+            </span>
+          </div>
+
+          {/* Title */}
+          <p
+            className="text-sm font-bold text-blue-900 leading-snug mb-1.5"
             style={generating ? { animation: "generating-pulse 1.2s ease-in-out infinite" } : {}}
           >
-            {generating ? "Đang tạo đề..." : "Tạo đề AI ngẫu nhiên"}
-          </span>
+            {generating ? "Đang tạo đề..." : "Tạo đề ngẫu nhiên"}
+          </p>
+
+          {/* Tagline */}
           {!generating && (
-            <span className="block text-xs text-blue-400 mt-0.5 leading-tight">
+            <p className="text-xs text-blue-500 leading-snug mb-auto">
               để rèn phản xạ với đề chưa gặp
-            </span>
+            </p>
           )}
-        </div>
-        <span className="text-sm font-bold text-blue-600 shrink-0 group-hover:translate-x-0.5 transition-transform">
-          Tạo →
-        </span>
-      </button>
 
-      {genError && <p className="text-xs text-red-500 pl-1">{genError}</p>}
+          {/* Bottom row */}
+          <div className="flex items-center justify-between mt-2.5">
+            <span className="text-xs text-blue-400">AI · Mỗi lần khác nhau</span>
+            <span className="text-xs font-bold text-blue-600 group-hover:translate-x-0.5 transition-transform">
+              Tạo →
+            </span>
+          </div>
+        </button>
 
-      {/* ── Prompt cards — 3 cols, compact ── */}
-      <div className="grid grid-cols-3 gap-2.5">
+        {/* ── Prompt cards ── */}
         {visible.map((p) => {
           const pct = scores[p.id] ?? null
           const isNewest = getTopikNum(p.source) === maxTopik
@@ -172,6 +179,8 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
           )
         })}
       </div>
+
+      {genError && <p className="text-xs text-red-500 pl-1">{genError}</p>}
 
       {/* ── Show more / less ── */}
       {!showAll && hiddenCount > 0 && (
