@@ -35,7 +35,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
   const sorted = [...prompts].sort((a, b) => getTopikNum(b.source) - getTopikNum(a.source))
   const maxTopik = getTopikNum(sorted[0]?.source ?? "")
 
-  const INITIAL_SHOW = 6
+  const INITIAL_SHOW = 5
   const visible = showAll ? sorted : sorted.slice(0, INITIAL_SHOW)
   const hiddenCount = sorted.length - INITIAL_SHOW
 
@@ -62,12 +62,10 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
       <style>{`
         @keyframes ai-breathe {
           0%, 100% {
-            box-shadow: 0 0 0 0 rgba(59,130,246,0), 0 2px 6px rgba(59,130,246,0.08);
-            border-color: rgb(147,197,253);
+            box-shadow: 0 2px 8px rgba(30,64,175,0.2), 0 0 0 0 rgba(30,64,175,0);
           }
           50% {
-            box-shadow: 0 0 22px 4px rgba(59,130,246,0.2), 0 2px 6px rgba(59,130,246,0.12);
-            border-color: rgb(59,130,246);
+            box-shadow: 0 4px 20px rgba(30,64,175,0.45), 0 0 0 3px rgba(30,64,175,0.15);
           }
         }
         @keyframes ai-sparkle-spin {
@@ -86,28 +84,31 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
       {/* ── Grid: AI card đầu tiên + prompt cards ── */}
       <div className="grid grid-cols-3 gap-2.5">
 
-        {/* ── AI generate card ── */}
+        {/* ── AI generate card — dark navy ── */}
         <button
           onClick={handleGenerate}
           disabled={generating}
-          className="text-left rounded-xl border px-3.5 py-3 disabled:opacity-60 group flex flex-col transition-colors"
+          className="text-left rounded-xl px-3.5 py-3 disabled:opacity-60 group flex flex-col transition-all"
           style={{
-            background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+            background: "linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 100%)",
+            border: "1px solid rgba(255,255,255,0.12)",
             animation: !generating ? "ai-breathe 3s ease-in-out infinite" : "none",
-            borderColor: "rgb(147,197,253)",
           }}
         >
           {/* Top row — badge + sparkle */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-blue-600 bg-white/70 border border-blue-200 px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-bold text-blue-200 bg-white/10 border border-white/20 px-2 py-0.5 rounded-full">
               AI tạo
             </span>
             <span
-              className="text-base text-blue-500 select-none"
-              style={!generating ? {
-                display: "inline-block",
-                animation: "ai-sparkle-spin 3s ease-in-out infinite",
-              } : {}}
+              className="text-base select-none"
+              style={{
+                color: "#fbbf24",
+                ...((!generating) ? {
+                  display: "inline-block",
+                  animation: "ai-sparkle-spin 3s ease-in-out infinite",
+                } : {}),
+              }}
             >
               {generating ? "⏳" : "✦"}
             </span>
@@ -115,7 +116,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
           {/* Title */}
           <p
-            className="text-sm font-bold text-blue-900 leading-snug mb-1.5"
+            className="text-sm font-bold text-white leading-snug mb-1.5"
             style={generating ? { animation: "generating-pulse 1.2s ease-in-out infinite" } : {}}
           >
             {generating ? "Đang tạo đề..." : "Tạo đề ngẫu nhiên"}
@@ -123,15 +124,15 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
           {/* Tagline */}
           {!generating && (
-            <p className="text-xs text-blue-500 leading-snug mb-auto">
+            <p className="text-xs text-blue-200 leading-snug mb-auto opacity-80">
               để rèn phản xạ với đề chưa gặp
             </p>
           )}
 
           {/* Bottom row */}
           <div className="flex items-center justify-between mt-2.5">
-            <span className="text-xs text-blue-400">AI · Mỗi lần khác nhau</span>
-            <span className="text-xs font-bold text-blue-600 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-xs text-blue-300 opacity-70">AI · Mỗi lần khác nhau</span>
+            <span className="text-xs font-bold text-white group-hover:translate-x-0.5 transition-transform">
               Tạo →
             </span>
           </div>
