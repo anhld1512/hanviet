@@ -35,7 +35,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
   const sorted = [...prompts].sort((a, b) => getTopikNum(b.source) - getTopikNum(a.source))
   const maxTopik = getTopikNum(sorted[0]?.source ?? "")
 
-  const INITIAL_SHOW = 3
+  const INITIAL_SHOW = 6
   const visible = showAll ? sorted : sorted.slice(0, INITIAL_SHOW)
   const hiddenCount = sorted.length - INITIAL_SHOW
 
@@ -66,12 +66,38 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
         disabled={generating}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 hover:border-blue-200 transition-all text-left disabled:opacity-60 group"
       >
-        <span className="text-base shrink-0">{generating ? "⏳" : "✦"}</span>
+        {/* Animated sparkle icon */}
+        <span
+          className="text-base shrink-0 select-none"
+          style={
+            generating
+              ? {}
+              : {
+                  display: "inline-block",
+                  animation: "sparkle-pulse 2s ease-in-out infinite",
+                }
+          }
+        >
+          {generating ? "⏳" : "✦"}
+        </span>
+
+        <style>{`
+          @keyframes sparkle-pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            30% { transform: scale(1.35) rotate(15deg); opacity: 0.85; }
+            60% { transform: scale(0.9) rotate(-10deg); opacity: 1; }
+          }
+        `}</style>
+
         <div className="flex-1 min-w-0">
           <span className="text-sm font-semibold text-blue-800">
             {generating ? "Đang tạo đề..." : "Tạo đề AI ngẫu nhiên"}
           </span>
-          <span className="text-xs text-blue-500 ml-2">chuẩn format TOPIK · nội dung mới mỗi lần</span>
+          {!generating && (
+            <span className="block text-xs text-blue-400 mt-0.5 leading-tight">
+              để rèn phản xạ với đề chưa gặp
+            </span>
+          )}
         </div>
         <span className="text-sm font-bold text-blue-600 shrink-0 group-hover:translate-x-0.5 transition-transform">
           Tạo →
@@ -80,8 +106,8 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
       {genError && <p className="text-xs text-red-500 pl-1">{genError}</p>}
 
-      {/* ── Prompt cards ── */}
-      <div className="grid grid-cols-3 gap-3">
+      {/* ── Prompt cards — 3 cols, compact ── */}
+      <div className="grid grid-cols-3 gap-2.5">
         {visible.map((p) => {
           const pct = scores[p.id] ?? null
           const isNewest = getTopikNum(p.source) === maxTopik
@@ -90,12 +116,12 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
             <button
               key={p.id}
               onClick={() => onSelect(p)}
-              className="text-left rounded-xl border border-gray-200 bg-white p-4 hover:border-blue-300 hover:shadow-sm transition-all group"
+              className="text-left rounded-xl border border-gray-200 bg-white px-3 py-2.5 hover:border-blue-300 hover:shadow-sm transition-all group"
             >
               {/* Top row: difficulty + score */}
-              <div className="flex items-center justify-between mb-2.5">
-                <div className="flex items-center gap-1.5">
-                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${difficultyColor(p.difficulty)}`}>
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1">
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${difficultyColor(p.difficulty)}`}>
                     {difficultyLabel(p.difficulty)}
                   </span>
                   {isNewest && (
@@ -106,16 +132,16 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
               </div>
 
               {/* Title */}
-              <p className="text-sm font-semibold text-gray-900 leading-snug mb-1 group-hover:text-blue-700 transition-colors">
+              <p className="text-xs font-semibold text-gray-900 leading-snug mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
                 {p.context}
               </p>
 
               {renderExtra?.(p)}
 
               {/* Source + CTA */}
-              <div className="flex items-center justify-between mt-2.5">
-                <span className="text-xs text-gray-400">{p.source}</span>
-                <span className="text-xs font-medium text-gray-400 group-hover:text-blue-500 transition-colors">
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-[11px] text-gray-400">{p.source}</span>
+                <span className="text-[11px] font-medium text-gray-400 group-hover:text-blue-500 transition-colors">
                   {pct !== null ? "Luyện lại →" : "Bắt đầu →"}
                 </span>
               </div>

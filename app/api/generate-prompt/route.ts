@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 const OPENROUTER_API_KEY = process.env.DEEPSEEK_API_KEY!
 
-export const maxDuration = 30
+export const maxDuration = 60
 
 const PROMPTS: Record<string, string> = {
   q51: `Bạn là người tạo đề thi TOPIK II. Tạo 1 đề Q51 실용문 điền vào chỗ trống.
@@ -109,8 +109,8 @@ Trả về JSON hợp lệ (không có markdown):
 
 // Goi DeepSeek voi retry tu dong (toi da MAX_RETRIES lan)
 // Xu ly ca: HTTP 5xx, content rong, JSON parse loi
-const MAX_RETRIES = 2
-const RETRY_DELAY_MS = 600
+const MAX_RETRIES = 1
+const RETRY_DELAY_MS = 300
 
 async function callDeepSeekWithRetry(userPrompt: string): Promise<Record<string, unknown>> {
   let lastError: unknown
@@ -130,9 +130,9 @@ async function callDeepSeekWithRetry(userPrompt: string): Promise<Record<string,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "deepseek-v4-flash",
-          max_tokens: 4000,
-          temperature: 1.1,
+          model: "deepseek-chat",
+          max_tokens: 1200,
+          temperature: 1.0,
           messages: [
             {
               role: "system",
