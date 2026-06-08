@@ -164,8 +164,8 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
     <>
       <style>{`
         @keyframes tip-badge-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
-          50%       { box-shadow: 0 0 0 4px rgba(59,130,246,0.18); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); }
+          50%       { box-shadow: 0 0 0 4px rgba(234,88,12,0.2); }
         }
         @keyframes tip-arrow-bounce {
           0%, 100% { transform: translateY(0); }
@@ -182,7 +182,7 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
       >
         {/* Badge với glow pulse khi đang đóng */}
         <span
-          className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full shrink-0"
+          className="text-xs font-bold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full shrink-0"
           style={!open ? { animation: "tip-badge-glow 2s ease-in-out infinite" } : {}}
         >
           Mẹo
