@@ -7,7 +7,7 @@ import type { GradeResult } from "@/lib/grading-prompts"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import UpgradeModal from "@/app/components/UpgradeModal"
 import { saveSubmission } from "@/lib/save-submission"
-import { Timer, Zap } from "lucide-react"
+import { Timer, Zap, Eye, EyeOff, AlertTriangle } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 type Prompts = { q51: WritingPrompt; q52: WritingPrompt; q53: WritingPrompt; q54: WritingPrompt }
@@ -22,7 +22,8 @@ type ExamResults = {
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const EXAM_SECONDS = 50 * 60 // 50 minutes
+const EXAM_SECONDS = 50 * 60
+const Q_ORDER: QKey[] = ["q51", "q52", "q53", "q54"]
 const Q_TABS: { key: QKey; label: string; points: number; color: string; accent: string }[] = [
   { key: "q51", label: "Q51", points: 10,  color: "green",  accent: "bg-blue-100 text-blue-700" },
   { key: "q52", label: "Q52", points: 10,  color: "blue",   accent: "bg-blue-100 text-blue-700" },
@@ -44,6 +45,40 @@ function levelEstimate(total: number): { label: string; color: string; desc: str
   return { label: "Cần cố gắng", color: "text-blue-500", desc: "Chưa đủ điểm pass — cần luyện thêm" }
 }
 
+// ─── Exit Warning Modal ───────────────────────────────────────────────────────
+function ExitWarningModal({ onStay, onExit }: { onStay: () => void; onExit: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-2xl p-8 max-w-sm w-full mx-4">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center mb-4">
+            <AlertTriangle size={28} className="text-red-500" />
+          </div>
+          <h2 className="text-xl font-extrabold text-gray-900 mb-2">Thoát bài thi?</h2>
+          <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+            Nếu thoát ra, toàn bộ bài làm <strong className="text-gray-800">sẽ bị mất</strong> và không thể phục hồi.
+            Thời gian đếm ngược sẽ tiếp tục kể cả khi bạn quay lại.
+          </p>
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={onStay}
+              className="flex-1 border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-bold py-3 rounded-xl transition-colors"
+            >
+              Tiếp tục thi
+            </button>
+            <button
+              onClick={onExit}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors"
+            >
+              Thoát & mất bài
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function ExamClient({
   prompts, isPro, usedThisMonth, displayName,
@@ -55,11 +90,9 @@ export default function ExamClient({
 }) {
   const router = useRouter()
 
-  // Phase
   const [phase, setPhase] = useState<Phase>("setup")
   const [activeQ, setActiveQ] = useState<QKey>("q51")
 
-  // Prompts — can be replaced by AI-generated set
   const [activePrompts, setActivePrompts] = useState<Prompts>(prompts)
   const [promptMode, setPromptMode] = useState<"bank" | "ai">("bank")
   const [generatingAI, setGeneratingAI] = useState(false)
@@ -81,8 +114,12 @@ export default function ExamClient({
   const [results, setResults] = useState<ExamResults>({ q51: null, q52: null, q53: null, q54: null })
   const [expandedQ, setExpandedQ] = useState<QKey | null>(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
-  const [gradingStep, setGradingStep] = useState(0) // 0-4 progress
+  const [gradingStep, setGradingStep] = useState(0)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // UI state
+  const [showExitWarning, setShowExitWarning] = useState(false)
+  const [showContext, setShowContext] = useState(false)
 
   // ── Completion checks ──────────────────────────────────────────────────────
   const done51 = ans51A.trim().length > 0 && ans51B.trim().length > 0
@@ -90,7 +127,6 @@ export default function ExamClient({
   const done53 = ans53.replace(/\n/g, "").length >= 50
   const done54 = ans54.replace(/\n/g, "").length >= 200
   const allDone = done51 && done52 && done53 && done54
-
   const doneMap: Record<QKey, boolean> = { q51: done51, q52: done52, q53: done53, q54: done54 }
 
   // ── Timer ──────────────────────────────────────────────────────────────────
@@ -107,6 +143,47 @@ export default function ExamClient({
   }, [phase])
 
   function stopTimer() { if (timerRef.current) clearInterval(timerRef.current) }
+
+  // ── Back / unload warning khi đang thi ────────────────────────────────────
+  useEffect(() => {
+    if (phase !== "exam") return
+
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault()
+      e.returnValue = ""
+    }
+
+    function handlePopState() {
+      // Chặn back button, đẩy lại state và hiện modal
+      window.history.pushState(null, "", window.location.href)
+      setShowExitWarning(true)
+    }
+
+    // Đẩy 1 fake history entry để bắt popstate
+    window.history.pushState(null, "", window.location.href)
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    window.addEventListener("popstate", handlePopState)
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+      window.removeEventListener("popstate", handlePopState)
+    }
+  }, [phase])
+
+  // ── Reset context hint khi đổi câu ────────────────────────────────────────
+  useEffect(() => {
+    setShowContext(false)
+  }, [activeQ])
+
+  // ── Prev / next navigation ─────────────────────────────────────────────────
+  function goPrev() {
+    const idx = Q_ORDER.indexOf(activeQ)
+    if (idx > 0) setActiveQ(Q_ORDER[idx - 1])
+  }
+  function goNext() {
+    const idx = Q_ORDER.indexOf(activeQ)
+    if (idx < Q_ORDER.length - 1) setActiveQ(Q_ORDER[idx + 1])
+  }
 
   // ── Generate AI exam set ───────────────────────────────────────────────────
   async function handleGenerateAI() {
@@ -137,7 +214,6 @@ export default function ExamClient({
     setSubmitError(null)
 
     try {
-      // ── Single batch call — counts as 1 grading use ──────────
       const res = await fetch("/api/grade-exam", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -176,7 +252,6 @@ export default function ExamClient({
       setGradingStep(4)
       setResults({ q51: { a: r51A, b: r51B }, q52: { a: r52A, b: r52B }, q53: r53Res, q54: r54Res })
 
-      // Save combined submission
       const total51 = r51A.scores.total + r51B.scores.total
       const total52 = r52A.scores.total + r52B.scores.total
       const combined: GradeResult = {
@@ -187,7 +262,6 @@ export default function ExamClient({
         corrections: [],
       }
       saveSubmission({ questionType: "mock_exam", userAnswer: ans54, gradeResult: combined })
-
       setPhase("results")
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
@@ -204,12 +278,17 @@ export default function ExamClient({
 
   function handleAutoSubmit() { handleSubmit() }
 
+  function handleExitConfirmed() {
+    stopTimer()
+    setShowExitWarning(false)
+    router.push("/practice")
+  }
+
   // ── Computed scores ────────────────────────────────────────────────────────
   const totalScore = results.q51 && results.q52 && results.q53 && results.q54
     ? results.q51.a.scores.total + results.q51.b.scores.total
       + results.q52.a.scores.total + results.q52.b.scores.total
-      + results.q53.scores.total
-      + results.q54.scores.total
+      + results.q53.scores.total + results.q54.scores.total
     : 0
 
   const scoreBreakdown = results.q51 && results.q52 && results.q53 && results.q54
@@ -242,10 +321,9 @@ export default function ExamClient({
             <p className="text-gray-500">Mô phỏng đúng cấu trúc đề thi thật — 4 câu · 50 phút · 100 điểm</p>
           </div>
 
-          {/* Exam overview */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             {Q_TABS.map((q) => (
-              <div key={q.key} className={`rounded-xl border p-3 ${q.key === "q51" ? "border-blue-100 bg-blue-50" : q.key === "q52" ? "border-blue-100 bg-blue-50" : q.key === "q53" ? "border-blue-100 bg-blue-50" : "border-gray-100 bg-gray-50"}`}>
+              <div key={q.key} className={`rounded-xl border p-3 ${q.key === "q54" ? "border-gray-100 bg-gray-50" : "border-blue-100 bg-blue-50"}`}>
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${q.accent}`}>{q.label}</span>
                 <div className="mt-1.5 text-xs text-gray-600 font-semibold">{q.points} điểm</div>
                 <div className="text-xs text-gray-400 mt-0.5">
@@ -255,7 +333,6 @@ export default function ExamClient({
             ))}
           </div>
 
-          {/* Rules */}
           <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6 text-xs text-gray-700 space-y-1">
             <div className="font-bold mb-2">Quy tắc thi thử:</div>
             <div>• Không có gợi ý — như thi thật</div>
@@ -264,7 +341,6 @@ export default function ExamClient({
             <div>• Cần viết đủ mới nộp được (Q54 ≥ 200 chữ)</div>
           </div>
 
-          {/* Usage info */}
           {!isPro && (
             <div className="flex items-center justify-between bg-gray-50 rounded-xl p-3 mb-5 text-xs">
               <span className="text-gray-500">Lượt chấm còn lại tháng này:</span>
@@ -279,7 +355,6 @@ export default function ExamClient({
             </div>
           )}
 
-          {/* Prompt mode selector */}
           <div className="grid grid-cols-2 gap-2 mb-4">
             <button
               onClick={() => { setActivePrompts(prompts); setPromptMode("bank") }}
@@ -305,13 +380,12 @@ export default function ExamClient({
 
           {aiError && <p className="text-xs text-red-500 mb-3">{aiError}</p>}
 
-          {/* Topic preview */}
           {promptMode === "ai" && (
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4 space-y-1.5">
               <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wide mb-2">Đề AI vừa tạo</p>
               {(["q51","q52","q53","q54"] as QKey[]).map(q => (
                 <div key={q} className="flex items-start gap-2 text-xs text-gray-700">
-                  <span className={`shrink-0 font-bold px-1.5 py-0.5 rounded text-[10px] ${q === "q51" ? "bg-blue-100 text-blue-700" : q === "q52" ? "bg-blue-100 text-blue-700" : q === "q53" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-blue-700"}`}>{q.toUpperCase()}</span>
+                  <span className={`shrink-0 font-bold px-1.5 py-0.5 rounded text-[10px] ${q === "q54" ? "bg-gray-100 text-blue-700" : "bg-blue-100 text-blue-700"}`}>{q.toUpperCase()}</span>
                   <span className="text-gray-600 leading-relaxed">{activePrompts[q].context}</span>
                 </div>
               ))}
@@ -375,7 +449,6 @@ export default function ExamClient({
     return (
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-3xl mx-auto">
-          {/* Header */}
           <div className="flex items-center gap-3 mb-6">
             <button
               onClick={() => router.push("/practice")}
@@ -387,22 +460,16 @@ export default function ExamClient({
             <span className="text-sm font-semibold text-gray-700">Kết quả thi thử</span>
           </div>
 
-          {/* Score hero */}
           <div className="bg-white rounded-2xl border border-gray-100 p-8 mb-6 text-center">
             <div className="text-6xl font-extrabold text-gray-900 mb-1">{totalScore}<span className="text-2xl text-gray-400 font-normal">/100</span></div>
             <div className={`text-lg font-bold mb-1 ${est.color}`}>{est.label}</div>
             <div className="text-sm text-gray-500 mb-6">{est.desc}</div>
-
-            {/* Score bar breakdown */}
             <div className="space-y-3">
               {scoreBreakdown.map((s) => (
                 <div key={s.key} className="flex items-center gap-3">
                   <div className="w-8 text-xs font-bold text-gray-500 text-right">{s.key}</div>
                   <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${s.color} rounded-full transition-all duration-1000`}
-                      style={{ width: `${(s.earned / s.max) * 100}%` }}
-                    />
+                    <div className={`h-full ${s.color} rounded-full transition-all duration-1000`} style={{ width: `${(s.earned / s.max) * 100}%` }} />
                   </div>
                   <div className="w-14 text-xs font-bold text-gray-700 text-right">{s.earned}/{s.max}</div>
                   <div className="w-10 text-xs text-gray-400">{Math.round((s.earned / s.max) * 100)}%</div>
@@ -411,7 +478,6 @@ export default function ExamClient({
             </div>
           </div>
 
-          {/* Per-question detail cards */}
           <div className="space-y-3 mb-6">
             {Q_TABS.map((qt) => {
               const qRes = results[qt.key as QKey]
@@ -439,7 +505,6 @@ export default function ExamClient({
                     </span>
                     <span className="text-gray-300 text-sm">{isExpanded ? "▲" : "▼"}</span>
                   </button>
-
                   {isExpanded && (
                     <div className="px-5 pb-5 border-t border-gray-50 pt-4 space-y-4">
                       {(qt.key === "q51" || qt.key === "q52") && (
@@ -451,7 +516,7 @@ export default function ExamClient({
                             <div key={label} className="bg-gray-50 rounded-xl p-4">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="w-6 h-6 bg-blue-500 text-white rounded-full text-xs flex items-center justify-center font-bold">{label}</span>
-                                <span className="text-xs text-gray-500 italic">"{ans}"</span>
+                                <span className="text-xs text-gray-500 italic">&ldquo;{ans}&rdquo;</span>
                               </div>
                               <div className="text-sm text-gray-700">{res.feedback.overall}</div>
                               {res.corrections?.slice(0, 1).map((c, i) => (
@@ -482,7 +547,6 @@ export default function ExamClient({
             })}
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3">
             <button
               onClick={() => {
@@ -510,13 +574,36 @@ export default function ExamClient({
 
   // ── EXAM ──────────────────────────────────────────────────────────────────
   const isLowTime = timeLeft < 5 * 60
-  const activeTab = Q_TABS.find((q) => q.key === activeQ)!
+  const activeTabIdx = Q_ORDER.indexOf(activeQ)
+  const isFirst = activeTabIdx === 0
+  const isLast = activeTabIdx === Q_ORDER.length - 1
+  const nextQ = !isLast ? Q_TABS[activeTabIdx + 1] : null
+  const prevQ = !isFirst ? Q_TABS[activeTabIdx - 1] : null
+
+  // Context hint cho câu hiện tại
+  const contextText = activePrompts[activeQ]?.context ?? ""
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Exit warning modal */}
+      {showExitWarning && (
+        <ExitWarningModal
+          onStay={() => setShowExitWarning(false)}
+          onExit={handleExitConfirmed}
+        />
+      )}
+
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-6 py-3 flex items-center gap-4 sticky top-0 z-10">
-        <span className="text-sm font-bold text-gray-700">Thi thử TOPIK II</span>
+        {/* Exit button */}
+        <button
+          onClick={() => setShowExitWarning(true)}
+          className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+        >
+          ✕ Thoát
+        </button>
+        <div className="w-px h-4 bg-gray-200" />
+        <span className="text-sm font-bold text-gray-700 shrink-0">Thi thử TOPIK II</span>
 
         {/* Tab nav */}
         <div className="flex gap-1 ml-4">
@@ -525,9 +612,7 @@ export default function ExamClient({
               key={q.key}
               onClick={() => setActiveQ(q.key)}
               className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
-                activeQ === q.key
-                  ? `${q.accent}`
-                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                activeQ === q.key ? q.accent : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
               }`}
             >
               {doneMap[q.key] && <span className="text-blue-500">✓</span>}
@@ -544,7 +629,7 @@ export default function ExamClient({
           ))}
         </div>
 
-        {/* Timer */}
+        {/* Timer + submit */}
         <div className="ml-auto flex items-center gap-2">
           {submitError && (
             <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded-lg">{submitError}</span>
@@ -562,8 +647,8 @@ export default function ExamClient({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-6 max-w-5xl mx-auto w-full">
+      {/* Content — full width với padding hợp lý */}
+      <div className="flex-1 px-8 py-6 w-full max-w-[1440px] mx-auto">
 
         {/* Q51 */}
         {activeQ === "q51" && (
@@ -571,7 +656,17 @@ export default function ExamClient({
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q51</span>
-                <span className="text-sm text-gray-500">{activePrompts.q51.context}</span>
+                {/* Context ẩn/hiện */}
+                <button
+                  onClick={() => setShowContext(v => !v)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showContext ? <EyeOff size={12} /> : <Eye size={12} />}
+                  {showContext ? "Ẩn gợi ý" : "Xem gợi ý"}
+                </button>
+                {showContext && (
+                  <span className="text-sm text-gray-500 transition-all">{contextText}</span>
+                )}
               </div>
               <div className="bg-gray-50 rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q51.text_kr}</div>
               <p className="text-xs text-gray-400 mt-3">Viết 1 câu phù hợp vào mỗi chỗ trống · thể văn 습니다체</p>
@@ -586,9 +681,13 @@ export default function ExamClient({
                   <WongojiEditor value={val} onChange={set} placeholder={`Viết câu cho chỗ trống ${key}...`} questionType="q51" />
                 </div>
               ))}
-              <button onClick={() => setActiveQ("q52")} className="w-full text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
-                Câu tiếp theo: Q52 →
-              </button>
+              {/* Nav buttons */}
+              <div className="flex gap-2">
+                <div className="flex-1" /> {/* spacer — Q51 không có prev */}
+                <button onClick={goNext} className="flex-1 text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
+                  Câu tiếp theo: Q52 →
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -599,7 +698,16 @@ export default function ExamClient({
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q52</span>
-                <span className="text-sm text-gray-500">{activePrompts.q52.context}</span>
+                <button
+                  onClick={() => setShowContext(v => !v)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showContext ? <EyeOff size={12} /> : <Eye size={12} />}
+                  {showContext ? "Ẩn gợi ý" : "Xem gợi ý"}
+                </button>
+                {showContext && (
+                  <span className="text-sm text-gray-500">{contextText}</span>
+                )}
               </div>
               <div className="bg-gray-50 rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q52.text_kr}</div>
               <p className="text-xs text-gray-400 mt-3">Viết 1 câu phù hợp · thể văn 다/ㄴ다체 học thuật</p>
@@ -614,9 +722,14 @@ export default function ExamClient({
                   <WongojiEditor value={val} onChange={set} placeholder={`Viết câu cho chỗ trống ${key}...`} questionType="q52" />
                 </div>
               ))}
-              <button onClick={() => setActiveQ("q53")} className="w-full text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
-                Câu tiếp theo: Q53 →
-              </button>
+              <div className="flex gap-2">
+                <button onClick={goPrev} className="flex-1 text-center text-sm text-gray-500 font-semibold py-2 hover:bg-gray-50 rounded-xl transition-colors border border-gray-200">
+                  ← {prevQ?.label}
+                </button>
+                <button onClick={goNext} className="flex-1 text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
+                  Câu tiếp theo: Q53 →
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -627,7 +740,16 @@ export default function ExamClient({
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q53</span>
-                <span className="text-sm text-gray-500">{activePrompts.q53.context}</span>
+                <button
+                  onClick={() => setShowContext(v => !v)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showContext ? <EyeOff size={12} /> : <Eye size={12} />}
+                  {showContext ? "Ẩn gợi ý" : "Xem gợi ý"}
+                </button>
+                {showContext && (
+                  <span className="text-sm text-gray-500">{contextText}</span>
+                )}
               </div>
               <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q53.text_kr}</div>
             </div>
@@ -641,45 +763,61 @@ export default function ExamClient({
                 </div>
                 <WongojiEditor value={ans53} onChange={setAns53} minChars={200} maxChars={320} questionType="q53" placeholder="Phân tích biểu đồ... (200–300 chữ)" />
               </div>
-              <button onClick={() => setActiveQ("q54")} className="w-full text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
-                Câu tiếp theo: Q54 →
-              </button>
+              <div className="flex gap-2">
+                <button onClick={goPrev} className="flex-1 text-center text-sm text-gray-500 font-semibold py-2 hover:bg-gray-50 rounded-xl transition-colors border border-gray-200">
+                  ← {prevQ?.label}
+                </button>
+                <button onClick={goNext} className="flex-1 text-center text-sm text-blue-600 font-semibold py-2 hover:bg-blue-50 rounded-xl transition-colors">
+                  Câu tiếp theo: Q54 →
+                </button>
+              </div>
             </div>
           </div>
         )}
 
         {/* Q54 */}
         {activeQ === "q54" && (
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-[1fr_2fr] gap-6">
             <div className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-blue-700">Q54</span>
-                  <span className="text-sm text-gray-500">{activePrompts.q54.context}</span>
+                  <button
+                    onClick={() => setShowContext(v => !v)}
+                    className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showContext ? <EyeOff size={12} /> : <Eye size={12} />}
+                    {showContext ? "Ẩn gợi ý" : "Xem gợi ý"}
+                  </button>
+                  {showContext && (
+                    <span className="text-sm text-gray-500">{contextText}</span>
+                  )}
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">{activePrompts.q54.text_kr}</div>
                 {activePrompts.q54.topic && (
                   <div className="mt-3 bg-gray-50 rounded-xl p-3 text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-line">{activePrompts.q54.topic}</div>
                 )}
               </div>
+              {/* Prev button cho Q54 */}
+              <button onClick={goPrev} className="w-full text-center text-sm text-gray-500 font-semibold py-2 hover:bg-gray-50 rounded-xl transition-colors border border-gray-200 bg-white">
+                ← {prevQ?.label}
+              </button>
             </div>
-            <div className="col-span-2">
-              <div className="bg-white rounded-2xl border border-gray-100 p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-gray-900 text-sm">Bài viết của bạn</h3>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
-                      {[600, 650, 700].map((t) => (
-                        <span key={t} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${ans54.replace(/\n/g,"").length >= t ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-400"}`}>{t}</span>
-                      ))}
-                    </div>
-                    <span className={`text-sm font-bold ${ans54.replace(/\n/g,"").length < 600 ? "text-blue-500" : ans54.replace(/\n/g,"").length > 700 ? "text-gray-600" : "text-blue-600"}`}>
-                      {ans54.replace(/\n/g,"").length} chữ
-                    </span>
+            <div className="bg-white rounded-2xl border border-gray-100 p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-gray-900 text-sm">Bài viết của bạn</h3>
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    {[600, 650, 700].map((t) => (
+                      <span key={t} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${ans54.replace(/\n/g,"").length >= t ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-400"}`}>{t}</span>
+                    ))}
                   </div>
+                  <span className={`text-sm font-bold ${ans54.replace(/\n/g,"").length < 600 ? "text-blue-500" : ans54.replace(/\n/g,"").length > 700 ? "text-gray-600" : "text-blue-600"}`}>
+                    {ans54.replace(/\n/g,"").length} chữ
+                  </span>
                 </div>
-                <WongojiEditor value={ans54} onChange={setAns54} minChars={600} maxChars={720} questionType="q54" placeholder="Viết bài luận... (600–700 chữ, thể văn 다체)" />
               </div>
+              <WongojiEditor value={ans54} onChange={setAns54} minChars={600} maxChars={720} questionType="q54" placeholder="Viết bài luận... (600–700 chữ, thể văn 다체)" />
             </div>
           </div>
         )}
