@@ -24,15 +24,15 @@ type Accent = {
 
 const ACCENTS: Record<string, Accent> = {
   q51: {
-    gradient: "from-green-50 to-emerald-50",
-    border: "border-green-200",
-    hoverBorder: "hover:border-green-400",
-    badge: "bg-green-500",
-    arrow: "text-green-500",
-    hoverText: "group-hover:text-green-600",
+    gradient: "from-blue-50 to-blue-50",
+    border: "border-blue-200",
+    hoverBorder: "hover:border-blue-400",
+    badge: "bg-blue-500",
+    arrow: "text-blue-500",
+    hoverText: "group-hover:text-blue-600",
   },
   q52: {
-    gradient: "from-blue-50 to-indigo-50",
+    gradient: "from-blue-50 to-blue-50",
     border: "border-blue-200",
     hoverBorder: "hover:border-blue-400",
     badge: "bg-blue-500",
@@ -40,20 +40,20 @@ const ACCENTS: Record<string, Accent> = {
     hoverText: "group-hover:text-blue-600",
   },
   q53: {
-    gradient: "from-purple-50 to-violet-50",
-    border: "border-purple-200",
-    hoverBorder: "hover:border-purple-400",
-    badge: "bg-purple-500",
-    arrow: "text-purple-500",
-    hoverText: "group-hover:text-purple-600",
+    gradient: "from-blue-50 to-blue-50",
+    border: "border-blue-200",
+    hoverBorder: "hover:border-blue-400",
+    badge: "bg-blue-500",
+    arrow: "text-blue-500",
+    hoverText: "group-hover:text-blue-600",
   },
   q54: {
-    gradient: "from-orange-50 to-amber-50",
-    border: "border-orange-200",
-    hoverBorder: "hover:border-orange-400",
-    badge: "bg-orange-500",
-    arrow: "text-orange-500",
-    hoverText: "group-hover:text-orange-600",
+    gradient: "from-amber-50 to-amber-50",
+    border: "border-gray-200",
+    hoverBorder: "hover:border-blue-400",
+    badge: "bg-gray-500",
+    arrow: "text-blue-500",
+    hoverText: "group-hover:text-blue-600",
   },
 }
 
@@ -151,7 +151,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
             >
               {/* Tag */}
               {isNewest && (
-                <span className="absolute -top-2.5 left-4 text-[10px] font-bold bg-green-500 text-white px-2.5 py-0.5 rounded-full shadow-sm">
+                <span className="absolute -top-2.5 left-4 text-[10px] font-bold bg-blue-500 text-white px-2.5 py-0.5 rounded-full shadow-sm">
                   🆕 Mới nhất
                 </span>
               )}

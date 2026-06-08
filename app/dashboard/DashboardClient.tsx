@@ -30,8 +30,8 @@ const QUICK_PRACTICE = [
     desc: "Điền câu vào thư/thông báo",
     points: "10 điểm",
     time: "3-5 phút",
-    color: "bg-green-50 border-green-100",
-    badge: "bg-green-100 text-green-700",
+    color: "bg-blue-50 border-blue-100",
+    badge: "bg-blue-100 text-blue-700",
     route: "/practice",
   },
   {
@@ -50,8 +50,8 @@ const QUICK_PRACTICE = [
     desc: "Viết 200-300 chữ",
     points: "30 điểm",
     time: "10-12 phút",
-    color: "bg-purple-50 border-purple-100",
-    badge: "bg-purple-100 text-purple-700",
+    color: "bg-blue-50 border-blue-100",
+    badge: "bg-blue-100 text-blue-700",
     route: "/practice",
   },
   {
@@ -60,8 +60,8 @@ const QUICK_PRACTICE = [
     desc: "Viết 600-700 chữ",
     points: "50 điểm",
     time: "28-35 phút",
-    color: "bg-orange-50 border-orange-100",
-    badge: "bg-orange-100 text-orange-700",
+    color: "bg-gray-50 border-gray-100",
+    badge: "bg-gray-100 text-blue-700",
     route: "/practice",
   },
 ]
@@ -110,10 +110,10 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
         {/* Stats row — 4 cột đều nhau */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Ngày streak", value: profile.study_streak, icon: "🔥", color: "text-orange-500" },
+            { label: "Ngày streak", value: profile.study_streak, icon: "🔥", color: "text-blue-500" },
             { label: "Bài đã viết", value: profile.total_essays_written, icon: "📝", color: "text-blue-500" },
-            { label: "Cấp mục tiêu", value: profile.target_level, icon: "🎯", color: "text-purple-500" },
-            { label: "Điểm Writing", value: estimatedScore !== null ? `${estimatedScore}%` : "0", icon: "📊", color: "text-green-500" },
+            { label: "Cấp mục tiêu", value: profile.target_level, icon: "🎯", color: "text-blue-500" },
+            { label: "Điểm Writing", value: estimatedScore !== null ? `${estimatedScore}%` : "0", icon: "📊", color: "text-blue-500" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
               <div className="text-3xl">{s.icon}</div>
@@ -183,12 +183,12 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
                       <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                         {pct !== null && (
                           <div
-                            className={`h-full rounded-full ${pct >= 80 ? "bg-green-400" : pct >= 60 ? "bg-yellow-400" : "bg-orange-400"}`}
+                            className={`h-full rounded-full ${pct >= 80 ? "bg-blue-400" : pct >= 60 ? "bg-gray-400" : "bg-blue-400"}`}
                             style={{ width: `${pct}%` }}
                           />
                         )}
                       </div>
-                      <span className={`text-xs font-semibold w-12 text-right ${pct === null ? "text-gray-300" : pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>
+                      <span className={`text-xs font-semibold w-12 text-right ${pct === null ? "text-gray-300" : pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>
                         {best ? `${best.score}/${best.max}` : `—/${max}`}
                       </span>
                     </div>
@@ -197,7 +197,7 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
                 {estimatedScore !== null && (
                   <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-xs text-gray-400">Trung bình tổng</span>
-                    <span className={`text-sm font-extrabold ${estimatedScore >= 80 ? "text-green-600" : estimatedScore >= 60 ? "text-yellow-600" : "text-orange-500"}`}>
+                    <span className={`text-sm font-extrabold ${estimatedScore >= 80 ? "text-blue-600" : estimatedScore >= 60 ? "text-gray-600" : "text-blue-500"}`}>
                       {estimatedScore}%
                     </span>
                   </div>
@@ -257,7 +257,7 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
                 </div>
               </Link>
               <Link href="/learning-path" className="bg-white rounded-2xl border border-gray-100 p-4 hover:shadow-sm transition-all flex items-center gap-4">
-                <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-xl shrink-0">🗺️</div>
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl shrink-0">🗺️</div>
                 <div>
                   <div className="font-semibold text-gray-900 text-sm">Lộ trình</div>
                   <div className="text-xs text-gray-400">4 giai đoạn luyện tập</div>

@@ -29,7 +29,7 @@ function ChartPreview({ chartData }: { chartData: ChartData }) {
         {["male", "female"].map((gender) => {
           const items = gender === "male" ? chartData.male! : chartData.female!
           const label = gender === "male" ? "Nam" : "Nữ"
-          const color = gender === "male" ? "bg-blue-400" : "bg-pink-400"
+          const color = gender === "male" ? "bg-blue-400" : "bg-blue-300"
           return (
             <div key={gender}>
               <div className="text-xs font-bold text-gray-500 mb-1.5">{label}</div>
@@ -132,17 +132,17 @@ export default function Q53Page() {
   if (gradeResult && selected) {
     const pct = Math.round((gradeResult.scores.total / gradeResult.max_scores.total) * 100)
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
             <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-purple-100 text-purple-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
+            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
             <span className="text-sm text-gray-500 truncate max-w-xs">{selected.context}</span>
             <div className="ml-auto flex items-center gap-2">
-              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{gradeResult.scores.total}/{gradeResult.max_scores.total}</span>
+              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>{gradeResult.scores.total}/{gradeResult.max_scores.total}</span>
               <span className="text-xs text-gray-400">điểm</span>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function Q53Page() {
     const chart = (selected.chart_data ?? {}) as ChartData
     const charCount = answer.replace(/\n/g, "").length
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         {loading && <GradingLoader />}
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
@@ -166,7 +166,7 @@ export default function Q53Page() {
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
             <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-purple-100 text-purple-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
+            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
@@ -181,7 +181,7 @@ export default function Q53Page() {
                 <ChartPreview chartData={chart} />
                 <div className="mt-4 bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">{selected.text_kr}</div>
               </div>
-              <div className="bg-purple-50 border border-purple-100 rounded-2xl p-4 text-xs text-purple-800">
+              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-xs text-blue-800">
                 <span className="font-bold">Lưu ý Q53:</span> Mục tiêu 200–300 chữ. Thể văn 다체. Không thêm ý kiến cá nhân.
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function Q53Page() {
               <div className="bg-white rounded-2xl border border-gray-100 p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-gray-900">Bài viết của bạn</h3>
-                  <span className={`text-sm font-bold ${charCount < 200 ? "text-orange-500" : charCount > 300 ? "text-yellow-600" : "text-green-600"}`}>
+                  <span className={`text-sm font-bold ${charCount < 200 ? "text-blue-500" : charCount > 300 ? "text-gray-600" : "text-blue-600"}`}>
                     {charCount} chữ {charCount < 200 ? "(cần ≥200)" : charCount > 300 ? "(hơi dài)" : "✓"}
                   </span>
                 </div>
@@ -199,7 +199,7 @@ export default function Q53Page() {
               </div>
               {error && <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">{error}</div>}
               <button onClick={handleSubmit} disabled={!answer.trim() || loading}
-                className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
+                className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
                 {loading ? "AI đang chấm bài..." : "Nộp bài — AI chấm ngay"}
               </button>
               <p className="text-center text-xs text-gray-400">Tối đa 30 điểm · AI chấm theo rubric NIIED</p>
@@ -216,7 +216,7 @@ export default function Q53Page() {
   const passed = Q53_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb]">
+    <div className="flex min-h-screen bg-background">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
@@ -224,11 +224,11 @@ export default function Q53Page() {
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
           <div className="w-px h-4 bg-gray-200" />
-          <span className="text-xs bg-purple-100 text-purple-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
+          <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q53</span>
           <span className="font-bold text-gray-900">Phân tích biểu đồ</span>
           <div className="ml-auto flex items-center gap-3 text-sm">
             <span className="text-gray-400">{attempted}/{Q53_PROMPTS.length} đã thử</span>
-            <span className="text-green-600 font-semibold">{passed} đề ≥80%</span>
+            <span className="text-blue-600 font-semibold">{passed} đề ≥80%</span>
           </div>
         </div>
         <PracticeTips data={TIPS_Q53} />
@@ -250,7 +250,7 @@ export default function Q53Page() {
                     <div key={i} className="flex items-center gap-1.5">
                       <div className="w-14 text-[10px] text-gray-400 truncate shrink-0">{item.label}</div>
                       <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-300 rounded-full" style={{ width: `${(val / maxVal) * 100}%` }} />
+                        <div className="h-full bg-blue-300 rounded-full" style={{ width: `${(val / maxVal) * 100}%` }} />
                       </div>
                       <div className="text-[10px] text-gray-400 w-6 text-right shrink-0">{val}{item.percent !== undefined ? "%" : "h"}</div>
                     </div>

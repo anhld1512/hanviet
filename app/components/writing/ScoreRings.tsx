@@ -6,11 +6,12 @@ import { getBestPct, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from 
 import { Q51_PROMPTS, Q52_PROMPTS, Q53_PROMPTS, Q54_PROMPTS } from "@/lib/data/prompts"
 import { getStreak, getTotalEssays } from "@/lib/activity-tracker"
 
+// Apple iOS system colors
 const RINGS = [
-  { key: "q51", label: "Q51", color: "#22c55e", track: "#dcfce7", prompts: Q51_PROMPTS, href: "/practice/q51" },
-  { key: "q52", label: "Q52", color: "#3b82f6", track: "#dbeafe", prompts: Q52_PROMPTS, href: "/practice/q52" },
-  { key: "q53", label: "Q53", color: "#a855f7", track: "#f3e8ff", prompts: Q53_PROMPTS, href: "/practice/q53" },
-  { key: "q54", label: "Q54", color: "#f97316", track: "#ffedd5", prompts: Q54_PROMPTS, href: "/practice/q54" },
+  { key: "q51", label: "Q51", color: "#007AFF", track: "#E8F0FE", prompts: Q51_PROMPTS, href: "/practice/q51" },
+  { key: "q52", label: "Q52", color: "#34C759", track: "#E8F8ED", prompts: Q52_PROMPTS, href: "/practice/q52" },
+  { key: "q53", label: "Q53", color: "#FF9500", track: "#FFF3E0", prompts: Q53_PROMPTS, href: "/practice/q53" },
+  { key: "q54", label: "Q54", color: "#FF2D55", track: "#FFE8EE", prompts: Q54_PROMPTS, href: "/practice/q54" },
 ]
 
 function Ring({ color, track, pct, label, href }: {
@@ -28,20 +29,20 @@ function Ring({ color, track, pct, label, href }: {
         {/* Inner circle */}
         <div
           className="absolute inset-[9px] rounded-full flex flex-col items-center justify-center gap-0.5"
-          style={{ background: "rgba(248,249,251,0.96)" }}
+          style={{ background: "rgba(255,255,255,0.97)" }}
         >
           {pct !== null ? (
             <>
               <span className="text-[17px] font-extrabold leading-none" style={{ color }}>{pct}</span>
-              <span className="text-[9px] text-slate-400 leading-none font-medium">%</span>
+              <span className="text-[9px] text-[#AEAEB2] leading-none font-medium">%</span>
             </>
           ) : (
-            <span className="text-[20px] leading-none text-slate-300">—</span>
+            <span className="text-[20px] leading-none text-[#D2D2D7]">—</span>
           )}
         </div>
       </div>
       {/* Label */}
-      <span className="text-xs font-bold text-slate-500 group-hover:text-slate-800 transition-colors">{label}</span>
+      <span className="text-xs font-bold text-[#6E6E73] group-hover:text-[#1D1D1F] transition-colors">{label}</span>
     </Link>
   )
 }
@@ -106,12 +107,12 @@ export default function ScoreRings() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {doneCount < 4 && (
-            <span className="text-xs text-indigo-500 font-semibold">
+            <span className="text-xs text-blue-500 font-semibold">
               {4 - doneCount} loại chưa thử →
             </span>
           )}
           {total > 0 && (
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-[#AEAEB2]">
               <span className="font-bold text-slate-600">{total}</span> bài viết
             </span>
           )}
@@ -119,7 +120,7 @@ export default function ScoreRings() {
         <div className="flex items-center gap-1">
           <span className="text-sm">🔥</span>
           <span className="text-sm font-extrabold text-slate-700 leading-none">{streak}</span>
-          <span className="text-[10px] text-slate-400 ml-0.5">ngày streak</span>
+          <span className="text-[10px] text-[#AEAEB2] ml-0.5">ngày streak</span>
         </div>
       </div>
     </div>

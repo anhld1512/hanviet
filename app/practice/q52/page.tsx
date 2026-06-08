@@ -118,9 +118,9 @@ export default function Q52Page() {
     const total = gradeA.scores.total + gradeB.scores.total
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
-    const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : "#ea580c"
+    const scoreColor = pct >= 80 ? "#0066CC" : pct >= 60 ? "#6B7280" : "#6B7280"
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
           {/* Breadcrumb + tổng điểm */}
@@ -185,7 +185,7 @@ export default function Q52Page() {
   // Editor view
   if (selected) {
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         {loading && <GradingLoader />}
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
@@ -235,7 +235,7 @@ export default function Q52Page() {
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-gray-400">{value.length} ký tự</span>
                       {value.length > 0 && (value.trim().endsWith("습니다") || value.trim().endsWith("해요")) && (
-                        <span className="text-xs text-orange-500">Q52 dùng 다체, không dùng 습니다/해요</span>
+                        <span className="text-xs text-blue-500">Q52 dùng 다체, không dùng 습니다/해요</span>
                       )}
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export default function Q52Page() {
   const passed = Q52_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb]">
+    <div className="flex min-h-screen bg-background">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
@@ -271,7 +271,7 @@ export default function Q52Page() {
           <span className="font-bold text-gray-900">Nghị luận ngắn</span>
           <div className="ml-auto flex items-center gap-3 text-sm">
             <span className="text-gray-400">{attempted}/{Q52_PROMPTS.length} đã thử</span>
-            <span className="text-green-600 font-semibold">{passed} đề ≥80%</span>
+            <span className="text-blue-600 font-semibold">{passed} đề ≥80%</span>
           </div>
         </div>
         <PracticeTips data={TIPS_Q52} />

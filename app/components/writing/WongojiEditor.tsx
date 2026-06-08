@@ -77,9 +77,9 @@ export default function WongojiEditor({
   // Mau indicator
   let barColor = "bg-gray-300", textColor = "text-gray-400", label = "Chưa đủ"
   if (min > 0 && charCount >= min * 0.5 && charCount < min) {
-    barColor = "bg-yellow-400"; textColor = "text-yellow-600"; label = `Còn ${min - charCount} chữ`
+    barColor = "bg-gray-400"; textColor = "text-gray-600"; label = `Còn ${min - charCount} chữ`
   } else if (charCount >= (min || 0) && charCount <= max) {
-    barColor = "bg-green-500"; textColor = "text-green-600"; label = "Đúng độ dài"
+    barColor = "bg-blue-500"; textColor = "text-blue-600"; label = "Đúng độ dài"
   } else if (charCount > max) {
     barColor = "bg-red-500"; textColor = "text-red-600"; label = `Vượt ${charCount - max} chữ`
   }
@@ -102,7 +102,7 @@ export default function WongojiEditor({
     if (timeLimit && !timerStarted) { setTimerActive(true); setTimerStarted(true) }
   }, [timeLimit, timerStarted])
 
-  const timerColor = timeLeft < 120 ? "text-red-500" : timeLeft < 300 ? "text-yellow-500" : "text-gray-700"
+  const timerColor = timeLeft < 120 ? "text-red-500" : timeLeft < 300 ? "text-gray-500" : "text-gray-700"
 
   return (
     <div className="flex flex-col gap-3">
@@ -116,7 +116,7 @@ export default function WongojiEditor({
           {min > 0 && (
             <span className={`text-xs px-2 py-0.5 rounded-full ${
               charCount >= min && charCount <= max
-                ? "bg-green-100 text-green-700"
+                ? "bg-blue-100 text-blue-700"
                 : charCount > max
                 ? "bg-red-100 text-red-700"
                 : "bg-gray-100 text-gray-500"
@@ -245,12 +245,12 @@ export default function WongojiEditor({
                   backgroundColor: isOverMax
                     ? "#fef2f2"
                     : isComposingCell
-                    ? "#eff6ff"
+                    ? "#EBF5FF"
                     : "transparent",
                   fontFamily: "'Malgun Gothic', 'Apple SD Gothic Neo', 'NanumGothic', sans-serif",
                   fontSize: 19,
                   lineHeight: 1,
-                  color: isComposingCell ? "#2563eb" : "#111827",
+                  color: isComposingCell ? "#0066CC" : "#111827",
                 }}
               >
                 {displayChar || null}
@@ -261,7 +261,7 @@ export default function WongojiEditor({
                       position: "absolute",
                       width: 2,
                       height: 20,
-                      background: "#3b82f6",
+                      background: "#0066CC",
                       borderRadius: 1,
                       animation: "wg-blink 1s step-end infinite",
                     }}

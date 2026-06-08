@@ -107,36 +107,93 @@ Trả về JSON hợp lệ (không có markdown):
 }`,
 }
 
+// Goi DeepSeek voi retry tu dong (toi da MAX_RETRIES lan)
+// Xu ly ca: HTTP 5xx, content rong, JSON parse loi
+const MAX_RETRIES = 2
+const RETRY_DELAY_MS = 600
+
+async function callDeepSeekWithRetry(userPrompt: string): Promise<Record<string, unknown>> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      // Doi truoc khi retry, tranh hammer API
+      await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempt))
+      console.warn(`[generate-prompt] Retry attempt ${attempt}/${MAX_RETRIES}`)
+    }
+
+    try {
+      const res = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-v4-flash",
+          max_tokens: 4000,
+          temperature: 1.1,
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a TOPIK II exam question creator. Output ONLY valid JSON. No markdown fences, no explanation, no extra text.",
+            },
+            { role: "user", content: userPrompt },
+          ],
+        }),
+      })
+
+      // HTTP-level error (5xx, 429, etc.)
+      if (!res.ok) {
+        const errText = await res.text().catch(() => res.statusText)
+        lastError = new Error(`DeepSeek HTTP ${res.status}: ${errText.slice(0, 200)}`)
+        console.error(`[generate-prompt] attempt ${attempt} HTTP error:`, lastError)
+        continue // retry
+      }
+
+      const data = await res.json()
+      const raw: string = data.choices?.[0]?.message?.content ?? ""
+
+      // Content rong -> retry
+      if (!raw.trim()) {
+        lastError = new Error("DeepSeek returned empty content")
+        console.error(`[generate-prompt] attempt ${attempt} empty content`)
+        continue
+      }
+
+      // Strip markdown fences neu co
+      const clean = raw.replace(/^```json?\s*/i, "").replace(/```\s*$/, "").trim()
+
+      // JSON parse loi -> retry (output bi truncate hoac format sai)
+      let parsed: Record<string, unknown>
+      try {
+        parsed = JSON.parse(clean)
+      } catch (parseErr) {
+        lastError = parseErr
+        console.error(`[generate-prompt] attempt ${attempt} JSON parse error:`, parseErr, "raw:", clean.slice(0, 200))
+        continue
+      }
+
+      // Thanh cong
+      return parsed
+    } catch (fetchErr) {
+      lastError = fetchErr
+      console.error(`[generate-prompt] attempt ${attempt} fetch error:`, fetchErr)
+      // continue -> retry
+    }
+  }
+
+  throw lastError
+}
+
 export async function GET(req: NextRequest) {
   const type = req.nextUrl.searchParams.get("type") ?? "q54"
   const userPrompt = PROMPTS[type]
   if (!userPrompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
 
   try {
-    const res = await fetch("https://api.deepseek.com/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "deepseek-v4-flash",
-        max_tokens: 4000,
-        temperature: 1.1,
-        messages: [
-          {
-            role: "system",
-            content: "You are a TOPIK II exam question creator. Output ONLY valid JSON. No markdown fences, no explanation, no extra text.",
-          },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    })
-
-    const data = await res.json()
-    const raw: string = data.choices?.[0]?.message?.content ?? ""
-    const clean = raw.replace(/^```json?\s*/i, "").replace(/```\s*$/, "").trim()
-    const parsed = JSON.parse(clean)
+    const parsed = await callDeepSeekWithRetry(userPrompt)
 
     return NextResponse.json({
       id: -1,
@@ -151,7 +208,7 @@ export async function GET(req: NextRequest) {
       ai_generated: true,
     })
   } catch (e) {
-    console.error("generate-prompt error:", e)
+    console.error("[generate-prompt] All retries failed:", e)
     return NextResponse.json({ error: "Không thể tạo đề, thử lại sau" }, { status: 500 })
   }
 }

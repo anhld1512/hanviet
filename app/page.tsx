@@ -73,7 +73,7 @@ export default function LandingPage() {
           {[
             { num: "33/100", label: "Điểm Writing TB thí sinh", sub: "Thấp hơn Nghe và Đọc 20 điểm", color: "text-red-500" },
             { num: "85.000", label: "Lượt thi TOPIK/năm tại VN", sub: "Cao nhất thế giới", color: "text-blue-500" },
-            { num: "33%", label: "Tổng điểm là Writing", sub: "100/300 điểm", color: "text-purple-500" },
+            { num: "33%", label: "Tổng điểm là Writing", sub: "100/300 điểm", color: "text-blue-500" },
           ].map((s) => (
             <div key={s.num} className="bg-gray-50 rounded-2xl p-4 text-center">
               <div className={`text-2xl sm:text-3xl font-extrabold ${s.color}`}>{s.num}</div>

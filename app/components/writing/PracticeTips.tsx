@@ -160,7 +160,7 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
     <div className="mb-6 rounded-2xl border border-slate-200 overflow-hidden" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.04)" }}>
 
       {/* ── Header bar ── */}
-      <div className="px-5 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" }}>
+      <div className="px-5 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #0066CC 0%, #0066CC 100%)" }}>
         <span className="text-base">✅</span>
         <span className="text-sm font-bold text-white tracking-wide">Quy trình trước khi viết</span>
         <span className="ml-auto text-xs text-blue-200 font-medium">Làm đúng thứ tự — click đề bất kỳ khi sẵn sàng</span>
@@ -174,7 +174,7 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
               {i < data.steps.length - 1 && (
                 <span className="absolute -right-2 top-3.5 text-slate-300 text-base select-none z-10">›</span>
               )}
-              <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#f8f9fb" }}>
+              <div className="flex-1 rounded-xl border border-slate-100 p-3.5 flex flex-col gap-2" style={{ background: "#FAFAFA" }}>
                 <div className="flex items-center justify-between">
                   <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0">
                     {i + 1}

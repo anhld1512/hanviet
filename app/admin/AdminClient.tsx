@@ -83,7 +83,7 @@ function UserCard({ user, onRefresh }: { user: UserRow; onRefresh: () => void })
       </div>
 
       {msg && (
-        <div className={`text-xs rounded-lg px-3 py-2 mb-3 ${msg.includes("error") || msg.includes("not found") ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
+        <div className={`text-xs rounded-lg px-3 py-2 mb-3 ${msg.includes("error") || msg.includes("not found") ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-700"}`}>
           {msg}
         </div>
       )}
@@ -166,8 +166,8 @@ export default function AdminClient({ stats, recentUsers }: { stats: Stats; rece
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
             { label: "Tổng users", value: stats.totalUsers, icon: "👥", color: "text-blue-600" },
-            { label: "Pro users", value: stats.proUsers, icon: "⚡", color: "text-yellow-600" },
-            { label: "Tổng submissions", value: stats.totalSubs, icon: "📝", color: "text-green-600" },
+            { label: "Pro users", value: stats.proUsers, icon: "⚡", color: "text-gray-600" },
+            { label: "Tổng submissions", value: stats.totalSubs, icon: "📝", color: "text-blue-600" },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
               <div className="text-3xl">{s.icon}</div>

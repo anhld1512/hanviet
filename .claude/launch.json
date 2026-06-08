@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "hanviet",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "runtimeExecutable": "/Users/anhld1512/Documents/Work/hanviet/node_modules/.bin/next",
+      "runtimeArgs": ["dev", "/Users/anhld1512/Documents/Work/hanviet"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

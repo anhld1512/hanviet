@@ -1,9 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8f9fb;
-  --foreground: #0f172a;
+  /* Apple-inspired neutral base */
+  --background: #F5F5F7;
+  --foreground: #1D1D1F;
   --font-body: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+
+  /* Text scale */
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-muted: #AEAEB2;
+
+  /* Surface */
+  --surface: #FFFFFF;
+  --border: #D2D2D7;
+
+  /* Primary: Apple Blue */
+  --primary: #0066CC;
+  --primary-light: #E8F1FA;
+  --primary-mid: #CCE0F5;
+  --primary-dark: #004F99;
+
+  /* Sidebar */
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #D2D2D7;
 }
 
 @theme inline {
@@ -18,6 +38,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 * {

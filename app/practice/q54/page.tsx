@@ -74,17 +74,17 @@ export default function Q54Page() {
   if (gradeResult && selected) {
     const pct = Math.round((gradeResult.scores.total / gradeResult.max_scores.total) * 100)
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
         <div className="w-full">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
             <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+            <span className="text-xs bg-gray-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
             <span className="text-sm text-gray-500 truncate max-w-xs">{selected.context}</span>
             <div className="ml-auto flex items-center gap-2">
-              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-green-600" : pct >= 60 ? "text-yellow-600" : "text-orange-500"}`}>{gradeResult.scores.total}/{gradeResult.max_scores.total}</span>
+              <span className={`text-lg font-extrabold ${pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>{gradeResult.scores.total}/{gradeResult.max_scores.total}</span>
               <span className="text-xs text-gray-400">điểm</span>
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function Q54Page() {
   if (selected) {
     const charCount = answer.replace(/\n/g, "").length
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         {loading && <GradingLoader />}
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
@@ -107,7 +107,7 @@ export default function Q54Page() {
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
             <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+            <span className="text-xs bg-gray-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
@@ -121,10 +121,10 @@ export default function Q54Page() {
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line">{selected.text_kr}</div>
               </div>
-              <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 space-y-2 text-xs">
-                <div className="font-bold text-orange-800">📐 Cấu trúc gợi ý:</div>
+              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-2 text-xs">
+                <div className="font-bold text-gray-700">📐 Cấu trúc gợi ý:</div>
                 {["① Mở đề — nêu vấn đề (~100 chữ)", "② Luận điểm 1 + dẫn chứng (~150 chữ)", "③ Luận điểm 2 + dẫn chứng (~150 chữ)", "④ Kết luận — giải pháp/tổng kết (~100 chữ)"].map((s, i) => (
-                  <div key={i} className="text-orange-700">{s}</div>
+                  <div key={i} className="text-blue-700">{s}</div>
                 ))}
               </div>
             </div>
@@ -136,12 +136,12 @@ export default function Q54Page() {
                   <div className="flex items-center gap-3">
                     <div className="flex gap-1">
                       {[600, 650, 700].map((threshold) => (
-                        <span key={threshold} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${charCount >= threshold ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400"}`}>
+                        <span key={threshold} className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${charCount >= threshold ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-400"}`}>
                           {threshold}
                         </span>
                       ))}
                     </div>
-                    <span className={`text-sm font-bold ${charCount < 600 ? "text-orange-500" : charCount > 700 ? "text-yellow-600" : "text-green-600"}`}>
+                    <span className={`text-sm font-bold ${charCount < 600 ? "text-blue-500" : charCount > 700 ? "text-gray-600" : "text-blue-600"}`}>
                       {charCount} chữ {charCount < 600 ? `(còn ${600 - charCount})` : charCount > 700 ? "(hơi dài)" : "✓"}
                     </span>
                   </div>
@@ -153,7 +153,7 @@ export default function Q54Page() {
               <div className="flex gap-3">
                 <button onClick={() => setAnswer("")} className="px-5 py-3 border border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-sm">Xóa</button>
                 <button onClick={handleSubmit} disabled={charCount < 100 || loading}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
+                  className="flex-1 bg-gray-500 hover:bg-blue-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors text-sm">
                   {loading ? "AI đang chấm bài..." : "Nộp bài — AI chấm ngay"}
                 </button>
               </div>
@@ -171,7 +171,7 @@ export default function Q54Page() {
   const passed = Q54_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb]">
+    <div className="flex min-h-screen bg-background">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
@@ -179,11 +179,11 @@ export default function Q54Page() {
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>
           <div className="w-px h-4 bg-gray-200" />
-          <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
+          <span className="text-xs bg-gray-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q54</span>
           <span className="font-bold text-gray-900">Bài luận</span>
           <div className="ml-auto flex items-center gap-3 text-sm">
             <span className="text-gray-400">{attempted}/{Q54_PROMPTS.length} đã thử</span>
-            <span className="text-green-600 font-semibold">{passed} đề ≥80%</span>
+            <span className="text-blue-600 font-semibold">{passed} đề ≥80%</span>
           </div>
         </div>
         <PracticeTips data={TIPS_Q54} />

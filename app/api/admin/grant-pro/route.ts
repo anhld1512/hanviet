@@ -34,8 +34,12 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "grant") {
+      const m = months ?? 6
       const expiresAt = new Date()
-      expiresAt.setMonth(expiresAt.getMonth() + (months ?? 6))
+      expiresAt.setMonth(expiresAt.getMonth() + m)
+
+      // Map months → plan key
+      const planKey = m === 1 ? "pro1" : m === 3 ? "pro3" : m === 12 ? "pro12" : "pro6"
 
       await admin
         .from("user_profiles")
@@ -43,13 +47,15 @@ export async function POST(req: NextRequest) {
           subscription_tier: "pro",
           is_pro: true,
           pro_expires_at: expiresAt.toISOString(),
+          subscription_plan: planKey,
         })
         .eq("id", target.id)
 
       return NextResponse.json({
         success: true,
-        message: `Granted Pro to ${targetEmail} until ${expiresAt.toLocaleDateString("vi-VN")}`,
+        message: `Granted Pro (${planKey}) to ${targetEmail} until ${expiresAt.toLocaleDateString("vi-VN")}`,
         expires: expiresAt.toISOString(),
+        plan: planKey,
       })
     }
 
@@ -60,6 +66,7 @@ export async function POST(req: NextRequest) {
           subscription_tier: "free",
           is_pro: false,
           pro_expires_at: null,
+          subscription_plan: "free",
         })
         .eq("id", target.id)
 

@@ -28,10 +28,10 @@ const MINI_TEMPLATES: Record<string, Array<{ title: string; pattern: string; exa
 }
 
 const Q_COLORS: Record<string, { bg: string; badge: string; text: string; border: string }> = {
-  q51: { bg: "bg-green-50", badge: "bg-green-100 text-green-700", text: "text-green-700", border: "border-green-200" },
+  q51: { bg: "bg-blue-50", badge: "bg-blue-100 text-blue-700", text: "text-blue-700", border: "border-blue-200" },
   q52: { bg: "bg-blue-50", badge: "bg-blue-100 text-blue-700", text: "text-blue-700", border: "border-blue-200" },
-  q53: { bg: "bg-purple-50", badge: "bg-purple-100 text-purple-700", text: "text-purple-700", border: "border-purple-200" },
-  q54: { bg: "bg-orange-50", badge: "bg-orange-100 text-orange-700", text: "text-orange-700", border: "border-orange-200" },
+  q53: { bg: "bg-blue-50", badge: "bg-blue-100 text-blue-700", text: "text-blue-700", border: "border-blue-200" },
+  q54: { bg: "bg-gray-50", badge: "bg-gray-100 text-blue-700", text: "text-blue-700", border: "border-gray-200" },
 }
 
 function ProgressBar({ value, max, color = "bg-blue-500" }: { value: number; max: number; color?: string }) {
@@ -135,7 +135,7 @@ export default function StageClient({
               <div className="text-xs text-gray-400 mb-1">Giai đoạn {stageIdx + 1}/{totalStages}</div>
               {/* Tien do tasks */}
               {mounted && (
-                <div className={`text-2xl font-extrabold ${completedCount === totalTasks ? "text-green-500" : "text-blue-500"}`}>
+                <div className={`text-2xl font-extrabold ${completedCount === totalTasks ? "text-blue-500" : "text-blue-500"}`}>
                   {completedCount}<span className="text-lg text-gray-300">/{totalTasks}</span>
                 </div>
               )}
@@ -150,7 +150,7 @@ export default function StageClient({
                 {stage.tasks.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 flex-1 rounded-full transition-all ${taskDone[i] ? "bg-green-400" : "bg-gray-200"}`}
+                    className={`h-1.5 flex-1 rounded-full transition-all ${taskDone[i] ? "bg-blue-400" : "bg-gray-200"}`}
                   />
                 ))}
               </div>
@@ -158,36 +158,36 @@ export default function StageClient({
           )}
 
           {/* Muc tieu */}
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-3">
-            <span className="text-xs font-bold text-amber-700">🎯 Mục tiêu: </span>
-            <span className="text-xs text-amber-800">{stage.goal}</span>
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+            <span className="text-xs font-bold text-blue-700">🎯 Mục tiêu: </span>
+            <span className="text-xs text-gray-700">{stage.goal}</span>
           </div>
 
           {/* Dieu kien pass */}
           {stage.unlockAt > 0 && (
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className={`rounded-xl p-3 ${countOk ? "bg-green-50 border border-green-100" : "bg-gray-50 border border-gray-100"}`}>
+              <div className={`rounded-xl p-3 ${countOk ? "bg-blue-50 border border-blue-100" : "bg-gray-50 border border-gray-100"}`}>
                 <div className="flex justify-between text-xs mb-1.5">
-                  <span className={countOk ? "text-green-700 font-semibold" : "text-gray-600"}>
+                  <span className={countOk ? "text-blue-700 font-semibold" : "text-gray-600"}>
                     {countOk ? "✓" : "○"} Nộp đủ {stage.unlockAt} bài
                   </span>
-                  <span className={`font-bold ${countOk ? "text-green-600" : "text-gray-500"}`}>
+                  <span className={`font-bold ${countOk ? "text-blue-600" : "text-gray-500"}`}>
                     {Math.min(essayCount, stage.unlockAt)}/{stage.unlockAt}
                   </span>
                 </div>
-                <ProgressBar value={essayCount} max={stage.unlockAt} color={countOk ? "bg-green-400" : "bg-blue-400"} />
+                <ProgressBar value={essayCount} max={stage.unlockAt} color={countOk ? "bg-blue-400" : "bg-blue-400"} />
               </div>
               {stage.minAvgPct > 0 && (
-                <div className={`rounded-xl p-3 ${scoreOk ? "bg-green-50 border border-green-100" : "bg-gray-50 border border-gray-100"}`}>
+                <div className={`rounded-xl p-3 ${scoreOk ? "bg-blue-50 border border-blue-100" : "bg-gray-50 border border-gray-100"}`}>
                   <div className="flex justify-between text-xs mb-1.5">
-                    <span className={scoreOk ? "text-green-700 font-semibold" : "text-gray-600"}>
+                    <span className={scoreOk ? "text-blue-700 font-semibold" : "text-gray-600"}>
                       {scoreOk ? "✓" : "○"} Điểm TB {stage.scoreTypes.map(t => t.toUpperCase()).join("+")} ≥ {stage.minAvgPct}%
                     </span>
-                    <span className={`font-bold ${scoreOk ? "text-green-600" : avgForStage > 0 ? "text-yellow-600" : "text-gray-400"}`}>
+                    <span className={`font-bold ${scoreOk ? "text-blue-600" : avgForStage > 0 ? "text-gray-600" : "text-gray-400"}`}>
                       {Object.keys(avgPct).length > 0 ? `${avgForStage}%` : "—"}
                     </span>
                   </div>
-                  <ProgressBar value={avgForStage} max={100} color={scoreOk ? "bg-green-400" : avgForStage >= stage.minAvgPct * 0.8 ? "bg-yellow-400" : "bg-orange-400"} />
+                  <ProgressBar value={avgForStage} max={100} color={scoreOk ? "bg-blue-400" : avgForStage >= stage.minAvgPct * 0.8 ? "bg-gray-400" : "bg-blue-400"} />
                 </div>
               )}
             </div>
@@ -214,14 +214,14 @@ export default function StageClient({
                   key={i}
                   className={`bg-white rounded-2xl border p-5 transition-all ${
                     isDone
-                      ? "border-green-200 bg-green-50/30"
+                      ? "border-blue-200 bg-blue-50/30"
                       : mainColor ? mainColor.border : "border-gray-100"
                   }`}
                 >
                   <div className="flex items-start gap-4">
                     {/* Checkpoint indicator */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5 transition-all ${
-                      isDone ? "bg-green-500 text-white" : "bg-gray-100 text-gray-500"
+                      isDone ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-500"
                     }`}>
                       {isDone ? "✓" : i + 1}
                     </div>
@@ -229,13 +229,13 @@ export default function StageClient({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span>{task.type === "template" ? "📋" : task.type === "practice" ? "✏️" : "🔍"}</span>
-                        <span className={`font-semibold text-sm ${isDone ? "text-green-800" : "text-gray-900"}`}>{task.label}</span>
+                        <span className={`font-semibold text-sm ${isDone ? "text-blue-800" : "text-gray-900"}`}>{task.label}</span>
                         {qTypes.map((q) => (
                           <span key={q} className={`text-xs font-bold px-2 py-0.5 rounded-full ${Q_COLORS[q]?.badge ?? ""}`}>
                             {q.toUpperCase()}
                           </span>
                         ))}
-                        {isDone && <span className="text-xs text-green-600 font-semibold ml-1">Đã hoàn thành</span>}
+                        {isDone && <span className="text-xs text-blue-600 font-semibold ml-1">Đã hoàn thành</span>}
                       </div>
 
                       {/* Inline templates preview */}
@@ -258,11 +258,11 @@ export default function StageClient({
                         <div className="mt-2">
                           <div className="flex justify-between text-xs text-gray-400 mb-1">
                             <span>Bài đã nộp</span>
-                            <span className={taskProgress.current >= taskProgress.target ? "text-green-600 font-bold" : "text-gray-500"}>
+                            <span className={taskProgress.current >= taskProgress.target ? "text-blue-600 font-bold" : "text-gray-500"}>
                               {Math.min(taskProgress.current, taskProgress.target)}/{taskProgress.target}
                             </span>
                           </div>
-                          <ProgressBar value={taskProgress.current} max={taskProgress.target} color={isDone ? "bg-green-400" : "bg-blue-400"} />
+                          <ProgressBar value={taskProgress.current} max={taskProgress.target} color={isDone ? "bg-blue-400" : "bg-blue-400"} />
                         </div>
                       )}
                     </div>
@@ -274,8 +274,8 @@ export default function StageClient({
                           href={taskUrl}
                           className={`text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors ${
                             task.type === "template" ? "bg-blue-500 hover:bg-blue-600" :
-                            task.type === "practice" ? "bg-green-500 hover:bg-green-600" :
-                            "bg-orange-500 hover:bg-orange-600"
+                            task.type === "practice" ? "bg-blue-500 hover:bg-blue-600" :
+                            "bg-gray-500 hover:bg-blue-600"
                           }`}
                         >
                           {task.type === "template" ? "Học ngay →" : task.type === "practice" ? "Bắt đầu →" : "Xem ngay →"}
@@ -285,7 +285,7 @@ export default function StageClient({
                       {task.type === "review" && !isDone && (
                         <button
                           onClick={() => markReviewDone(i)}
-                          className="text-xs text-gray-400 hover:text-green-600 border border-dashed border-gray-200 hover:border-green-300 px-3 py-1.5 rounded-lg transition-colors"
+                          className="text-xs text-gray-400 hover:text-blue-600 border border-dashed border-gray-200 hover:border-blue-300 px-3 py-1.5 rounded-lg transition-colors"
                         >
                           Đánh dấu xong ✓
                         </button>

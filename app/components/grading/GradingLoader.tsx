@@ -32,7 +32,7 @@ export default function GradingLoader() {
         {/* Spinner ring */}
         <div className="relative w-16 h-16">
           <div className="absolute inset-0 rounded-full border-4 border-gray-100" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-indigo-500 animate-spin" />
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 animate-spin" />
           <div className="absolute inset-0 flex items-center justify-center text-2xl">🤖</div>
         </div>
 
@@ -45,8 +45,8 @@ export default function GradingLoader() {
         </div>
 
         {/* Cycling message */}
-        <div className="min-h-[36px] flex items-center justify-center px-4 py-2 bg-indigo-50 rounded-xl w-full">
-          <p className="text-xs text-indigo-700 font-medium leading-relaxed">
+        <div className="min-h-[36px] flex items-center justify-center px-4 py-2 bg-blue-50 rounded-xl w-full">
+          <p className="text-xs text-blue-700 font-medium leading-relaxed">
             {MESSAGES[msgIndex]}{".".repeat(dots)}
           </p>
         </div>
@@ -57,7 +57,7 @@ export default function GradingLoader() {
             <div
               key={i}
               className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                i === msgIndex ? "bg-indigo-500" : "bg-gray-200"
+                i === msgIndex ? "bg-blue-500" : "bg-gray-200"
               }`}
             />
           ))}

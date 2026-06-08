@@ -108,16 +108,16 @@ export default function Q51Page() {
     const total = gradeA.scores.total + gradeB.scores.total
     const max = gradeA.max_scores.total + gradeB.max_scores.total
     const pct = Math.round((total / max) * 100)
-    const scoreColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : "#ea580c"
+    const scoreColor = pct >= 80 ? "#0066CC" : pct >= 60 ? "#6B7280" : "#6B7280"
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         <Sidebar />
         <main className="ml-56 flex-1 p-8">
           {/* Breadcrumb + tổng điểm */}
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-slate-400 hover:text-slate-600 text-sm font-medium shrink-0">← Chọn đề khác</button>
             <div className="w-px h-4 bg-slate-200 shrink-0" />
-            <span className="text-xs bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200 shrink-0">Q51</span>
+            <span className="text-xs bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1 rounded-full border border-blue-200 shrink-0">Q51</span>
             <span className="text-sm text-slate-500 truncate">{selected.context}</span>
             <div className="ml-auto flex items-center gap-3 shrink-0">
               <span className="text-sm font-bold" style={{ color: scoreColor }}>{total}/{max} điểm</span>
@@ -175,7 +175,7 @@ export default function Q51Page() {
   // ── Editor view ──
   if (selected) {
     return (
-      <div className="flex min-h-screen bg-[#f8f9fb]">
+      <div className="flex min-h-screen bg-background">
         {loading && <GradingLoader />}
         {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
         <Sidebar />
@@ -184,7 +184,7 @@ export default function Q51Page() {
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
             <div className="w-px h-4 bg-gray-200" />
-            <span className="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded-full">Q51</span>
+            <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2.5 py-1 rounded-full">Q51</span>
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
@@ -225,7 +225,7 @@ export default function Q51Page() {
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-gray-400">{value.length} ký tự</span>
                       {value.length > 0 && !value.trim().endsWith("다") && !value.trim().endsWith("요") && (
-                        <span className="text-xs text-orange-500">Kết thúc bằng 습니다 hoặc ㅂ니다</span>
+                        <span className="text-xs text-blue-500">Kết thúc bằng 습니다 hoặc ㅂ니다</span>
                       )}
                     </div>
                   </div>
@@ -250,7 +250,7 @@ export default function Q51Page() {
   const passed = Q51_PROMPTS.filter((p) => (scores[p.id] ?? 0) >= 80).length
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb]">
+    <div className="flex min-h-screen bg-background">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
       <main className="ml-56 flex-1 p-8">
@@ -259,11 +259,11 @@ export default function Q51Page() {
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-sm text-slate-400 hover:text-slate-600 font-medium transition-colors">← Luyện viết</Link>
           <div className="w-px h-4 bg-slate-200" />
-          <span className="text-xs bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full border border-green-200">Q51</span>
+          <span className="text-xs bg-blue-50 text-blue-700 font-extrabold px-2.5 py-1 rounded-full border border-blue-200">Q51</span>
           <span className="font-bold text-slate-900 text-base">Thực dụng văn</span>
           <div className="ml-auto flex items-center gap-3">
             <span className="text-sm text-slate-400">{attempted}/{Q51_PROMPTS.length} đã thử</span>
-            <span className="text-sm text-green-600 font-bold">{passed} đề ≥80%</span>
+            <span className="text-sm text-blue-600 font-bold">{passed} đề ≥80%</span>
           </div>
         </div>
 

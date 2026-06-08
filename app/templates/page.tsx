@@ -27,8 +27,8 @@ const TEMPLATES: Template[] = [
     subType: "Thư / Email",
     title: "Thư cảm ơn / xin lỗi / đề nghị",
     badge: "Q51",
-    badgeColor: "bg-green-100 text-green-700",
-    headerColor: "border-green-200 bg-green-50",
+    badgeColor: "bg-blue-100 text-blue-700",
+    headerColor: "border-blue-200 bg-blue-50",
     template_kr: `[수신인]께
 
 안녕하세요. 저는 [자기 소개]입니다.
@@ -69,8 +69,8 @@ Xin cảm ơn.
     subType: "Thông báo / Thư mời",
     title: "Thông báo sự kiện / Thư mời tham dự",
     badge: "Q51",
-    badgeColor: "bg-green-100 text-green-700",
-    headerColor: "border-green-200 bg-green-50",
+    badgeColor: "bg-blue-100 text-blue-700",
+    headerColor: "border-blue-200 bg-blue-50",
     template_kr: `[공지 제목]
 
 안녕하십니까.
@@ -161,8 +161,8 @@ Xin cảm ơn.`,
     subType: "Biểu đồ cột / Khảo sát",
     title: "Phân tích biểu đồ khảo sát",
     badge: "Q53",
-    badgeColor: "bg-purple-100 text-purple-700",
-    headerColor: "border-purple-200 bg-purple-50",
+    badgeColor: "bg-blue-100 text-blue-700",
+    headerColor: "border-blue-200 bg-blue-50",
     template_kr: `위 그래프는 [조사 대상]을 대상으로 [조사 내용]을 조사한 결과이다.
 
 [1위 항목]이 [수치]%로 가장 높게 나타났으며, 다음으로 [2위 항목]이 [수치]%, [3위 항목]이 [수치]%로 그 뒤를 이었다.
@@ -191,8 +191,8 @@ Qua đó, có thể thấy [kết luận/hàm ý].`,
     subType: "Thay đổi theo thời gian",
     title: "Biểu đồ xu hướng thay đổi",
     badge: "Q53",
-    badgeColor: "bg-purple-100 text-purple-700",
-    headerColor: "border-purple-200 bg-purple-50",
+    badgeColor: "bg-blue-100 text-blue-700",
+    headerColor: "border-blue-200 bg-blue-50",
     template_kr: `위 그래프는 [기간] 동안의 [주제] 변화를 나타낸 것이다.
 
 [시작 시점]에는 [수치]이었으나, [끝 시점]에는 [수치]로 [증가/감소]하였다. 특히 [중간 시점]에 [특징적인 변화]를 보였다.
@@ -222,8 +222,8 @@ Qua đó có thể thấy [kết luận].`,
     subType: "Ưu & Nhược điểm",
     title: "Cấu trúc 2 mặt lợi/hại (찬반)",
     badge: "Q54",
-    badgeColor: "bg-orange-100 text-orange-700",
-    headerColor: "border-orange-200 bg-orange-50",
+    badgeColor: "bg-gray-100 text-blue-700",
+    headerColor: "border-gray-200 bg-gray-50",
     template_kr: `[주제]에 대해 다양한 시각이 존재한다.
 
 [주제]의 긍정적인 측면으로는 먼저 [장점 1]을/를 들 수 있다. [장점 1 설명 + 예시]. 또한 [장점 2]도 빼놓을 수 없다. [장점 2 설명].
@@ -252,8 +252,8 @@ Xét đến những điểm này, [kết luận cân bằng + hướng tới].`,
     subType: "Vấn đề & Giải pháp",
     title: "Cấu trúc vấn đề – giải pháp (문제-해결)",
     badge: "Q54",
-    badgeColor: "bg-orange-100 text-orange-700",
-    headerColor: "border-orange-200 bg-orange-50",
+    badgeColor: "bg-gray-100 text-blue-700",
+    headerColor: "border-gray-200 bg-gray-50",
     template_kr: `오늘날 [사회 문제]가 심각한 사회 문제로 대두되고 있다. [문제 배경/현황 설명].
 
 이러한 문제가 발생하는 원인은 크게 두 가지로 볼 수 있다. 첫째, [원인 1]. [원인 1 설명]. 둘째, [원인 2]. [원인 2 설명].
@@ -386,7 +386,7 @@ function TemplatesInner() {
           )}
           {!allowedQTypes && <p className="text-sm text-gray-500 ml-1">Mẫu câu & cấu trúc cho Q51–Q54</p>}
           {fromStage && alreadyDone && (
-            <span className="ml-auto text-xs text-green-600 bg-green-50 font-bold px-3 py-1 rounded-full">✓ Đã học xong</span>
+            <span className="ml-auto text-xs text-blue-600 bg-blue-50 font-bold px-3 py-1 rounded-full">✓ Đã học xong</span>
           )}
         </div>
 
@@ -437,7 +437,7 @@ function TemplatesInner() {
                     <div className="bg-white rounded-xl p-4 font-mono text-sm text-gray-700 leading-relaxed whitespace-pre-line border border-gray-100">
                       {active.template_kr}
                     </div>
-                    <div className="mt-3 bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs text-amber-800">
+                    <div className="mt-3 bg-gray-50 border border-gray-100 rounded-xl p-3 text-xs text-gray-700">
                       <span className="font-bold">Lưu ý:</span> {active.note}
                     </div>
                   </div>
@@ -513,7 +513,7 @@ function TemplatesInner() {
                 disabled={!scrolledToBottom}
                 className={`shrink-0 ml-6 font-bold text-sm px-6 py-3 rounded-xl transition-all ${
                   scrolledToBottom
-                    ? "bg-green-500 hover:bg-green-600 text-white cursor-pointer"
+                    ? "bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
               >
@@ -522,7 +522,7 @@ function TemplatesInner() {
             </div>
             {scrolledToBottom && (
               <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-green-400 rounded-full w-full transition-all" />
+                <div className="h-full bg-blue-400 rounded-full w-full transition-all" />
               </div>
             )}
           </div>
@@ -530,17 +530,17 @@ function TemplatesInner() {
 
         {/* Da hoan thanh banner */}
         {fromStage && alreadyDone && !activeId && (
-          <div className="mt-8 bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center justify-between">
+          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl">✓</div>
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-xl">✓</div>
               <div>
-                <div className="font-bold text-green-800">Bước này đã hoàn thành!</div>
-                <p className="text-xs text-green-600">Tiếp tục thực hành để vượt qua giai đoạn.</p>
+                <div className="font-bold text-blue-800">Bước này đã hoàn thành!</div>
+                <p className="text-xs text-blue-600">Tiếp tục thực hành để vượt qua giai đoạn.</p>
               </div>
             </div>
             <Link
               href="/learning-path/stage"
-              className="bg-green-500 hover:bg-green-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
             >
               Quay lại giai đoạn →
             </Link>

@@ -9,9 +9,9 @@ const DAYS_LABELS = ["T2", "", "T4", "", "T6", "", "CN"]
 
 function getColor(count: number) {
   if (count === 0) return "#e2e8f0"   // gray — no activity
-  if (count === 1) return "#bfdbfe"   // blue-200
-  if (count === 2) return "#60a5fa"   // blue-400
-  return "#2563eb"                     // blue-600
+  if (count === 1) return "#CCE0F5"   // blue-200
+  if (count === 2) return "#4D9ED6"   // blue-400
+  return "#0066CC"                     // blue-600
 }
 
 function buildGrid(activity: Record<string, number>) {
@@ -73,7 +73,7 @@ export default function HeroHeatmap() {
         {weeks.map((_, i) => {
           const ml = monthLabels.find(m => m.col === i)
           return (
-            <div key={i} className="w-[14px] text-[9px] text-indigo-300/80 font-medium leading-none text-center">
+            <div key={i} className="w-[14px] text-[9px] text-blue-300/80 font-medium leading-none text-center">
               {ml ? ml.label : ""}
             </div>
           )
@@ -85,7 +85,7 @@ export default function HeroHeatmap() {
         {/* Day labels */}
         <div className="flex flex-col gap-1 pr-1">
           {DAYS_LABELS.map((d, i) => (
-            <div key={i} className="h-[14px] text-[9px] text-indigo-300/70 font-medium leading-none flex items-center">
+            <div key={i} className="h-[14px] text-[9px] text-blue-300/70 font-medium leading-none flex items-center">
               {d}
             </div>
           ))}
@@ -112,20 +112,20 @@ export default function HeroHeatmap() {
       {/* Legend + stats */}
       <div className="flex items-center justify-between pl-6">
         <div className="flex items-center gap-1">
-          <span className="text-[9px] text-indigo-300/70">Ít</span>
+          <span className="text-[9px] text-blue-300/70">Ít</span>
           {[0, 1, 2, 3].map(v => (
             <div key={v} className="w-[10px] h-[10px] rounded-[2px]" style={{ background: getColor(v) }} />
           ))}
-          <span className="text-[9px] text-indigo-300/70">Nhiều</span>
+          <span className="text-[9px] text-blue-300/70">Nhiều</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <span className="text-[10px] text-indigo-200/70">{total} bài</span>
+            <span className="text-[10px] text-blue-200/70">{total} bài</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-base">🔥</span>
             <span className="text-[18px] font-extrabold text-white leading-none">{streak}</span>
-            <span className="text-[10px] text-indigo-200/80 font-medium leading-tight">ngày<br/>streak</span>
+            <span className="text-[10px] text-blue-200/80 font-medium leading-tight">ngày<br/>streak</span>
           </div>
         </div>
       </div>

@@ -16,7 +16,8 @@ const client = new OpenAI({
 // MODEL_SIMPLE: V4 Flash — Q51/Q52 (1 cau ngan), nhanh, du chat luong
 // MODEL_ADVANCED: V4 Pro — Q53/Q54 (bai luan dai), 49B active params, chat luong cao hon
 const MODEL_SIMPLE = "deepseek-v4-flash"
-const MODEL_ADVANCED = "deepseek-v4-pro"
+// V4 Pro qua cham (>120s) → timeout Vercel 60s. Dung V4 Flash cho ca Q53/Q54.
+const MODEL_ADVANCED = "deepseek-v4-flash"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {

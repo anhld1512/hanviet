@@ -15,7 +15,7 @@ const Q_TYPES = [
   {
     key: "q52", label: "Q52", title: "Nghị luận ngắn",
     total: Q52_PROMPTS.length, prompts: Q52_PROMPTS,
-    icon: "⚖️", accent: "#3b82f6", accentBg: "#eff6ff", accentText: "#1d4ed8",
+    icon: "⚖️", accent: "#0066CC", accentBg: "#EBF5FF", accentText: "#005BB5",
     time: "5–7 phút", href: "/practice/q52",
   },
   {
@@ -27,7 +27,7 @@ const Q_TYPES = [
   {
     key: "q54", label: "Q54", title: "Luận văn dài",
     total: Q54_PROMPTS.length, prompts: Q54_PROMPTS,
-    icon: "📝", accent: "#f97316", accentBg: "#fff7ed", accentText: "#c2410c",
+    icon: "📝", accent: "#F59E0B", accentBg: "#FFFBEB", accentText: "#B45309",
     time: "28–35 phút", href: "/practice/q54",
   },
 ]
@@ -103,7 +103,7 @@ export default function PracticeProgress() {
       {/* ── Quick stats row ── */}
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl border border-slate-200/80 px-5 py-4 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-xl">🔥</div>
+          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-xl">🔥</div>
           <div>
             <div className="text-[22px] font-extrabold text-slate-900 leading-none">{streak}</div>
             <div className="text-xs text-slate-400 font-medium mt-0.5">Ngày streak</div>
@@ -117,7 +117,7 @@ export default function PracticeProgress() {
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200/80 px-5 py-4 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-xl">🎯</div>
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">🎯</div>
           <div>
             <div className="text-[22px] font-extrabold text-slate-900 leading-none">{totalPassed}</div>
             <div className="text-xs text-slate-400 font-medium mt-0.5">Đề đạt ≥80%</div>
@@ -140,7 +140,7 @@ export default function PracticeProgress() {
             const bestColor = s.best === null ? "#94a3b8"
               : s.best >= 80 ? "#22c55e"
               : s.best >= 60 ? "#f59e0b"
-              : "#f97316"
+              : "#F59E0B"
 
             return (
               <Link key={q.key} href={q.href} className="group flex flex-col gap-3 p-4 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all" style={{ background: "#fafbfc" }}>
@@ -151,7 +151,7 @@ export default function PracticeProgress() {
                     <span className="text-xs font-extrabold" style={{ color: q.accentText }}>{q.label}</span>
                   </div>
                   {s.best !== null && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: s.best >= 80 ? "#dcfce7" : s.best >= 60 ? "#fef3c7" : "#ffedd5", color: bestColor }}>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: s.best >= 80 ? "#dcfce7" : s.best >= 60 ? "#fef3c7" : "#FEF3C7", color: bestColor }}>
                       Best {s.best}%
                     </span>
                   )}
