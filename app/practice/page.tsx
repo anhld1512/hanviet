@@ -77,7 +77,7 @@ export default function PracticePage() {
               <span className="text-blue-600">Writing đang ở mức nào?</span>
             </h1>
             <p className="text-sm text-[#6E6E73] mb-5 leading-relaxed max-w-sm">
-              AI chấm điểm theo rubric NIIED (Viện Giáo dục Quốc tế Hàn Quốc — cơ quan tổ chức kỳ thi TOPIK) tức thì · Feedback 100% tiếng Việt · Biết điểm yếu để tập trung đúng chỗ
+              AI chấm điểm theo rubric NIIED (Viện Giáo dục Quốc tế Hàn Quốc) tức thì · Feedback 100% tiếng Việt · Biết điểm yếu để tập trung đúng chỗ
             </p>
 
             <div className="flex items-center gap-2.5 flex-wrap">
