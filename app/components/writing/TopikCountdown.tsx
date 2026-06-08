@@ -19,8 +19,13 @@ function getNextTopik() {
 }
 
 function getDaysLeft(target: Date) {
-  const diff = target.getTime() - new Date().getTime()
-  return Math.max(0, Math.ceil(diff / 86400000))
+  const now = new Date()
+  // So sánh ngày calendar (bỏ qua giờ/phút/giây/múi giờ)
+  // tránh lệch ±1 ngày do UTC vs local timezone
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const targetMidnight = new Date(target.getFullYear(), target.getMonth(), target.getDate())
+  const diff = targetMidnight.getTime() - todayMidnight.getTime()
+  return Math.max(0, Math.round(diff / 86400000))
 }
 
 function formatDate(d: Date) {
