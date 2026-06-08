@@ -270,7 +270,7 @@ export default function Q51Page() {
         {/* Prompt grid — primary action */}
         <h2 className="text-sm font-bold text-slate-900 mb-4">
           Chọn đề để luyện
-          <span className="text-xs font-normal text-slate-400 ml-2">— xanh ≥80% · vàng 60–79% · cam &lt;60%</span>
+          
         </h2>
         <PromptGrid
           prompts={Q51_PROMPTS}
