@@ -10,7 +10,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q52_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
-import { saveResultQ51Q52, loadResultQ51Q52, clearResult } from "@/lib/last-result-cache"
+import { saveResultQ51Q52, loadResultQ51Q52, clearResult, preloadResultsFromDB, mergeDBResultsToLocalStorage } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q52 } from "@/app/components/writing/PracticeTips"
@@ -32,8 +32,12 @@ export default function Q52Page() {
     const s: Record<number, number | null> = {}
     Q52_PROMPTS.forEach((p) => { s[p.id] = getBestPct("q52", p.id) })
     setScores(s)
-    loadBestScoresFromDB("q52").then((dbScores) => {
+    Promise.all([
+      loadBestScoresFromDB("q52"),
+      preloadResultsFromDB("q52"),
+    ]).then(([dbScores, dbResults]) => {
       mergeBestScoresToLocalStorage("q52", dbScores)
+      mergeDBResultsToLocalStorage("q52", dbResults)
       setScores((prev) => {
         const merged = { ...prev }
         for (const [id, pct] of Object.entries(dbScores)) {
@@ -45,9 +49,9 @@ export default function Q52Page() {
     })
   }, [])
 
-  function openPrompt(p: WritingPrompt) {
+  async function openPrompt(p: WritingPrompt) {
     setSelected(p); setError(null); setShowHint(null)
-    const cached = loadResultQ51Q52("q52", p.id)
+    const cached = await loadResultQ51Q52("q52", p.id)
     if (cached) {
       setAnswerA(cached.answerA); setAnswerB(cached.answerB)
       setGradeA(cached.gradeA); setGradeB(cached.gradeB)
@@ -111,8 +115,9 @@ export default function Q52Page() {
           feedback: { overall: rA.feedback.overall + " | " + rB.feedback.overall, content: "", organization: "", language: "", style: "" },
           corrections: [...rA.corrections, ...rB.corrections],
         }
-        trackActivity(); saveSubmission({ questionType: "q52", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined })
-        saveResultQ51Q52("q52", selected.id, { answerA, answerB, gradeA: rA!, gradeB: rB! })
+        const fullResult = { answerA, answerB, gradeA: rA!, gradeB: rB! }
+        saveResultQ51Q52("q52", selected.id, fullResult)
+        trackActivity(); saveSubmission({ questionType: "q52", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined, fullResult })
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"

@@ -7,12 +7,13 @@ const MAX_SCORE: Record<string, number> = {
 
 export async function saveSubmission(params: {
   questionType: "q51" | "q52" | "q53" | "q54" | "mock_exam"
-  promptId?: number       // for linking best score per prompt (pass -1 for AI-generated prompts)
+  promptId?: number         // pass -1 for AI-generated prompts
   userAnswer: string
   gradeResult: GradeResult
   timeSpentSeconds?: number
+  fullResult?: unknown      // complete payload for result restoration (cross-device)
 }): Promise<void> {
-  const { questionType, promptId, userAnswer, gradeResult, timeSpentSeconds } = params
+  const { questionType, promptId, userAnswer, gradeResult, timeSpentSeconds, fullResult } = params
 
   try {
     const supabase = createClient()
@@ -35,6 +36,7 @@ export async function saveSubmission(params: {
       criteria_scores: gradeResult.scores,
       errors: gradeResult.corrections,
       overall_feedback_vi: gradeResult.feedback.overall,
+      full_result: fullResult ?? null,
     })
   } catch (e) {
     // Silent — submission errors must not block UX

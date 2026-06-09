@@ -10,7 +10,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q54_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
-import { saveResultQ53Q54, loadResultQ53Q54, clearResult } from "@/lib/last-result-cache"
+import { saveResultQ53Q54, loadResultQ53Q54, clearResult, preloadResultsFromDB, mergeDBResultsToLocalStorage } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q54 } from "@/app/components/writing/PracticeTips"
@@ -29,8 +29,12 @@ export default function Q54Page() {
     const s: Record<number, number | null> = {}
     Q54_PROMPTS.forEach((p) => { s[p.id] = getBestPct("q54", p.id) })
     setScores(s)
-    loadBestScoresFromDB("q54").then((dbScores) => {
+    Promise.all([
+      loadBestScoresFromDB("q54"),
+      preloadResultsFromDB("q54"),
+    ]).then(([dbScores, dbResults]) => {
       mergeBestScoresToLocalStorage("q54", dbScores)
+      mergeDBResultsToLocalStorage("q54", dbResults)
       setScores((prev) => {
         const merged = { ...prev }
         for (const [id, pct] of Object.entries(dbScores)) {
@@ -42,9 +46,9 @@ export default function Q54Page() {
     })
   }, [])
 
-  function openPrompt(p: WritingPrompt) {
+  async function openPrompt(p: WritingPrompt) {
     setSelected(p); setError(null)
-    const cached = loadResultQ53Q54("q54", p.id)
+    const cached = await loadResultQ53Q54("q54", p.id)
     if (cached) { setAnswer(cached.answer); setGradeResult(cached.gradeResult) }
     else { setAnswer(""); setGradeResult(null) }
   }
@@ -68,7 +72,9 @@ export default function Q54Page() {
       const pct = Math.round((result.scores.total / result.max_scores.total) * 100)
       saveBestPct("q54", selected.id, pct)
       setScores((prev) => ({ ...prev, [selected.id]: Math.max(prev[selected.id] ?? 0, pct) }))
-      trackActivity(); saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result })
+      const fullResult = { answer, gradeResult: result }
+      saveResultQ53Q54("q54", selected.id, fullResult)
+      trackActivity(); saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result, fullResult })
       saveResultQ53Q54("q54", selected.id, { answer, gradeResult: result })
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"

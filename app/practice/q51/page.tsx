@@ -10,7 +10,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q51_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
-import { saveResultQ51Q52, loadResultQ51Q52, clearResult } from "@/lib/last-result-cache"
+import { saveResultQ51Q52, loadResultQ51Q52, clearResult, preloadResultsFromDB, mergeDBResultsToLocalStorage } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q51 } from "@/app/components/writing/PracticeTips"
@@ -29,13 +29,17 @@ export default function Q51Page() {
   const [showUpgrade, setShowUpgrade] = useState(false)
 
   useEffect(() => {
-    // Load from localStorage first (instant)
+    // L1: best scores từ localStorage (instant)
     const s: Record<number, number | null> = {}
     Q51_PROMPTS.forEach((p) => { s[p.id] = getBestPct("q51", p.id) })
     setScores(s)
-    // Then sync from Supabase (per-account) and merge
-    loadBestScoresFromDB("q51").then((dbScores) => {
+    // L2: sync từ Supabase — best scores + full results
+    Promise.all([
+      loadBestScoresFromDB("q51"),
+      preloadResultsFromDB("q51"),
+    ]).then(([dbScores, dbResults]) => {
       mergeBestScoresToLocalStorage("q51", dbScores)
+      mergeDBResultsToLocalStorage("q51", dbResults)
       setScores((prev) => {
         const merged = { ...prev }
         for (const [id, pct] of Object.entries(dbScores)) {
@@ -47,11 +51,11 @@ export default function Q51Page() {
     })
   }, [])
 
-  function openPrompt(p: WritingPrompt) {
+  async function openPrompt(p: WritingPrompt) {
     setSelected(p)
     setError(null); setShowHint(null)
-    // Nếu đã làm rồi → restore kết quả luôn
-    const cached = loadResultQ51Q52("q51", p.id)
+    // L1 → L2: restore kết quả nếu đã làm rồi
+    const cached = await loadResultQ51Q52("q51", p.id)
     if (cached) {
       setAnswerA(cached.answerA); setAnswerB(cached.answerB)
       setGradeA(cached.gradeA); setGradeB(cached.gradeB)
@@ -101,8 +105,9 @@ export default function Q51Page() {
           feedback: { overall: rA.feedback.overall + " | " + rB.feedback.overall, content: "", organization: "", language: "", style: "" },
           corrections: [...rA.corrections, ...rB.corrections],
         }
-        trackActivity(); saveSubmission({ questionType: "q51", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined })
-        saveResultQ51Q52("q51", selected.id, { answerA, answerB, gradeA: rA!, gradeB: rB! })
+        const fullResult = { answerA, answerB, gradeA: rA!, gradeB: rB! }
+        saveResultQ51Q52("q51", selected.id, fullResult)
+        trackActivity(); saveSubmission({ questionType: "q51", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined, fullResult })
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
