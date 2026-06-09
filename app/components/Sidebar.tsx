@@ -19,6 +19,7 @@ export default function Sidebar() {
   const router = useRouter()
   const [isPro, setIsPro] = useState<boolean | null>(null) // null = đang load
   const [bonus, setBonus] = useState(0)
+  const [remaining, setRemaining] = useState<number | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -26,12 +27,21 @@ export default function Sidebar() {
       if (!user) return
       supabase
         .from("user_profiles")
-        .select("subscription_tier, is_pro, bonus_gradings")
+        .select("subscription_tier, is_pro, bonus_gradings, monthly_gradings, grading_month, pro_expires_at")
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
-          setIsPro(data?.subscription_tier === "pro" || data?.is_pro === true)
+          const pro =
+            data?.subscription_tier === "pro" ||
+            data?.is_pro === true ||
+            (data?.pro_expires_at && new Date(data.pro_expires_at) > new Date())
+          setIsPro(!!pro)
           setBonus(data?.bonus_gradings ?? 0)
+          if (!pro) {
+            const currentMonth = new Date().toISOString().slice(0, 7)
+            const used = data?.grading_month === currentMonth ? (data?.monthly_gradings ?? 0) : 0
+            setRemaining(Math.max(0, 5 - used))
+          }
         })
     })
   }, [])
@@ -101,7 +111,26 @@ export default function Sidebar() {
             </span>
           </div>
         )}
-        {/* Hiện nút khi biết chắc user KHÔNG phải Pro (null = đang load → ẩn) */}
+        {/* Remaining count + Nâng cấp Pro — chỉ hiện khi biết chắc KHÔNG phải Pro */}
+        {isPro === false && remaining !== null && (
+          <div className="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] text-gray-400 font-medium">Lượt chấm tháng này</span>
+              <span className={`text-[11px] font-bold ${remaining === 0 ? "text-red-500" : remaining <= 2 ? "text-orange-500" : "text-gray-600"}`}>
+                {remaining}/5
+              </span>
+            </div>
+            <div className="h-1 rounded-full overflow-hidden bg-gray-200">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${Math.max(4, (remaining / 5) * 100)}%`,
+                  background: remaining === 0 ? "#EF4444" : remaining <= 2 ? "#F97316" : "#2563EB",
+                }}
+              />
+            </div>
+          </div>
+        )}
         {isPro === false && (
           <Link
             href="/pricing"
