@@ -17,7 +17,7 @@ const NAV_ITEMS: { href: string; Icon: LucideIcon; label: string; badge?: string
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const [isPro, setIsPro] = useState(true)
+  const [isPro, setIsPro] = useState<boolean | null>(null) // null = đang load
   const [bonus, setBonus] = useState(0)
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function Sidebar() {
       {/* Bottom */}
       <div className="px-2.5 pb-4 space-y-1.5">
         {/* Bonus gradings indicator */}
-        {!isPro && bonus > 0 && (
+        {isPro === false && bonus > 0 && (
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-100">
             <Gift size={13} className="text-amber-500 shrink-0" />
             <span className="text-xs font-semibold text-amber-700">
@@ -101,7 +101,8 @@ export default function Sidebar() {
             </span>
           </div>
         )}
-        {!isPro && (
+        {/* Hiện nút khi biết chắc user KHÔNG phải Pro (null = đang load → ẩn) */}
+        {isPro === false && (
           <Link
             href="/pricing"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
