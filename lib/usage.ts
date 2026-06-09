@@ -25,6 +25,8 @@ export async function checkUsage(): Promise<UsageStatus> {
       .eq("id", user.id)
       .single()
 
+    // Không có profile → user mới, coi như chưa dùng lần nào (FREE_LIMIT lượt)
+    // incrementUsage sẽ upsert row khi chấm lần đầu
     if (!profile) return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT, bonus: 0 }
 
     // Pro: unlimited
@@ -65,7 +67,15 @@ export async function incrementUsage(): Promise<void> {
       .eq("id", user.id)
       .single()
 
-    if (!profile) return
+    const currentMonth = new Date().toISOString().slice(0, 7)
+
+    // Không có profile → upsert row mới (user mới chưa có profile)
+    if (!profile) {
+      await supabase
+        .from("user_profiles")
+        .upsert({ id: user.id, monthly_gradings: 1, grading_month: currentMonth })
+      return
+    }
 
     const isPro =
       profile.subscription_tier === "pro" ||
@@ -84,7 +94,6 @@ export async function incrementUsage(): Promise<void> {
     }
 
     // Deduct from monthly
-    const currentMonth = new Date().toISOString().slice(0, 7)
     const currentCount =
       profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0
 

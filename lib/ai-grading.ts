@@ -12,12 +12,10 @@ const client = new OpenAI({
   baseURL: "https://api.deepseek.com",
 })
 
-// Direct DeepSeek API (khong qua OpenRouter) — nhanh hon, cache hit re hon nhieu
-// MODEL_SIMPLE: V4 Flash — Q51/Q52 (1 cau ngan), nhanh, du chat luong
-// MODEL_ADVANCED: V4 Pro — Q53/Q54 (bai luan dai), 49B active params, chat luong cao hon
-const MODEL_SIMPLE = "deepseek-v4-flash"
-// V4 Pro qua cham (>120s) → timeout Vercel 60s. Dung V4 Flash cho ca Q53/Q54.
-const MODEL_ADVANCED = "deepseek-v4-flash"
+// Direct DeepSeek API — model "deepseek-chat" = DeepSeek V3 (production stable name)
+// "deepseek-v4-flash" / "deepseek-v3-flash" etc. are NOT valid model names
+const MODEL_SIMPLE = "deepseek-chat"
+const MODEL_ADVANCED = "deepseek-chat"
 
 // Parse JSON an toan tu response (xu ly ca markdown code blocks)
 function parseGradeJSON(text: string): Record<string, unknown> | null {

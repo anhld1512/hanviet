@@ -1,7 +1,6 @@
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
 import TopikCountdown from "@/app/components/writing/TopikCountdown"
-import FreeUsageStrip from "@/app/components/FreeUsageStrip"
 import { Mail, Scale, BarChart2, BookOpen } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -111,9 +110,6 @@ export default function PracticePage() {
             <TopikCountdown />
           </div>
         </div>
-
-        {/* ── Free usage strip (chỉ hiện cho free user) ── */}
-        <FreeUsageStrip />
 
         {/* ── Section title ── */}
         <div className="flex items-center justify-between mb-4">

@@ -14,6 +14,24 @@ const NAV_ITEMS: { href: string; Icon: LucideIcon; label: string; badge?: string
   { href: "/review",        Icon: RotateCcw, label: "Ôn lỗi" },
 ]
 
+const SIDEBAR_CACHE_KEY = "topeak_sidebar_state"
+type SidebarCache = { isPro: boolean; bonus: number; remaining: number; ts: number }
+
+function readCache(): SidebarCache | null {
+  try {
+    const raw = localStorage.getItem(SIDEBAR_CACHE_KEY)
+    if (!raw) return null
+    const c: SidebarCache = JSON.parse(raw)
+    // Cache hết hạn sau 5 phút
+    if (Date.now() - c.ts > 5 * 60 * 1000) return null
+    return c
+  } catch { return null }
+}
+
+function writeCache(c: Omit<SidebarCache, "ts">) {
+  try { localStorage.setItem(SIDEBAR_CACHE_KEY, JSON.stringify({ ...c, ts: Date.now() })) } catch {}
+}
+
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
@@ -22,6 +40,15 @@ export default function Sidebar() {
   const [remaining, setRemaining] = useState<number | null>(null)
 
   useEffect(() => {
+    // Hiện ngay từ cache (tránh delay nhìn thấy)
+    const cached = readCache()
+    if (cached) {
+      setIsPro(cached.isPro)
+      setBonus(cached.bonus)
+      setRemaining(cached.isPro ? null : cached.remaining)
+    }
+
+    // Fetch mới từ DB (cập nhật cache sau)
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return
@@ -35,13 +62,16 @@ export default function Sidebar() {
             data?.subscription_tier === "pro" ||
             data?.is_pro === true ||
             (data?.pro_expires_at && new Date(data.pro_expires_at) > new Date())
-          setIsPro(!!pro)
-          setBonus(data?.bonus_gradings ?? 0)
-          if (!pro) {
+          const rem = pro ? 0 : (() => {
             const currentMonth = new Date().toISOString().slice(0, 7)
             const used = data?.grading_month === currentMonth ? (data?.monthly_gradings ?? 0) : 0
-            setRemaining(Math.max(0, 5 - used))
-          }
+            return Math.max(0, 5 - used)
+          })()
+          const bon = data?.bonus_gradings ?? 0
+          setIsPro(!!pro)
+          setBonus(bon)
+          if (!pro) setRemaining(rem)
+          writeCache({ isPro: !!pro, bonus: bon, remaining: rem })
         })
     })
   }, [])
