@@ -3,24 +3,6 @@ import Image from "next/image"
 import { createClient } from "@/lib/supabase-server"
 import { redirect } from "next/navigation"
 
-// ── Bank config ────────────────────────────────────────────────────────────
-// TODO: cập nhật số tài khoản thật trước khi dùng thật
-const BANK = {
-  code: "MB",         // VietQR bank code
-  account: "0123456789",  // << SỬA THÀNH SỐ TK THẬT
-  name: "LE DUC ANH",
-  label: "MB Bank",
-}
-
-function vietqrUrl(amount: number, note: string) {
-  const params = new URLSearchParams({
-    amount: String(amount),
-    addInfo: note,
-    accountName: BANK.name,
-  })
-  return `https://img.vietqr.io/image/${BANK.code}-${BANK.account}-compact2.png?${params}`
-}
-
 // ── Plan definitions ───────────────────────────────────────────────────────
 const PLANS = [
   {
@@ -106,16 +88,16 @@ const PLANS = [
 
 const FAQ = [
   {
-    q: "Sau khi thanh toán bao lâu thì tài khoản được nâng cấp?",
-    a: "Trong vòng 2–4 giờ (trong giờ hành chính). Bạn sẽ nhận email xác nhận khi tài khoản được kích hoạt.",
+    q: "Đăng ký Pro bằng cách nào?",
+    a: "Nhắn tin qua Fanpage Facebook ToPeak, ghi rõ gói muốn đăng ký và email tài khoản. Admin sẽ liên hệ hướng dẫn thanh toán và kích hoạt trong 2–4 giờ.",
   },
   {
     q: "Có thể dùng thử trước khi mua không?",
     a: "Có — gói Free cho phép 5 lượt chấm AI mỗi tháng, đủ để trải nghiệm toàn bộ tính năng cơ bản trước khi quyết định.",
   },
   {
-    q: "Thanh toán bằng cách nào?",
-    a: "Chuyển khoản ngân hàng theo thông tin bên dưới, ghi đúng nội dung chuyển khoản. Admin sẽ kích hoạt Pro trong 2–4 giờ.",
+    q: "Sau khi liên hệ bao lâu thì được kích hoạt?",
+    a: "Trong vòng 2–4 giờ trong giờ hành chính (8:00–18:00 các ngày trong tuần). Ngoài giờ hành chính sẽ được xử lý vào sáng hôm sau.",
   },
   {
     q: "Gói Pro hết hạn thì dữ liệu có mất không?",
@@ -123,7 +105,7 @@ const FAQ = [
   },
   {
     q: "Có hoàn tiền không?",
-    a: "Nếu tài khoản chưa được kích hoạt sau 24 giờ, liên hệ admin để được hoàn tiền hoặc hỗ trợ.",
+    a: "Nếu chưa sử dụng lượt chấm nào sau khi kích hoạt, liên hệ qua Fanpage để được hỗ trợ hoàn tiền trong vòng 24 giờ.",
   },
 ]
 
@@ -273,7 +255,7 @@ export default async function PricingPage() {
                   </div>
                 ) : isPro ? (
                   <a
-                    href={`#pay-${plan.bankNote}`}
+                    href="#contact"
                     className={`text-center text-xs py-2.5 rounded-xl font-bold transition-colors ${
                       isHighlight
                         ? "bg-white text-[#0066CC] hover:bg-blue-50"
@@ -284,7 +266,7 @@ export default async function PricingPage() {
                   </a>
                 ) : (
                   <a
-                    href={`#pay-${plan.bankNote}`}
+                    href="#contact"
                     className={`text-center text-xs py-2.5 rounded-xl font-bold transition-colors ${
                       isHighlight
                         ? "bg-white text-[#0066CC] hover:bg-blue-50"
@@ -309,73 +291,28 @@ export default async function PricingPage() {
           </p>
         </div>
 
-        {/* Payment section */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 mb-10">
-          <h2 className="text-lg font-bold text-[#1D1D1F] mb-1">Hướng dẫn thanh toán</h2>
-          <p className="text-sm text-[#6E6E73] mb-8">
-            Chuyển khoản đúng nội dung — tài khoản kích hoạt trong 2–4 giờ
+        {/* Contact CTA section */}
+        <div id="contact" className="bg-gradient-to-br from-[#0066CC] to-[#004F99] rounded-2xl p-8 mb-10 text-white text-center">
+          <div className="text-3xl mb-3">💬</div>
+          <h2 className="text-xl font-extrabold mb-2">Đăng ký qua Fanpage ToPeak</h2>
+          <p className="text-blue-100 text-sm mb-6 max-w-md mx-auto leading-relaxed">
+            Nhắn tin cho chúng tôi qua Fanpage Facebook — ghi rõ gói muốn đăng ký và email tài khoản.
+            Admin kích hoạt Pro trong <strong className="text-white">2–4 giờ</strong> (giờ hành chính).
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Bank info */}
-            <div className="space-y-4">
-              <div className="bg-[#F5F5F7] rounded-xl p-5 font-mono text-sm space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-[#6E6E73]">Ngân hàng</span>
-                  <span className="font-bold text-[#1D1D1F]">{BANK.label}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#6E6E73]">Số tài khoản</span>
-                  <span className="font-bold text-[#1D1D1F]">{BANK.account}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#6E6E73]">Tên tài khoản</span>
-                  <span className="font-bold text-[#1D1D1F]">{BANK.name}</span>
-                </div>
-
-                <div className="border-t border-gray-200 pt-3">
-                  <div className="text-[#6E6E73] text-xs mb-2">Nội dung chuyển khoản:</div>
-                  {PLANS.map((plan) => (
-                    <div key={plan.key} id={`pay-${plan.bankNote}`} className="flex items-center justify-between mb-1.5">
-                      <span className="text-[#6E6E73] text-xs">{plan.name}:</span>
-                      <span className="bg-white border border-gray-200 text-[#1D1D1F] font-bold px-2 py-0.5 rounded text-xs">
-                        {plan.bankNote} {user.email?.split("@")[0].toUpperCase()}
-                      </span>
-                    </div>
-                  ))}
-                  <p className="text-[10px] text-[#AEAEB2] mt-2">
-                    Ghi đúng: mã gói + phần trước @ của email
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 rounded-xl p-4 text-xs text-blue-700 border border-blue-100">
-                <strong>Sau khi chuyển khoản:</strong> Admin kích hoạt trong 2–4 giờ (giờ hành chính).
-                Quá 24 giờ chưa kích hoạt → liên hệ qua email hoặc Zalo.
-              </div>
-            </div>
-
-            {/* QR Codes — one per plan */}
-            <div>
-              <div className="text-xs font-semibold text-[#6E6E73] mb-3">Quét QR để chuyển khoản nhanh:</div>
-              <div className="grid grid-cols-2 gap-3">
-                {PLANS.map((plan) => (
-                  <div key={plan.key} className="flex flex-col items-center bg-[#F5F5F7] rounded-xl p-3">
-                    <div className="text-[10px] font-bold text-[#6E6E73] mb-2">{plan.name}</div>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={vietqrUrl(plan.bankAmount, `${plan.bankNote} ${user.email?.split("@")[0].toUpperCase()}`)}
-                      alt={`QR ${plan.name}`}
-                      width={120}
-                      height={120}
-                      className="rounded-lg"
-                    />
-                    <div className="text-[10px] text-[#0066CC] font-bold mt-2">{plan.price}đ</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <a
+            href="https://www.facebook.com/topeak.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-[#0066CC] font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors text-sm"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Nhắn tin qua Fanpage →
+          </a>
+          <p className="text-blue-200 text-xs mt-4">
+            Hoặc inbox trực tiếp: <strong className="text-white">facebook.com/topeak.app</strong>
+          </p>
         </div>
 
         {/* FAQ */}
