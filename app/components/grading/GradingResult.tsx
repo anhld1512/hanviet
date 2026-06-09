@@ -124,7 +124,7 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
 
 // ─── CoachingTip — collapsed by default, Q51/Q52 ─────────────────────────────
 function CoachingTip({ coaching }: { coaching: NonNullable<GradeResult["coaching"]> }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true) // mở sẵn
   const tip = coaching.focus_pattern || coaching.level_tip || ""
   // Preview: chỉ 1 câu đầu
   const preview = tip.split(/\.\s/)[0].slice(0, 70) + (tip.length > 70 ? "…" : "")
@@ -387,42 +387,37 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
         </div>
       </div>
 
-      {/* ── Row 2: Errors — compact, no long explanations ── */}
+      {/* ── Row 2: Errors ── */}
+      {/* Typography system: header=text-sm bold | SAI→ĐÚNG=text-base mono | pattern=text-xs badge */}
       {corrections.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 px-5 py-4">
-          <div className="flex items-center gap-2 mb-3.5">
-            <span className="text-sm font-bold text-gray-700">Lỗi cần sửa</span>
-            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">{corrections.length} lỗi</span>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm font-bold text-gray-800">Lỗi cần sửa</span>
+            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-semibold">{corrections.length} lỗi</span>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {corrections.map((c, i) => {
               const typeConfig = c.type ? ERROR_TYPE_CONFIG[c.type] : null
-              // Lấy 1 câu ngắn đầu tiên của explanation (trước dấu '. ')
-              const shortExpl = c.explanation
-                ? c.explanation.split(/\.\s/)[0].slice(0, 90) + (c.explanation.length > 90 ? "…" : "")
-                : null
               return (
                 <div key={i} className="flex items-start gap-3">
+                  {/* Type badge */}
                   {typeConfig && (
                     <span className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg border mt-0.5 ${typeConfig.color}`}>
                       {typeConfig.label}
                     </span>
                   )}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 space-y-1.5">
                     {/* SAI → ĐÚNG */}
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-2.5 flex-wrap">
                       <span className="font-mono text-base text-red-600 line-through">{c.original}</span>
-                      <span className="text-gray-400 text-sm">→</span>
+                      <span className="text-gray-300 text-sm">→</span>
                       <span className="font-mono text-base text-blue-700 font-semibold">{c.corrected}</span>
                     </div>
-                    {/* Pattern OR short explanation — chỉ 1 dòng */}
-                    {(c.pattern || shortExpl) && (
-                      <p className="text-sm text-gray-500 mt-1 leading-snug">
-                        {c.pattern
-                          ? <span className="font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs">{c.pattern}</span>
-                          : shortExpl
-                        }
-                      </p>
+                    {/* Pattern badge only — không có explanation text */}
+                    {c.pattern && (
+                      <span className="inline-block font-mono text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-200">
+                        {c.pattern}
+                      </span>
                     )}
                   </div>
                 </div>

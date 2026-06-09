@@ -86,10 +86,9 @@ export default function Q52Page() {
 
     setLoading(true); setError(null)
     try {
-      const [rA, rB] = await Promise.all([
-        gradeBlank("ㄱ", answerA, selected.blanks?.[0]?.hint ?? ""),
-        gradeBlank("ㄴ", answerB, selected.blanks?.[1]?.hint ?? ""),
-      ])
+      // Sequential để tránh DeepSeek rate-limit lỗi
+      const rA = await gradeBlank("ㄱ", answerA, selected.blanks?.[0]?.hint ?? "")
+      const rB = await gradeBlank("ㄴ", answerB, selected.blanks?.[1]?.hint ?? "")
       setGradeA(rA); setGradeB(rB)
       if (rA && rB) {
         const total = rA.scores.total + rB.scores.total
