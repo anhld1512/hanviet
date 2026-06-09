@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ToPeak — TOPIK to Peak. Lên đỉnh TOPIK",
     description: "AI chấm bài viết TOPIK II tức thì, feedback tiếng Việt, rubric NIIED chính thức.",
-    url: "https://hanviet-ten.vercel.app",
+    url: "https://topeak.vn",
     siteName: "ToPeak",
     locale: "vi_VN",
     type: "website",
