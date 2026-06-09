@@ -116,7 +116,7 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
           <span className="shrink-0 text-[10px] font-extrabold bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md mt-0.5">ĐÚNG</span>
           <span className="text-sm text-blue-800 font-semibold font-mono leading-relaxed">{correction.corrected}</span>
         </div>
-        <p className="text-xs text-gray-500 leading-relaxed pt-1 border-t border-gray-50">{correction.explanation}</p>
+        <p className="text-sm text-gray-500 leading-relaxed pt-1 border-t border-gray-50">{correction.explanation}</p>
       </div>
     </div>
   )
@@ -413,11 +413,9 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
                       <span className="text-gray-300 text-sm">→</span>
                       <span className="font-mono text-base text-blue-700 font-semibold">{c.corrected}</span>
                     </div>
-                    {/* Pattern badge only — không có explanation text */}
+                    {/* Pattern — text-sm, đồng bộ với CoachingTip body */}
                     {c.pattern && (
-                      <span className="inline-block font-mono text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-200">
-                        {c.pattern}
-                      </span>
+                      <p className="text-sm text-gray-600 leading-relaxed">{c.pattern}</p>
                     )}
                   </div>
                 </div>
