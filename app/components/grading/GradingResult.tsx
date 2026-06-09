@@ -126,7 +126,8 @@ function ErrorCard({ correction, index }: { correction: GradeResult["corrections
 function CoachingTip({ coaching }: { coaching: NonNullable<GradeResult["coaching"]> }) {
   const [open, setOpen] = useState(false)
   const tip = coaching.focus_pattern || coaching.level_tip || ""
-  const preview = tip.length > 80 ? tip.slice(0, 80) + "…" : tip
+  // Preview: chỉ 1 câu đầu
+  const preview = tip.split(/\.\s/)[0].slice(0, 70) + (tip.length > 70 ? "…" : "")
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
@@ -134,21 +135,21 @@ function CoachingTip({ coaching }: { coaching: NonNullable<GradeResult["coaching
         onClick={() => setOpen(v => !v)}
         className="w-full flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left"
       >
-        <span className="text-xs font-bold text-blue-600 shrink-0">Làm gì để điểm cao hơn?</span>
-        <span className="text-xs text-gray-400 flex-1 truncate">{!open ? preview : ""}</span>
-        <span className="text-gray-300 text-xs shrink-0">{open ? "▲" : "▼"}</span>
+        <span className="text-sm font-bold text-blue-600 shrink-0">Làm gì để điểm cao hơn?</span>
+        <span className="text-sm text-gray-400 flex-1 truncate">{!open ? preview : ""}</span>
+        <span className="text-gray-300 text-sm shrink-0">{open ? "▲" : "▼"}</span>
       </button>
       {open && (
-        <div className="px-5 pb-4 space-y-3 border-t border-gray-50">
+        <div className="px-5 pb-5 space-y-3 border-t border-gray-100">
           {coaching.focus_pattern && (
-            <div className="flex items-start gap-2.5 pt-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5" />
+            <div className="flex items-start gap-3 pt-4">
+              <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0 mt-1.5" />
               <p className="text-sm text-gray-700 leading-relaxed">{coaching.focus_pattern}</p>
             </div>
           )}
           {coaching.level_tip && (
-            <div className="flex items-start gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
+            <div className="flex items-start gap-3">
+              <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0 mt-1.5" />
               <p className="text-sm text-gray-700 leading-relaxed">{coaching.level_tip}</p>
             </div>
           )}
@@ -353,19 +354,19 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
   return (
     <div className="space-y-3">
 
-      {/* ── Row 1: Score + criteria chips in one line ── */}
+      {/* ── Row 1: Score + criteria chips ── */}
       <div className="bg-white rounded-2xl border border-gray-100 px-5 py-4">
         <div className="flex items-center gap-3 flex-wrap">
           {/* Score */}
           <div className="flex items-baseline gap-1 shrink-0">
-            <span className="text-[38px] font-extrabold leading-none" style={{ color: scoreColor }}>{scores.total}</span>
-            <span className="text-base text-gray-300 leading-none">/{max_scores.total}</span>
+            <span className="text-[40px] font-extrabold leading-none" style={{ color: scoreColor }}>{scores.total}</span>
+            <span className="text-lg text-gray-300 leading-none">/{max_scores.total}</span>
           </div>
-          <span className="text-sm font-bold shrink-0" style={{ color: scoreColor }}>{scoreVerdict}</span>
+          <span className="text-base font-bold shrink-0" style={{ color: scoreColor }}>{scoreVerdict}</span>
 
-          <div className="w-px h-7 bg-gray-200 shrink-0 mx-0.5" />
+          <div className="w-px h-8 bg-gray-200 shrink-0 mx-1" />
 
-          {/* Criteria chips — score only, no text */}
+          {/* Criteria chips — tên + điểm, không text */}
           {criteria.map(c => {
             const isFull = c.score === c.max
             const isZero = c.score === 0 && c.max > 0
@@ -376,47 +377,52 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
               : "bg-gray-50 text-gray-600 border-gray-200"
             const icon = isFull ? "✓" : isZero ? "✗" : "·"
             return (
-              <span key={c.key} className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border ${chipCls} shrink-0`}>
+              <span key={c.key} className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg border ${chipCls} shrink-0`}>
                 <span>{icon}</span>
                 <span>{c.label}</span>
-                <span className="opacity-60 font-normal">{c.score}/{c.max}</span>
+                <span className="opacity-50 font-normal text-xs">{c.score}/{c.max}</span>
               </span>
             )
           })}
         </div>
       </div>
 
-      {/* ── Row 2: Errors — compact inline ── */}
+      {/* ── Row 2: Errors — compact, no long explanations ── */}
       {corrections.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 px-5 py-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-bold text-gray-700">Lỗi cần sửa</span>
-            <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">{corrections.length} lỗi</span>
+          <div className="flex items-center gap-2 mb-3.5">
+            <span className="text-sm font-bold text-gray-700">Lỗi cần sửa</span>
+            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">{corrections.length} lỗi</span>
           </div>
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {corrections.map((c, i) => {
               const typeConfig = c.type ? ERROR_TYPE_CONFIG[c.type] : null
+              // Lấy 1 câu ngắn đầu tiên của explanation (trước dấu '. ')
+              const shortExpl = c.explanation
+                ? c.explanation.split(/\.\s/)[0].slice(0, 90) + (c.explanation.length > 90 ? "…" : "")
+                : null
               return (
-                <div key={i} className="flex items-start gap-2.5">
-                  {/* Type badge */}
+                <div key={i} className="flex items-start gap-3">
                   {typeConfig && (
-                    <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-md border mt-0.5 ${typeConfig.color}`}>
+                    <span className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg border mt-0.5 ${typeConfig.color}`}>
                       {typeConfig.label}
                     </span>
                   )}
                   <div className="flex-1 min-w-0">
-                    {/* SAI → ĐÚNG inline */}
+                    {/* SAI → ĐÚNG */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-sm text-red-600 line-through">{c.original}</span>
-                      <span className="text-gray-300 text-xs">→</span>
-                      <span className="font-mono text-sm text-blue-700 font-semibold">{c.corrected}</span>
-                      {c.pattern && (
-                        <span className="text-[10px] font-mono bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded border border-gray-200">{c.pattern}</span>
-                      )}
+                      <span className="font-mono text-base text-red-600 line-through">{c.original}</span>
+                      <span className="text-gray-400 text-sm">→</span>
+                      <span className="font-mono text-base text-blue-700 font-semibold">{c.corrected}</span>
                     </div>
-                    {/* Explanation — short, 1 line */}
-                    {c.explanation && (
-                      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{c.explanation}</p>
+                    {/* Pattern OR short explanation — chỉ 1 dòng */}
+                    {(c.pattern || shortExpl) && (
+                      <p className="text-sm text-gray-500 mt-1 leading-snug">
+                        {c.pattern
+                          ? <span className="font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs">{c.pattern}</span>
+                          : shortExpl
+                        }
+                      </p>
                     )}
                   </div>
                 </div>
@@ -426,18 +432,18 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
         </div>
       )}
 
-      {/* ── Row 3: Câu mẫu — most important for learning ── */}
+      {/* ── Row 3: Câu mẫu — nổi bật nhất ── */}
       {better_example && (
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-3.5">
-          <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5">Câu mẫu tham khảo</p>
-          <p className="font-mono text-sm text-blue-900 leading-relaxed">{better_example}</p>
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4">
+          <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">Câu mẫu tham khảo</p>
+          <p className="font-mono text-base text-blue-900 leading-relaxed">{better_example}</p>
           {better_opening && (
-            <p className="font-mono text-sm text-blue-900 leading-relaxed mt-1.5 pt-1.5 border-t border-blue-200">{better_opening}</p>
+            <p className="font-mono text-base text-blue-900 leading-relaxed mt-2 pt-2 border-t border-blue-200">{better_opening}</p>
           )}
         </div>
       )}
 
-      {/* ── Row 4: Coaching — 1 key tip, collapsed by default ── */}
+      {/* ── Row 4: Coaching — collapsed, expand on click ── */}
       {coaching && (coaching.focus_pattern || coaching.level_tip) && (
         <CoachingTip coaching={coaching} />
       )}
