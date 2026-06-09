@@ -10,6 +10,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q52_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { saveResultQ51Q52, loadResultQ51Q52, clearResult } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q52 } from "@/app/components/writing/PracticeTips"
@@ -45,8 +46,15 @@ export default function Q52Page() {
   }, [])
 
   function openPrompt(p: WritingPrompt) {
-    setSelected(p); setAnswerA(""); setAnswerB("")
-    setGradeA(null); setGradeB(null); setError(null); setShowHint(null)
+    setSelected(p); setError(null); setShowHint(null)
+    const cached = loadResultQ51Q52("q52", p.id)
+    if (cached) {
+      setAnswerA(cached.answerA); setAnswerB(cached.answerB)
+      setGradeA(cached.gradeA); setGradeB(cached.gradeB)
+    } else {
+      setAnswerA(""); setAnswerB("")
+      setGradeA(null); setGradeB(null)
+    }
   }
 
   function handleAnswerAChange(v: string) { setAnswerA(v); if (error) setError(null) }
@@ -104,6 +112,7 @@ export default function Q52Page() {
           corrections: [...rA.corrections, ...rB.corrections],
         }
         trackActivity(); saveSubmission({ questionType: "q52", promptId: selected.id, userAnswer: `(ㄱ) ${answerA}\n(ㄴ) ${answerB}`, gradeResult: combined })
+        saveResultQ51Q52("q52", selected.id, { answerA, answerB, gradeA: rA!, gradeB: rB! })
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
@@ -144,7 +153,7 @@ export default function Q52Page() {
               <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerA}</span>
               <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeA.scores.total}/{gradeA.max_scores.total} điểm</span>
             </div>
-            <GradingResult result={gradeA} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
+            <GradingResult result={gradeA} onRetry={() => { clearResult("q52", selected.id); setGradeA(null); setGradeB(null); setAnswerA(""); setAnswerB("") }} onNext={backToList} hideActions />
           </div>
 
           {/* Divider */}
@@ -162,12 +171,12 @@ export default function Q52Page() {
               <span className="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg border border-gray-100">{answerB}</span>
               <span className="ml-auto text-sm font-bold shrink-0" style={{ color: scoreColor }}>{gradeB.scores.total}/{gradeB.max_scores.total} điểm</span>
             </div>
-            <GradingResult result={gradeB} onRetry={() => { setGradeA(null); setGradeB(null) }} onNext={backToList} hideActions />
+            <GradingResult result={gradeB} onRetry={() => { clearResult("q52", selected.id); setGradeA(null); setGradeB(null); setAnswerA(""); setAnswerB("") }} onNext={backToList} hideActions />
           </div>
 
           {/* Shared CTA */}
           <div className="flex gap-3 pb-10">
-            <button onClick={() => { setGradeA(null); setGradeB(null) }}
+            <button onClick={() => { clearResult("q52", selected.id); setGradeA(null); setGradeB(null); setAnswerA(""); setAnswerB("") }}
               className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm">
               Làm lại đề này
             </button>

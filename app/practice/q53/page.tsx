@@ -10,6 +10,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q53_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { saveResultQ53Q54, loadResultQ53Q54, clearResult } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
 import PracticeTips, { TIPS_Q53 } from "@/app/components/writing/PracticeTips"
@@ -99,7 +100,12 @@ export default function Q53Page() {
     })
   }, [])
 
-  function openPrompt(p: WritingPrompt) { setSelected(p); setAnswer(""); setGradeResult(null); setError(null) }
+  function openPrompt(p: WritingPrompt) {
+    setSelected(p); setError(null)
+    const cached = loadResultQ53Q54("q53", p.id)
+    if (cached) { setAnswer(cached.answer); setGradeResult(cached.gradeResult) }
+    else { setAnswer(""); setGradeResult(null) }
+  }
   function backToList() { setSelected(null); setGradeResult(null); setAnswer("") }
 
   async function handleSubmit() {
@@ -121,6 +127,7 @@ export default function Q53Page() {
       saveBestPct("q53", selected.id, pct)
       setScores((prev) => ({ ...prev, [selected.id]: Math.max(prev[selected.id] ?? 0, pct) }))
       trackActivity(); saveSubmission({ questionType: "q53", promptId: selected.id, userAnswer: answer, gradeResult: result })
+      saveResultQ53Q54("q53", selected.id, { answer, gradeResult: result })
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
       if (msg === "free_limit_reached") { setShowUpgrade(true); return }
@@ -146,7 +153,7 @@ export default function Q53Page() {
               <span className="text-xs text-gray-400">điểm</span>
             </div>
           </div>
-          <GradingResult result={gradeResult} onRetry={() => setGradeResult(null)} onNext={backToList} userAnswer={answer} />
+          <GradingResult result={gradeResult} onRetry={() => { clearResult("q53", selected.id); setGradeResult(null); setAnswer("") }} onNext={backToList} userAnswer={answer} />
         </div>
         </main>
       </div>
