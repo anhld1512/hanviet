@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { checkPromptUsage, incrementPromptUsage } from "@/lib/usage"
 
 const OPENROUTER_API_KEY = process.env.DEEPSEEK_API_KEY!
 
@@ -242,8 +243,20 @@ export async function GET(req: NextRequest) {
   const userPrompt = PROMPTS[type]
   if (!userPrompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
 
+  // ── Kiểm tra giới hạn lượt tạo đề ──────────────────────────────────────────
+  const usage = await checkPromptUsage()
+  if (!usage.allowed) {
+    return NextResponse.json(
+      { error: "prompt_limit_reached", used: usage.used, remaining: 0 },
+      { status: 403 }
+    )
+  }
+
   try {
     const parsed = await callDeepSeekWithRetry(userPrompt)
+
+    // ── Tăng counter sau khi tạo thành công ──────────────────────────────────
+    await incrementPromptUsage()
 
     return NextResponse.json({
       id: -1,

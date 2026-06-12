@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { difficultyLabel, difficultyColor } from "@/lib/practice-score"
 import type { WritingPrompt } from "@/lib/data/prompts"
+import UpgradeModal from "@/app/components/UpgradeModal"
 
 function getTopikNum(source: string) {
   const m = source.match(/(\d+)/)
@@ -28,11 +29,12 @@ type Props = {
 }
 
 export default function PromptGrid({ prompts, scores, onSelect, questionType, renderExtra }: Props) {
-  const [showAll, setShowAll]     = useState(false)
+  const [showAll, setShowAll]       = useState(false)
   const [generating, setGenerating] = useState(false)
-  const [genError, setGenError]   = useState<string | null>(null)
-  const [isHovered, setIsHovered] = useState(false)
-  const [sweepKey, setSweepKey]   = useState(0)   // tăng mỗi lần hover để restart sweep
+  const [genError, setGenError]     = useState<string | null>(null)
+  const [showUpgrade, setShowUpgrade] = useState(false)
+  const [isHovered, setIsHovered]   = useState(false)
+  const [sweepKey, setSweepKey]     = useState(0)   // tăng mỗi lần hover để restart sweep
 
   const sorted = [...prompts].sort((a, b) => getTopikNum(b.source) - getTopikNum(a.source))
   const maxTopik = getTopikNum(sorted[0]?.source ?? "")
@@ -46,12 +48,15 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
     setGenError(null)
     try {
       const res = await fetch(`/api/generate-prompt?type=${questionType}`)
+      const data = await res.json()
       if (!res.ok) {
-        const e = await res.json()
-        throw new Error(e.error ?? "Lỗi")
+        if (data.error === "prompt_limit_reached") {
+          setShowUpgrade(true)
+          return
+        }
+        throw new Error(data.error ?? "Lỗi")
       }
-      const prompt: WritingPrompt = await res.json()
-      onSelect(prompt)
+      onSelect(data as WritingPrompt)
     } catch (e) {
       setGenError(e instanceof Error ? e.message : "Không thể tạo đề, thử lại")
     } finally {
@@ -85,6 +90,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
   return (
     <div className="space-y-3">
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <style>{`
         /* ── Idle breathe ── */
         @keyframes ai-breathe {

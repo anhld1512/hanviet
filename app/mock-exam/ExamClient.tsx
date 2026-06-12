@@ -196,6 +196,12 @@ export default function ExamClient({
         fetch("/api/generate-prompt?type=q53").then(r => r.json()),
         fetch("/api/generate-prompt?type=q54").then(r => r.json()),
       ])
+      // Kiểm tra prompt_limit_reached (chỉ cần 1 cái bị block là hiện upgrade)
+      if (r51.error === "prompt_limit_reached" || r52.error === "prompt_limit_reached" ||
+          r53.error === "prompt_limit_reached" || r54.error === "prompt_limit_reached") {
+        setShowUpgrade(true)
+        return
+      }
       if (r51.error || r52.error || r53.error || r54.error) throw new Error("Tạo đề thất bại")
       setActivePrompts({ q51: r51, q52: r52, q53: r53, q54: r54 })
       setPromptMode("ai")
