@@ -127,7 +127,7 @@ export default function Q54Page() {
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {/* Đề bài (1/3) */}
             <div className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -145,7 +145,7 @@ export default function Q54Page() {
               </div>
             </div>
             {/* Editor (2/3) */}
-            <div className="col-span-2 flex flex-col gap-4">
+            <div className="md:col-span-2 flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-gray-900">Bài viết của bạn</h3>

@@ -213,7 +213,7 @@ export default function Q52Page() {
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-start justify-between mb-4">
                 <h2 className="font-bold text-gray-900">Đề bài</h2>

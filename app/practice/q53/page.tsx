@@ -185,7 +185,7 @@ export default function Q53Page() {
             <span className="text-sm text-gray-500">{selected.context}</span>
             <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor(selected.difficulty)}`}>{difficultyLabel(selected.difficulty)}</span>
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Biểu đồ */}
             <div className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
