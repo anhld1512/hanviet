@@ -657,40 +657,40 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-gray-100"
+          <div className="rounded-2xl border border-gray-100"
             style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.05)" }}>
-            <table className="w-full text-sm min-w-[540px]">
+            <table className="w-full text-sm">
               <thead>
                 <tr style={{ background: "linear-gradient(135deg, #F0F6FF 0%, #E8EFFF 100%)" }}>
-                  <th className="text-left px-6 py-4 text-[#6E6E73] font-semibold">Tiêu chí</th>
-                  <th className="px-6 py-4 font-extrabold text-center"
+                  <th className="text-left px-3 md:px-6 py-4 text-[#6E6E73] font-semibold">Tiêu chí</th>
+                  <th className="px-3 md:px-6 py-4 font-extrabold text-center"
                     style={{ background: "rgba(0,102,204,0.06)", color: "#0066CC" }}>
                     ToPeak ✦
                   </th>
-                  <th className="px-6 py-4 text-[#6E6E73] font-semibold text-center">Trung tâm offline</th>
-                  <th className="px-6 py-4 text-[#6E6E73] font-semibold text-center">Easy6</th>
+                  <th className="px-3 md:px-6 py-4 text-[#6E6E73] font-semibold text-center">Trung tâm</th>
+                  <th className="hidden md:table-cell px-6 py-4 text-[#6E6E73] font-semibold text-center">Easy6</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {[
-                  ["Giá / tháng",           "từ 149.000đ",       "250.000 - 700.000đ",  "Miễn phí (giới hạn)"],
-                  ["Thời gian chờ kết quả", "5 giây",            "3 - 7 ngày",           "Tức thì"],
+                  ["Giá / tháng",           "từ 149.000đ",       "250k - 700k/tháng",   "Miễn phí (giới hạn)"],
+                  ["Chờ kết quả",           "5 giây",            "3 - 7 ngày",           "Tức thì"],
                   ["Ngôn ngữ feedback",     "Tiếng Việt 100%",   "Tiếng Việt",           "Tiếng Anh"],
-                  ["4 tiêu chí Viện Giáo dục Quốc tế Hàn Quốc (NIIED)",      "check",             "check",                "x"],
+                  ["4 tiêu chí NIIED",      "check",             "check",                "x"],
                   ["원고지 thật",            "check",             "x",                    "x"],
                   ["Lộ trình cá nhân",      "check",             "x",                    "x"],
                   ["Thi thử đầy đủ",        "check",             "check",                "x"],
                 ].map(([label, hv, offline, easy]) => (
                   <tr key={label} className="hover:bg-blue-50/30 transition-colors">
-                    <td className="px-6 py-3.5 text-[#1D1D1F] font-semibold">{label}</td>
+                    <td className="px-3 md:px-6 py-3 text-[#1D1D1F] font-semibold text-xs md:text-sm">{label}</td>
                     {[hv, offline, easy].map((val, idx) => (
-                      <td key={idx} className={`px-6 py-3.5 text-center ${idx === 0 ? "font-bold text-[#0066CC]" : "text-[#6E6E73]"}`}
+                      <td key={idx} className={`px-3 md:px-6 py-3 text-center text-xs md:text-sm ${idx === 2 ? "hidden md:table-cell" : ""} ${idx === 0 ? "font-bold text-[#0066CC]" : "text-[#6E6E73]"}`}
                         style={idx === 0 ? { background: "rgba(0,102,204,0.04)" } : {}}>
                         {val === "check" ? (
-                          <Check size={16} strokeWidth={2.5}
+                          <Check size={15} strokeWidth={2.5}
                             className={`mx-auto ${idx === 0 ? "text-[#0066CC]" : "text-[#34C759]"}`} />
                         ) : val === "x" ? (
-                          <X size={16} strokeWidth={2} className="mx-auto text-[#C7C7CC]" />
+                          <X size={15} strokeWidth={2} className="mx-auto text-[#C7C7CC]" />
                         ) : val}
                       </td>
                     ))}
