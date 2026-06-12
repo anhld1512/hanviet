@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 
-export default function UpgradeModal({ onClose }: { onClose: () => void }) {
+export default function UpgradeModal({ onClose, reason = "grading" }: { onClose: () => void; reason?: "grading" | "prompt" }) {
   const router = useRouter()
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
@@ -13,7 +13,10 @@ export default function UpgradeModal({ onClose }: { onClose: () => void }) {
           <div className="text-4xl mb-3">⚡</div>
           <h2 className="text-xl font-extrabold text-gray-900 mb-1">Hết lượt miễn phí tháng này</h2>
           <p className="text-sm text-gray-500">
-            Bạn đã dùng hết <strong>5 lượt chấm</strong> miễn phí. Nâng cấp Pro để luyện không giới hạn.
+            {reason === "prompt"
+              ? <>Bạn đã dùng hết <strong>5 lượt tạo đề AI</strong> miễn phí. Nâng cấp Pro để tạo đề không giới hạn.</>
+              : <>Bạn đã dùng hết <strong>5 lượt chấm</strong> miễn phí. Nâng cấp Pro để luyện không giới hạn.</>
+            }
           </p>
         </div>
 

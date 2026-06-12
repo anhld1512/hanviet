@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { difficultyLabel, difficultyColor } from "@/lib/practice-score"
 import type { WritingPrompt } from "@/lib/data/prompts"
 import UpgradeModal from "@/app/components/UpgradeModal"
@@ -29,12 +29,20 @@ type Props = {
 }
 
 export default function PromptGrid({ prompts, scores, onSelect, questionType, renderExtra }: Props) {
-  const [showAll, setShowAll]       = useState(false)
-  const [generating, setGenerating] = useState(false)
-  const [genError, setGenError]     = useState<string | null>(null)
+  const [showAll, setShowAll]         = useState(false)
+  const [generating, setGenerating]   = useState(false)
+  const [genError, setGenError]       = useState<string | null>(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
-  const [isHovered, setIsHovered]   = useState(false)
-  const [sweepKey, setSweepKey]     = useState(0)   // tăng mỗi lần hover để restart sweep
+  const [promptRemaining, setPromptRemaining] = useState<number | null>(null)
+  const [isHovered, setIsHovered]     = useState(false)
+  const [sweepKey, setSweepKey]       = useState(0)   // tăng mỗi lần hover để restart sweep
+
+  useEffect(() => {
+    fetch("/api/usage-status")
+      .then(r => r.json())
+      .then(d => { if (typeof d.promptRemaining === "number") setPromptRemaining(d.promptRemaining) })
+      .catch(() => {})
+  }, [])
 
   const sorted = [...prompts].sort((a, b) => getTopikNum(b.source) - getTopikNum(a.source))
   const maxTopik = getTopikNum(sorted[0]?.source ?? "")
@@ -90,7 +98,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
   return (
     <div className="space-y-3">
-      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} reason="prompt" />}
       <style>{`
         /* ── Idle breathe ── */
         @keyframes ai-breathe {
@@ -225,7 +233,14 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
 
               {/* Bottom row */}
               <div className="flex items-center justify-between mt-2.5 relative z-10">
-                <span className="text-xs text-blue-300/70">AI · Mỗi lần khác nhau</span>
+                <span className="text-xs text-blue-300/70">
+                  {promptRemaining === null
+                    ? "AI · Mỗi lần khác nhau"
+                    : promptRemaining === 0
+                    ? <span className="text-yellow-300/90 font-semibold">Hết lượt tháng này</span>
+                    : <span className="text-blue-200/80">Còn <strong className="text-white">{promptRemaining}</strong> lượt</span>
+                  }
+                </span>
                 <span
                   className="text-xs font-bold text-white transition-transform duration-150"
                   style={{ transform: isHovered ? "translateX(3px)" : "translateX(0)" }}
