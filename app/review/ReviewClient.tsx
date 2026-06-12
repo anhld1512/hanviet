@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Correction = { original: string; corrected: string; explanation: string }
@@ -223,7 +224,8 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8 flex items-center justify-center">
+      <BottomNav />
+        <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8 flex items-center justify-center">
           <div className="text-center">
             <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
                 <span className="text-2xl font-black text-gray-300">?</span>
@@ -242,7 +244,8 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

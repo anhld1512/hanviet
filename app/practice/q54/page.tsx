@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import GradingResult from "@/app/components/grading/GradingResult"
 import GradingLoader from "@/app/components/grading/GradingLoader"
@@ -89,7 +90,8 @@ export default function Q54Page() {
     return (
       <div className="flex min-h-screen bg-background">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+        <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
         <div className="w-full">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Chọn đề khác</button>
@@ -115,7 +117,8 @@ export default function Q54Page() {
       <div className="flex min-h-screen bg-background">
         {loading && <GradingLoader />}
         <Sidebar />
-        <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+        <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
         <div className="w-full">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={backToList} className="text-gray-400 hover:text-gray-600 text-sm">← Danh sách đề</button>
@@ -187,7 +190,8 @@ export default function Q54Page() {
     <div className="flex min-h-screen bg-background">
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
         <div className="w-full">
         <div className="flex items-center gap-3 mb-6">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600 text-sm">← Luyện viết</Link>

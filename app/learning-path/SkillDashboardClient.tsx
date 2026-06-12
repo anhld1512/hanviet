@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 import { Flame } from "lucide-react"
 import type { QtypeStat, ErrorStat } from "./page"
 
@@ -94,7 +95,8 @@ export default function SkillDashboardClient({
   return (
     <div className="flex min-h-screen bg-[#F5F5F7]">
       <Sidebar />
-      <main className="ml-56 flex-1 px-8 py-7">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 px-4 md:px-8 py-5 md:py-7 pb-20 md:pb-7">
         <div className="space-y-5">
 
           {/* 1. Streak hero */}

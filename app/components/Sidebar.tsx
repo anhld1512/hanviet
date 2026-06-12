@@ -83,7 +83,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-56 flex flex-col z-20"
+    <aside className="fixed top-0 left-0 h-screen w-56 hidden md:flex flex-col z-20"
       style={{ background: "var(--sidebar-bg)", borderRight: "1px solid var(--sidebar-border)" }}
     >
       {/* Logo */}

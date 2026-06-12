@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 import type { User } from "@supabase/supabase-js"
 
 type Profile = {
@@ -87,9 +88,10 @@ export default function DashboardClient({ profile, user, bestScores = {} }: { pr
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
+      <BottomNav />
 
       {/* Main content */}
-      <main className="ml-56 flex-1 min-h-screen p-8">
+      <main className="ml-0 md:ml-56 flex-1 min-h-screen p-4 md:p-8 pb-20 md:pb-8">
 
         {/* Header */}
         <div className="flex items-end justify-between mb-8">

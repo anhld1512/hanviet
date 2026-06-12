@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 import TopikCountdown from "@/app/components/writing/TopikCountdown"
 import { Mail, Scale, BarChart2, BookOpen } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
@@ -47,7 +48,8 @@ export default function PracticePage() {
   return (
     <div className="flex min-h-screen bg-[#F5F5F7]">
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
 
         {/* ── Hero Banner ── */}
         <div

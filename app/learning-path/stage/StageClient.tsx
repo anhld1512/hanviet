@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 import type { Stage, StageTask } from "@/lib/learning-path-data"
 import { calcAvgPct } from "@/lib/learning-path-data"
 import { tplCheckpointKey } from "@/app/templates/page"
@@ -108,7 +109,8 @@ export default function StageClient({
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="ml-56 flex-1 p-8 max-w-5xl">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8 max-w-5xl">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
           <Link href="/practice" className="text-gray-400 hover:text-gray-600">← Luyện viết</Link>

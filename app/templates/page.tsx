@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
+import BottomNav from "@/app/components/BottomNav"
 
 type Template = {
   id: string
@@ -362,7 +363,8 @@ function TemplatesInner() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="ml-56 flex-1 p-8">
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           {fromStage ? (
@@ -556,7 +558,8 @@ export default function TemplatesPage() {
     <Suspense fallback={
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <main className="ml-56 flex-1 p-8 flex items-center justify-center">
+      <BottomNav />
+        <main className="ml-0 md:ml-56 flex-1 p-4 md:p-8 pb-20 md:pb-8 flex items-center justify-center">
           <div className="text-gray-400 text-sm">Đang tải...</div>
         </main>
       </div>

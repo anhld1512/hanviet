@@ -4,9 +4,9 @@
     {
       "name": "hanviet",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd /Users/anhld1512/Documents/Work/hanviet && node_modules/.bin/next dev"],
-      "port": 3000,
-      "autoPort": true
+      "runtimeArgs": ["-c", "cd /Users/anhld1512/Documents/Work/hanviet && node_modules/.bin/next dev -p 3001"],
+      "port": 3001,
+      "autoPort": false
     }
   ]
 }
