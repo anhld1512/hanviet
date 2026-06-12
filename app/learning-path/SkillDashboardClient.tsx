@@ -1,10 +1,12 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Sidebar from "@/app/components/Sidebar"
 import BottomNav from "@/app/components/BottomNav"
 import { Flame } from "lucide-react"
-import type { QtypeStat, ErrorStat } from "./page"
+import type { QtypeStat } from "./page"
 
 const Q_META: Record<string, { icon: string; href: string; accent: string; bg: string; bar: string }> = {
   q51: { icon: "✉", href: "/practice/q51", accent: "text-blue-600",    bg: "bg-blue-50 border-blue-100",      bar: "bg-blue-400" },
@@ -73,24 +75,84 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="text-[10px] font-bold text-[#AEAEB2] uppercase tracking-[0.12em] mb-2 px-0.5">{children}</p>
 }
 
-export default function SkillDashboardClient({
-  profile, qtypeStats, weakest, totalSubmissions,
-}: {
-  profile: { display_name: string; study_streak: number; target_level: number; total_essays_written: number }
-  qtypeStats: QtypeStat[]
-  topErrors: ErrorStat[]
-  weakest: QtypeStat | null
-  totalSubmissions: number
-}) {
+const QTYPE_LABELS: Record<string, string> = {
+  q51: "Viết thư", q52: "Đoạn văn", q53: "Phân tích biểu đồ", q54: "Bài luận",
+}
+
+export default function SkillDashboardClient() {
+  const router = useRouter()
   const tip = getDailyTip()
   const greeting = getGreeting()
-  const motivation = getMotivation(profile.study_streak, totalSubmissions)
+
+  type Profile = { display_name: string; study_streak: number; target_level: number; total_essays_written: number }
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [qtypeStats, setQtypeStats] = useState<QtypeStat[]>([])
+  const [weakest, setWeakest] = useState<QtypeStat | null>(null)
+  const [totalSubmissions, setTotalSubmissions] = useState(0)
+
+  useEffect(() => {
+    import("@/lib/supabase-client").then(({ createClient }) => {
+      const supabase = createClient()
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) { router.push("/login"); return }
+        const uid = session.user.id
+        Promise.all([
+          supabase.from("user_profiles").select("display_name, study_streak, target_level, total_essays_written").eq("id", uid).single(),
+          supabase.from("submissions").select("question_type, total_score, max_score, errors, created_at").eq("user_id", uid).neq("question_type", "mock_exam").order("created_at", { ascending: false }),
+        ]).then(([{ data: prof }, { data: rawSubs }]) => {
+          if (!prof) { router.push("/onboarding"); return }
+          setProfile(prof)
+          const subs = rawSubs ?? []
+          setTotalSubmissions(subs.length)
+          const stats: QtypeStat[] = (["q51", "q52", "q53", "q54"] as const).map((qt) => {
+            const typeSubs = subs.filter(s => s.question_type === qt)
+            const pcts = typeSubs.map(s => s.max_score > 0 ? Math.min(100, Math.round((s.total_score / s.max_score) * 100)) : 0)
+            const count = pcts.length
+            const avgPct = count > 0 ? Math.round(pcts.reduce((a, b) => a + b, 0) / count) : 0
+            const recentPcts = pcts.slice(0, 5)
+            let trend: QtypeStat["trend"] = "new"
+            if (pcts.length >= 2) {
+              const last3 = pcts.slice(0, 3), prev3 = pcts.slice(3, 6)
+              const lastAvg = last3.reduce((a, b) => a + b, 0) / last3.length
+              if (prev3.length > 0) {
+                const prevAvg = prev3.reduce((a, b) => a + b, 0) / prev3.length
+                trend = lastAvg >= prevAvg + 4 ? "up" : lastAvg <= prevAvg - 4 ? "down" : "flat"
+              } else trend = "flat"
+            }
+            return { type: qt, label: QTYPE_LABELS[qt], count, avgPct, recentPcts, trend }
+          })
+          setQtypeStats(stats)
+          const withData = stats.filter(q => q.count >= 2)
+          setWeakest(withData.length > 0 ? withData.reduce((a, b) => a.avgPct <= b.avgPct ? a : b) : null)
+        })
+      })
+    })
+  }, [router])
+
+  const motivation = getMotivation(profile?.study_streak ?? 0, totalSubmissions)
 
   const ctaHref  = weakest ? Q_META[weakest.type].href : "/practice/q51"
   const ctaTitle = weakest ? `${weakest.type.toUpperCase()} — ${Q_LABEL[weakest.type]}` : "Q51 — Viết thư"
   const ctaSub   = weakest && weakest.count > 0
     ? `Điểm trung bình của bạn: ${weakest.avgPct}% — luyện thêm để cải thiện`
     : "Câu ngắn nhất, luyện nhanh nhất — bắt đầu từ đây"
+
+  if (!profile) return (
+    <div className="flex min-h-screen bg-[#F5F5F7]">
+      <Sidebar />
+      <BottomNav />
+      <main className="ml-0 md:ml-56 flex-1 px-4 md:px-8 py-5 md:py-7 pb-20 md:pb-7 animate-pulse">
+        <div className="space-y-5">
+          <div className="h-24 bg-white rounded-2xl border border-gray-100" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[...Array(4)].map((_, i) => <div key={i} className="h-32 bg-white rounded-2xl border border-gray-100" />)}
+          </div>
+          <div className="h-36 bg-blue-50 rounded-2xl" />
+          <div className="h-40 bg-white rounded-2xl border border-gray-100" />
+        </div>
+      </main>
+    </div>
+  )
 
   return (
     <div className="flex min-h-screen bg-[#F5F5F7]">

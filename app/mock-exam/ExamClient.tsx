@@ -7,6 +7,7 @@ import type { GradeResult } from "@/lib/grading-prompts"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import UpgradeModal from "@/app/components/UpgradeModal"
 import { saveSubmission } from "@/lib/save-submission"
+import { getRandomPrompt } from "@/lib/data/prompts"
 import { Timer, Zap, Eye, EyeOff, AlertTriangle } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -79,21 +80,47 @@ function ExitWarningModal({ onStay, onExit }: { onStay: () => void; onExit: () =
   )
 }
 
+const DEFAULT_PROMPTS: Prompts = {
+  q51: getRandomPrompt("q51"),
+  q52: getRandomPrompt("q52"),
+  q53: getRandomPrompt("q53"),
+  q54: getRandomPrompt("q54"),
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
-export default function ExamClient({
-  prompts, isPro, usedThisMonth, displayName,
-}: {
-  prompts: Prompts
-  isPro: boolean
-  usedThisMonth: number
-  displayName: string
-}) {
+export default function ExamClient() {
   const router = useRouter()
+
+  // Profile loaded client-side — no server blocking
+  const [isPro, setIsPro] = useState(false)
+  const [usedThisMonth, setUsedThisMonth] = useState(0)
+  const [displayName, setDisplayName] = useState("bạn")
+
+  useEffect(() => {
+    import("@/lib/supabase-client").then(({ createClient }) => {
+      const supabase = createClient()
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) { router.push("/login"); return }
+        supabase
+          .from("user_profiles")
+          .select("subscription_tier, is_pro, display_name, monthly_gradings, grading_month")
+          .eq("id", session.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (!profile) return
+            setIsPro(profile.subscription_tier === "pro" || profile.is_pro === true)
+            setDisplayName(profile.display_name ?? "bạn")
+            const currentMonth = new Date().toISOString().slice(0, 7)
+            setUsedThisMonth(profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0)
+          })
+      })
+    })
+  }, [router])
 
   const [phase, setPhase] = useState<Phase>("setup")
   const [activeQ, setActiveQ] = useState<QKey>("q51")
 
-  const [activePrompts, setActivePrompts] = useState<Prompts>(prompts)
+  const [activePrompts, setActivePrompts] = useState<Prompts>(DEFAULT_PROMPTS)
   const [promptMode, setPromptMode] = useState<"bank" | "ai">("bank")
   const [generatingAI, setGeneratingAI] = useState(false)
   const [aiError, setAiError] = useState<string | null>(null)
@@ -280,7 +307,7 @@ export default function ExamClient({
       setPhase("exam")
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ans51A, ans51B, ans52A, ans52B, ans53, ans54, prompts])
+  }, [ans51A, ans51B, ans52A, ans52B, ans53, ans54, activePrompts])
 
   function handleAutoSubmit() { handleSubmit() }
 
@@ -363,7 +390,7 @@ export default function ExamClient({
 
           <div className="grid grid-cols-2 gap-2 mb-4">
             <button
-              onClick={() => { setActivePrompts(prompts); setPromptMode("bank") }}
+              onClick={() => { setActivePrompts(DEFAULT_PROMPTS); setPromptMode("bank") }}
               className={`rounded-xl border-2 p-3 text-left transition-all ${promptMode === "bank" ? "border-gray-900 bg-gray-50" : "border-gray-200 hover:border-gray-300"}`}
             >
               <div className="text-sm font-bold text-gray-900 mb-0.5">Đề ngẫu nhiên</div>
@@ -505,7 +532,7 @@ export default function ExamClient({
                     className="w-full flex items-center gap-4 p-5 hover:bg-gray-50 transition-colors"
                   >
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${qt.accent}`}>{qt.label}</span>
-                    <span className="text-sm text-gray-600 flex-1 text-left">{prompts[qt.key as QKey].context}</span>
+                    <span className="text-sm text-gray-600 flex-1 text-left">{activePrompts[qt.key as QKey].context}</span>
                     <span className={`text-base font-extrabold ${pct >= 80 ? "text-blue-600" : pct >= 60 ? "text-gray-600" : "text-blue-500"}`}>
                       {earned}/{qt.points}
                     </span>

@@ -124,28 +124,45 @@ function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function ReviewClient({ submissions }: { submissions: Submission[] }) {
+export default function ReviewClient() {
   const [tab, setTab] = useState<"all" | "q51" | "q52" | "q53" | "q54">("all")
   const [isFlipped, setIsFlipped] = useState(false)
   const [idx, setIdx] = useState(0)
   const [known, setKnown] = useState<Set<string>>(new Set())
   const [isShuffled, setIsShuffled] = useState(false)
   const [baseCards, setBaseCards] = useState<Card[]>([])
+  const [submissions, setSubmissions] = useState<Submission[]>([])
 
-  // Build base cards from all submissions
+  // Fetch submissions client-side — no server blocking
   useEffect(() => {
-    const cards: Card[] = submissions.flatMap((s, si) =>
-      (s.errors ?? []).map((e, ei) => ({
-        ...e,
-        qType: s.question_type,
-        date: s.created_at,
-        id: `${si}-${ei}`,
-      }))
-    )
-    setBaseCards(cards)
-    setIdx(0)
-    setIsFlipped(false)
-  }, [submissions])
+    import("@/lib/supabase-client").then(({ createClient }) => {
+      const supabase = createClient()
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) { window.location.href = "/login"; return }
+        supabase
+          .from("submissions")
+          .select("id, question_type, total_score, max_score, criteria_scores, errors, overall_feedback_vi, created_at")
+          .eq("user_id", session.user.id)
+          .order("created_at", { ascending: false })
+          .limit(30)
+          .then(({ data }) => {
+            const subs = (data ?? []) as Submission[]
+            setSubmissions(subs)
+            const cards: Card[] = subs.flatMap((s, si) =>
+              (s.errors ?? []).map((e, ei) => ({
+                ...e,
+                qType: s.question_type,
+                date: s.created_at,
+                id: `${si}-${ei}`,
+              }))
+            )
+            setBaseCards(cards)
+            setIdx(0)
+            setIsFlipped(false)
+          })
+      })
+    })
+  }, [])
 
   // Restore known from localStorage
   useEffect(() => {
