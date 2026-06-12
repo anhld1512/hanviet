@@ -916,16 +916,24 @@ export default function LandingPage() {
           href={FB_PAGE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="sticky-bubble fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 text-sm font-extrabold text-white pl-4 pr-5 py-3.5 rounded-full"
+          className="sticky-bubble fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 text-sm font-extrabold text-white rounded-full"
           style={{
             background: "linear-gradient(135deg, #1877F2 0%, #0C63D4 100%)",
             boxShadow: "0 8px 32px rgba(24,119,242,0.45)",
+            padding: undefined,
           }}
         >
-          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
-            <FbIcon size={14} />
+          {/* Mobile: icon only */}
+          <span className="flex md:hidden items-center justify-center w-14 h-14 rounded-full">
+            <FbIcon size={22} />
           </span>
-          Liên hệ Fanpage
+          {/* Desktop: icon + text */}
+          <span className="hidden md:flex items-center gap-2 pl-4 pr-5 py-3.5">
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
+              <FbIcon size={14} />
+            </span>
+            Liên hệ Fanpage
+          </span>
         </a>
 
       </div>
