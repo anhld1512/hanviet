@@ -253,14 +253,14 @@ export default function ReviewClient({ submissions }: { submissions: Submission[
           <div className="w-px h-4 bg-gray-200" />
           <span className="font-bold text-gray-900">Ôn lỗi</span>
           <span className="text-sm text-gray-400">— Flashcard từ các bài AI đã chấm</span>
-          <div className="ml-auto flex items-center gap-2 text-xs text-gray-400">
+          <div className="ml-auto hidden md:flex items-center gap-2 text-xs text-gray-400">
             <span>← → Space để điều hướng</span>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto">
           {/* Stats row */}
-          <div className="grid grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
               <div className="text-2xl font-extrabold text-blue-500">{practiceOnly.length}</div>
               <div className="text-xs text-gray-500 mt-1">Bài đã luyện</div>

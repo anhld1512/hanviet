@@ -126,10 +126,10 @@ export default function SkillDashboardClient({
           </div>
 
           {/* 2. Progress + CTA */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2">
               <SectionLabel>Tiến trình của bạn</SectionLabel>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {qtypeStats.map(stat => {
                   const m = getMastery(stat.avgPct, stat.count)
                   const meta = Q_META[stat.type]
@@ -168,7 +168,7 @@ export default function SkillDashboardClient({
               </div>
             </div>
 
-            <div className="col-span-1 flex flex-col">
+            <div className="md:col-span-1 flex flex-col">
               <SectionLabel>Luyện hôm nay</SectionLabel>
               <Link href={ctaHref}
                 className="flex-1 flex flex-col justify-between bg-[#0066CC] hover:bg-[#004F99] rounded-2xl px-5 py-5 transition-colors group">
@@ -188,7 +188,7 @@ export default function SkillDashboardClient({
           <div>
             <SectionLabel>Mẫu câu hôm nay</SectionLabel>
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-              <div className="grid grid-cols-2 divide-x divide-gray-100">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:divide-x divide-gray-100">
                 <div className="px-6 py-5">
                   <span className="text-xs font-bold text-[#0066CC] bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full">
                     {tip.tag}

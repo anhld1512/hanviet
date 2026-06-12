@@ -658,7 +658,7 @@ export default function ExamClient({
 
         {/* Q51 */}
         {activeQ === "q51" && (
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q51</span>
@@ -700,7 +700,7 @@ export default function ExamClient({
 
         {/* Q52 */}
         {activeQ === "q52" && (
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q52</span>
@@ -742,7 +742,7 @@ export default function ExamClient({
 
         {/* Q53 */}
         {activeQ === "q53" && (
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Q53</span>
@@ -783,7 +783,7 @@ export default function ExamClient({
 
         {/* Q54 */}
         {activeQ === "q54" && (
-          <div className="grid grid-cols-[1fr_2fr] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-6">
             <div className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center gap-2 mb-4">
