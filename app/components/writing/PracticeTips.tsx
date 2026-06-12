@@ -203,9 +203,28 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
       {open && (
         <>
           {/* Steps */}
-          <div className="border-t border-slate-100 bg-white px-5 py-5">
-            <div className="overflow-x-auto -mx-1 px-1">
-            <div className="grid grid-cols-5 gap-3 min-w-[540px]">
+          <div className="border-t border-slate-100 bg-white px-4 md:px-5 py-4 md:py-5">
+            {/* Mobile: vertical list */}
+            <div className="flex flex-col gap-2 md:hidden">
+              {data.steps.map((step, i) => (
+                <div key={i} className="flex items-start gap-3 rounded-xl border border-slate-100 p-3" style={{ background: "#FAFAFA" }}>
+                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-0.5">
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="text-xs font-bold text-slate-900 leading-snug">{step.label}</p>
+                      {step.time && (
+                        <span className="text-[9px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full shrink-0">{step.time}</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 leading-relaxed">{step.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Desktop: horizontal grid */}
+            <div className="hidden md:grid grid-cols-5 gap-3">
               {data.steps.map((step, i) => (
                 <div key={i} className="relative flex gap-3">
                   {i < data.steps.length - 1 && (
@@ -225,7 +244,6 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
                   </div>
                 </div>
               ))}
-            </div>
             </div>
           </div>
 
