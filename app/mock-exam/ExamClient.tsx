@@ -600,24 +600,42 @@ export default function ExamClient({
       )}
 
       {/* Top bar */}
-      <div className="bg-white border-b border-gray-100 px-6 py-3 flex items-center gap-4 sticky top-0 z-10">
-        {/* Exit button */}
-        <button
-          onClick={() => setShowExitWarning(true)}
-          className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors shrink-0"
-        >
-          ✕ Thoát
-        </button>
-        <div className="w-px h-4 bg-gray-200" />
-        <span className="text-sm font-bold text-gray-700 shrink-0">Thi thử TOPIK II</span>
+      <div className="bg-white border-b border-gray-100 px-3 md:px-6 py-3 flex flex-col md:flex-row md:items-center gap-2 md:gap-4 sticky top-0 z-10">
+        {/* Row 1: Thoát + title + timer + submit */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowExitWarning(true)}
+            className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+          >
+            ✕ Thoát
+          </button>
+          <div className="w-px h-4 bg-gray-200" />
+          <span className="text-sm font-bold text-gray-700 shrink-0">Thi thử TOPIK II</span>
+          {/* Timer + submit — luôn ở row 1 */}
+          <div className="ml-auto flex items-center gap-2">
+            {submitError && (
+              <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded-lg hidden md:inline">{submitError}</span>
+            )}
+            <div className={`font-mono text-base font-extrabold px-3 py-1 rounded-xl ${isLowTime ? "bg-red-100 text-red-600 animate-pulse" : "bg-gray-100 text-gray-700"}`}>
+              {fmtTime(timeLeft)}
+            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={!allDone}
+              className="bg-gray-900 hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-bold px-3 py-2 rounded-xl transition-colors"
+            >
+              Nộp bài
+            </button>
+          </div>
+        </div>
 
-        {/* Tab nav */}
-        <div className="flex gap-1 ml-4">
+        {/* Row 2 (mobile) / Row 1 continue (desktop): Tab nav */}
+        <div className="flex gap-1 overflow-x-auto md:ml-4 scrollbar-none">
           {Q_TABS.map((q) => (
             <button
               key={q.key}
               onClick={() => setActiveQ(q.key)}
-              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg transition-all shrink-0 ${
                 activeQ === q.key ? q.accent : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
               }`}
             >
@@ -626,35 +644,17 @@ export default function ExamClient({
               <span className="opacity-60">{q.points}đ</span>
             </button>
           ))}
-        </div>
-
-        {/* Progress pips */}
-        <div className="flex gap-1 ml-2">
-          {Q_TABS.map((q) => (
-            <div key={q.key} className={`w-2 h-2 rounded-full transition-colors ${doneMap[q.key] ? "bg-blue-400" : "bg-gray-200"}`} />
-          ))}
-        </div>
-
-        {/* Timer + submit */}
-        <div className="ml-auto flex items-center gap-2">
-          {submitError && (
-            <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded-lg">{submitError}</span>
-          )}
-          <div className={`font-mono text-lg font-extrabold px-4 py-1.5 rounded-xl ${isLowTime ? "bg-red-100 text-red-600 animate-pulse" : "bg-gray-100 text-gray-700"}`}>
-            {fmtTime(timeLeft)}
+          {/* Progress pips */}
+          <div className="flex gap-1 items-center ml-2 shrink-0">
+            {Q_TABS.map((q) => (
+              <div key={q.key} className={`w-2 h-2 rounded-full transition-colors ${doneMap[q.key] ? "bg-blue-400" : "bg-gray-200"}`} />
+            ))}
           </div>
-          <button
-            onClick={handleSubmit}
-            disabled={!allDone}
-            className="bg-gray-900 hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
-          >
-            Nộp bài
-          </button>
         </div>
       </div>
 
-      {/* Content — full width với padding hợp lý */}
-      <div className="flex-1 px-8 py-6 w-full max-w-[1440px] mx-auto">
+      {/* Content */}
+      <div className="flex-1 px-4 md:px-8 py-4 md:py-6 w-full max-w-[1440px] mx-auto">
 
         {/* Q51 */}
         {activeQ === "q51" && (

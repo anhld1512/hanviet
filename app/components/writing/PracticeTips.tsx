@@ -204,7 +204,8 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
         <>
           {/* Steps */}
           <div className="border-t border-slate-100 bg-white px-5 py-5">
-            <div className="grid grid-cols-5 gap-3">
+            <div className="overflow-x-auto -mx-1 px-1">
+            <div className="grid grid-cols-5 gap-3 min-w-[540px]">
               {data.steps.map((step, i) => (
                 <div key={i} className="relative flex gap-3">
                   {i < data.steps.length - 1 && (
@@ -225,10 +226,11 @@ export default function PracticeTips({ data }: { data: PracticeTipsData }) {
                 </div>
               ))}
             </div>
+            </div>
           </div>
 
           {/* Patterns + Avoid */}
-          <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-2 gap-4 bg-white">
+          <div className="border-t border-slate-100 px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-white">
             <div>
               <p className="text-xs font-bold text-slate-600 mb-2.5 uppercase tracking-wide">Câu mẫu hay dùng</p>
               <div className="flex flex-wrap gap-1.5">

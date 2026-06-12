@@ -53,32 +53,38 @@ function shuffle<T>(arr: T[]): T[] {
 // ─── Flashcard component ──────────────────────────────────────────────────────
 function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean; onFlip: () => void }) {
   return (
-    <div
-      className="relative w-full cursor-pointer select-none"
-      style={{ perspective: "1200px", minHeight: "260px" }}
-      onClick={onFlip}
-    >
+    <div className="relative w-full cursor-pointer select-none" onClick={onFlip}
+      style={{ perspective: "1200px" }}>
+      {/* Invisible sizer — front face content drives height */}
+      <div className="invisible pointer-events-none bg-white rounded-2xl p-5 flex flex-col" aria-hidden>
+        <span className="text-xs font-bold px-2.5 py-1 rounded-full mb-4 self-start">{Q_FULL[card.qType]}</span>
+        <p className="text-base font-semibold leading-relaxed mb-2 break-words">{card.original}</p>
+        <p className="text-xs mt-1">Câu này sai ở đâu?</p>
+        <div className="mt-5 flex items-center gap-2 text-xs"><span className="w-5 h-5 rounded-full border-2 flex items-center justify-center">↻</span>Nhấn để lật xem đáp án</div>
+        {/* Also size for back content */}
+        <div className="flex items-start gap-3 mt-4 p-3 rounded-xl"><span className="text-xs font-bold mt-0.5 shrink-0">SAI</span><span className="text-sm font-mono leading-relaxed break-words">{card.original}</span></div>
+        <div className="flex items-start gap-3 mt-2 p-3 rounded-xl"><span className="text-xs font-bold mt-0.5 shrink-0">ĐÚNG</span><span className="text-sm font-mono font-semibold leading-relaxed break-words">{card.corrected}</span></div>
+        <div className="p-3 rounded-xl mt-2"><p className="text-xs font-semibold mb-1">Giải thích</p><p className="text-sm leading-relaxed">{card.explanation}</p></div>
+      </div>
+
+      {/* Flip container — absolute over the sizer */}
       <div
-        className="relative w-full transition-transform duration-500"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          minHeight: "260px",
-        }}
+        className="absolute inset-0 transition-transform duration-500"
+        style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
       >
         {/* Front */}
         <div
-          className="absolute inset-0 bg-white rounded-2xl border-2 border-gray-100 p-7 flex flex-col items-center justify-center"
+          className="absolute inset-0 bg-white rounded-2xl border-2 border-gray-100 p-5 flex flex-col items-center justify-center overflow-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-full mb-5 ${Q_BADGE[card.qType] ?? "bg-gray-100 text-gray-600"}`}>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full mb-4 ${Q_BADGE[card.qType] ?? "bg-gray-100 text-gray-600"}`}>
             {Q_FULL[card.qType] ?? card.qType.toUpperCase()}
           </span>
-          <p className="text-lg font-semibold text-red-600 text-center leading-relaxed mb-2 font-mono">
+          <p className="text-base font-semibold text-red-600 text-center leading-relaxed mb-2 font-mono break-words w-full text-wrap">
             {card.original}
           </p>
           <p className="text-xs text-gray-400 italic mt-1">Câu này sai ở đâu?</p>
-          <div className="mt-6 flex items-center gap-2 text-xs text-gray-300">
+          <div className="mt-5 flex items-center gap-2 text-xs text-gray-300">
             <span className="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center">↻</span>
             Nhấn để lật xem đáp án
           </div>
@@ -86,10 +92,10 @@ function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean
 
         {/* Back */}
         <div
-          className="absolute inset-0 bg-white rounded-2xl border-2 border-blue-100 p-7 flex flex-col justify-center"
+          className="absolute inset-0 bg-white rounded-2xl border-2 border-blue-100 p-5 flex flex-col justify-center overflow-auto"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-3">
             <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${Q_BADGE[card.qType] ?? "bg-gray-100 text-gray-600"}`}>
               {Q_LABEL[card.qType] ?? card.qType.toUpperCase()}
             </span>
@@ -97,13 +103,13 @@ function Flashcard({ card, isFlipped, onFlip }: { card: Card; isFlipped: boolean
           </div>
 
           {/* Sai → Đúng */}
-          <div className="flex items-start gap-3 mb-4 p-3 bg-red-50 rounded-xl">
+          <div className="flex items-start gap-2 mb-3 p-3 bg-red-50 rounded-xl">
             <span className="text-xs font-bold text-red-400 mt-0.5 shrink-0">SAI</span>
-            <span className="text-sm text-red-600 font-mono line-through leading-relaxed">{card.original}</span>
+            <span className="text-sm text-red-600 font-mono line-through leading-relaxed break-words min-w-0">{card.original}</span>
           </div>
-          <div className="flex items-start gap-3 mb-4 p-3 bg-blue-50 rounded-xl">
+          <div className="flex items-start gap-2 mb-3 p-3 bg-blue-50 rounded-xl">
             <span className="text-xs font-bold text-blue-500 mt-0.5 shrink-0">ĐÚNG</span>
-            <span className="text-sm text-blue-700 font-mono font-semibold leading-relaxed">{card.corrected}</span>
+            <span className="text-sm text-blue-700 font-mono font-semibold leading-relaxed break-words min-w-0">{card.corrected}</span>
           </div>
 
           {/* Giải thích */}
