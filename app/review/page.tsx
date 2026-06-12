@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase-server"
+import { getUser } from "@/lib/auth-cache"
 import ReviewClient from "./ReviewClient"
 
 export default async function ReviewPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const user = await getUser()
   if (!user) redirect("/login")
+  const supabase = await createClient()
 
   // Lay 30 bai nop gan nhat
   const { data: submissions } = await supabase

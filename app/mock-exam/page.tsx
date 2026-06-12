@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase-server"
+import { getUser } from "@/lib/auth-cache"
 import { getRandomPrompt } from "@/lib/data/prompts"
 import ExamClient from "./ExamClient"
 
 export default async function MockExamPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) redirect("/login")
+  const supabase = await createClient()
 
   const { data: profile } = await supabase
     .from("user_profiles")

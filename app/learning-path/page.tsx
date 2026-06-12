@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase-server"
+import { getUser } from "@/lib/auth-cache"
 import SkillDashboardClient from "./SkillDashboardClient"
 
 export type QtypeStat = {
@@ -34,9 +35,9 @@ const ERROR_LABELS: Record<string, string> = {
 }
 
 export default async function LearningPathPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) redirect("/login")
+  const supabase = await createClient()
 
   const { data: profile } = await supabase
     .from("user_profiles")
