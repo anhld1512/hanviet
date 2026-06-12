@@ -53,7 +53,7 @@ export default function PracticePage() {
 
         {/* ── Hero Banner ── */}
         <div
-          className="rounded-2xl px-8 py-7 mb-8 relative overflow-hidden flex items-center gap-12"
+          className="rounded-2xl px-4 py-5 md:px-8 md:py-7 mb-6 md:mb-8 relative overflow-hidden flex flex-col md:flex-row md:items-center md:gap-12"
           style={{
             background: "linear-gradient(135deg, #F5F9FF 0%, #EBF3FF 60%, #DDEEFF 100%)",
             border: "1px solid #C5DCEF",
@@ -104,11 +104,11 @@ export default function PracticePage() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="self-stretch w-px bg-blue-200/60 relative z-10 shrink-0 mx-2" />
+          {/* Divider — ẩn trên mobile */}
+          <div className="hidden md:block self-stretch w-px bg-blue-200/60 relative z-10 shrink-0 mx-2" />
 
           {/* Right: TOPIK countdown */}
-          <div className="shrink-0 relative z-10 pl-2">
+          <div className="shrink-0 relative z-10 md:pl-2 mt-4 md:mt-0">
             <TopikCountdown />
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function PracticePage() {
         </div>
 
         {/* ── 4 Question Cards ── */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {QUESTION_TYPES.map((q) => (
             <Link
               key={q.key}
@@ -148,7 +148,7 @@ export default function PracticePage() {
                 {q.num}
               </div>
 
-              <div className="p-5 flex flex-col flex-1 relative z-10">
+              <div className="p-3 md:p-5 flex flex-col flex-1 relative z-10">
                 {/* Icon + time row */}
                 <div className="flex items-center justify-between mb-4">
                   <div
