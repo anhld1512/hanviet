@@ -100,27 +100,27 @@ export default function SkillDashboardClient({
         <div className="space-y-5">
 
           {/* 1. Streak hero */}
-          <div className="bg-white rounded-2xl border border-gray-100 px-6 py-5 flex items-center gap-5">
-            <div className="shrink-0 flex flex-col items-center bg-orange-50 border border-orange-100 rounded-2xl w-24 py-3">
-              <Flame size={22} className="text-orange-400 mb-1" />
-              <span className="text-4xl font-black text-orange-500 leading-tight" style={{ letterSpacing: "-0.03em" }}>
+          <div className="bg-white rounded-2xl border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-5">
+            <div className="shrink-0 flex flex-col items-center bg-orange-50 border border-orange-100 rounded-2xl w-16 md:w-24 py-2 md:py-3">
+              <Flame size={18} className="text-orange-400 mb-1" />
+              <span className="text-2xl md:text-4xl font-black text-orange-500 leading-tight" style={{ letterSpacing: "-0.03em" }}>
                 {profile.study_streak}
               </span>
-              <span className="text-[9px] font-bold text-orange-400 uppercase tracking-widest mt-0.5">ngày streak</span>
+              <span className="text-[8px] md:text-[9px] font-bold text-orange-400 uppercase tracking-widest mt-0.5">streak</span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-[#AEAEB2] mb-1">{greeting}, {profile.display_name}!</p>
-              <p className="text-xl font-bold text-[#1D1D1F] leading-snug" style={{ letterSpacing: "-0.02em" }}>
+              <p className="text-base md:text-xl font-bold text-[#1D1D1F] leading-snug" style={{ letterSpacing: "-0.02em" }}>
                 {motivation}
               </p>
             </div>
-            <div className="shrink-0 flex flex-col items-end gap-2">
+            <div className="shrink-0 flex flex-col items-end gap-1.5 md:gap-2">
               <div className="text-right">
-                <p className="text-2xl font-black text-[#1D1D1F]" style={{ letterSpacing: "-0.03em" }}>{totalSubmissions}</p>
-                <p className="text-xs text-[#AEAEB2]">bài đã nộp</p>
+                <p className="text-xl md:text-2xl font-black text-[#1D1D1F]" style={{ letterSpacing: "-0.03em" }}>{totalSubmissions}</p>
+                <p className="text-[10px] text-[#AEAEB2]">bài đã nộp</p>
               </div>
-              <span className="text-xs font-semibold text-[#0066CC] bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
-                Mục tiêu Level {profile.target_level}
+              <span className="text-[10px] md:text-xs font-semibold text-[#0066CC] bg-blue-50 border border-blue-100 px-2 md:px-3 py-1 rounded-full whitespace-nowrap">
+                Level {profile.target_level}
               </span>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function SkillDashboardClient({
           </div>
 
           {/* 4. Quick links */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-2">
             {[
               { href: "/mock-exam",    label: "Thi thử" },
               { href: "/review",       label: "Ôn lỗi" },

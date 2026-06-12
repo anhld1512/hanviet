@@ -136,7 +136,7 @@ export default function PromptGrid({ prompts, scores, onSelect, questionType, re
       `}</style>
 
       {/* ── Grid: AI card đầu tiên + prompt cards ── */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
 
         {/* ── AI generate card ── */}
         <button
