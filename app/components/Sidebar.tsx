@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase-client"
-import { PenLine, Timer, BarChart2, RotateCcw, Zap, LogOut, Gift } from "lucide-react"
+import { PenLine, Timer, BarChart2, RotateCcw, Zap, LogOut, Gift, MessageCircle } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 const NAV_ITEMS: { href: string; Icon: LucideIcon; label: string; badge?: string }[] = [
@@ -171,6 +171,16 @@ export default function Sidebar() {
             <span>Nâng cấp Pro</span>
           </Link>
         )}
+        <a
+          href="https://www.facebook.com/profile.php?id=61590641043505"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-semibold transition-colors hover:bg-blue-50"
+          style={{ color: "#1877F2" }}
+        >
+          <MessageCircle size={14} />
+          <span>Hỗ trợ qua Fanpage</span>
+        </a>
         <button
           onClick={handleLogout}
           className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium transition-colors hover:bg-[#F5F5F7]"

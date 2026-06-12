@@ -111,6 +111,16 @@ function GradingMockup() {
   )
 }
 
+const FB_PAGE_URL = "https://www.facebook.com/profile.php?id=61590641043505"
+
+function FbIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+    </svg>
+  )
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
@@ -232,6 +242,11 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <a href={FB_PAGE_URL} target="_blank" rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-[#1877F2] hover:bg-blue-50 transition-colors px-3 py-1.5 rounded-lg">
+                <FbIcon size={16} />
+                Fanpage
+              </a>
               <Link href="/login"
                 className="hidden sm:block text-sm text-[#6E6E73] hover:text-[#1D1D1F] font-semibold transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50">
                 Đăng nhập
@@ -869,6 +884,11 @@ export default function LandingPage() {
               <Link href="/pricing"  className="hover:text-[#6E6E73] transition-colors">Bảng giá</Link>
               <Link href="/activate" className="hover:text-[#6E6E73] transition-colors">Nhập voucher</Link>
               <Link href="/login"    className="hover:text-[#6E6E73] transition-colors">Đăng nhập</Link>
+              <a href={FB_PAGE_URL} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[#1877F2] hover:text-[#1060d0] transition-colors">
+                <FbIcon size={14} />
+                Fanpage
+              </a>
             </div>
             <p className="text-xs text-[#AEAEB2]">
               TOPIK to Peak — Lên đỉnh TOPIK
@@ -890,6 +910,23 @@ export default function LandingPage() {
             <ArrowRight size={14} strokeWidth={2.5} />
           </span>
         </Link>
+
+        {/* ── Sticky Facebook Bubble ───────────────────────────────────────── */}
+        <a
+          href={FB_PAGE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sticky-bubble fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 text-sm font-extrabold text-white pl-4 pr-5 py-3.5 rounded-full"
+          style={{
+            background: "linear-gradient(135deg, #1877F2 0%, #0C63D4 100%)",
+            boxShadow: "0 8px 32px rgba(24,119,242,0.45)",
+          }}
+        >
+          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
+            <FbIcon size={14} />
+          </span>
+          Liên hệ Fanpage
+        </a>
 
       </div>
     </>
