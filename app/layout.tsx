@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import FeedbackButton from "./components/FeedbackButton"
 
 export const metadata: Metadata = {
   title: "ToPeak — TOPIK to Peak. Lên đỉnh TOPIK",
@@ -32,6 +33,7 @@ export default function RootLayout({
         style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}
       >
         {children}
+        <FeedbackButton />
       </body>
     </html>
   )
