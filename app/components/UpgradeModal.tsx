@@ -52,7 +52,7 @@ export default function UpgradeModal({ onClose, reason = "grading" }: { onClose:
 
         {/* Fanpage contact */}
         <a
-          href="https://www.facebook.com/topeak.app"
+          href="https://www.facebook.com/profile.php?id=61590641043505"
           target="_blank"
           rel="noopener noreferrer"
           className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-2.5 rounded-xl transition-colors text-sm"

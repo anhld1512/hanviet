@@ -300,7 +300,7 @@ export default async function PricingPage() {
             Admin kích hoạt Pro trong <strong className="text-white">2–4 giờ</strong> (giờ hành chính).
           </p>
           <a
-            href="https://www.facebook.com/topeak.app"
+            href="https://www.facebook.com/profile.php?id=61590641043505"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white text-[#0066CC] font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors text-sm"
@@ -311,7 +311,7 @@ export default async function PricingPage() {
             Nhắn tin qua Fanpage →
           </a>
           <p className="text-blue-200 text-xs mt-4">
-            Hoặc inbox trực tiếp: <strong className="text-white">facebook.com/topeak.app</strong>
+            Hoặc inbox trực tiếp: <strong className="text-white">facebook.com/ToPeak</strong>
           </p>
         </div>
 
