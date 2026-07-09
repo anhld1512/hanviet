@@ -103,12 +103,16 @@ export default function ExamClient() {
         if (!session) { router.push("/login"); return }
         supabase
           .from("user_profiles")
-          .select("subscription_tier, is_pro, display_name, monthly_gradings, grading_month")
+          .select("subscription_tier, is_pro, pro_expires_at, display_name, monthly_gradings, grading_month")
           .eq("id", session.user.id)
           .single()
           .then(({ data: profile }) => {
             if (!profile) return
-            setIsPro(profile.subscription_tier === "pro" || profile.is_pro === true)
+            setIsPro(
+              profile.subscription_tier === "pro" ||
+              profile.is_pro === true ||
+              (profile.pro_expires_at && new Date(profile.pro_expires_at) > new Date())
+            )
             setDisplayName(profile.display_name ?? "bạn")
             const currentMonth = new Date().toISOString().slice(0, 7)
             setUsedThisMonth(profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0)
