@@ -60,7 +60,8 @@ export async function checkUsage(): Promise<UsageStatus> {
 
     return { allowed: remaining > 0, isPro: false, used, remaining, bonus: 0 }
   } catch {
-    return { allowed: true, isPro: false, used: 0, remaining: FREE_LIMIT, bonus: 0 }
+    // Fail-closed: DB lỗi (vd. Supabase paused) thì chặn — tránh chấm AI không giới hạn khi không verify được quota
+    return { allowed: false, isPro: false, used: 0, remaining: 0, bonus: 0 }
   }
 }
 
@@ -144,7 +145,8 @@ export async function checkPromptUsage(): Promise<PromptUsageStatus> {
 
     return { allowed: remaining > 0, isPro: false, used, remaining }
   } catch {
-    return { allowed: true, isPro: false, used: 0, remaining: FREE_PROMPT_LIMIT }
+    // Fail-closed: không verify được quota thì không cho gọi AI
+    return { allowed: false, isPro: false, used: 0, remaining: 0 }
   }
 }
 

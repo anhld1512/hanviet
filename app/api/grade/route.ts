@@ -4,6 +4,12 @@ import { checkUsage, incrementUsage } from "@/lib/usage"
 
 export const maxDuration = 60
 
+// Q54 chuẩn chỉ 700자 — cap 2000 để chặn abuse token cost
+const MAX_ANSWER_LEN = 2000
+const MAX_PROMPT_LEN = 3000
+const tooLong = (...fields: (string | undefined)[]) =>
+  fields.some((f) => (f?.length ?? 0) > MAX_ANSWER_LEN)
+
 export async function POST(req: NextRequest) {
   try {
     // ── Usage gate ──────────────────────────────────────────
@@ -26,6 +32,15 @@ export async function POST(req: NextRequest) {
 
     if (!question_type) {
       return NextResponse.json({ error: "Thieu question_type" }, { status: 400 })
+    }
+
+    if (
+      tooLong(body.student_answer, body.student_essay) ||
+      (body.prompt_text?.length ?? 0) > MAX_PROMPT_LEN ||
+      (body.chart_description?.length ?? 0) > MAX_PROMPT_LEN ||
+      (body.topic?.length ?? 0) > MAX_PROMPT_LEN
+    ) {
+      return NextResponse.json({ error: "Bài viết vượt quá độ dài cho phép" }, { status: 400 })
     }
 
     if (!process.env.DEEPSEEK_API_KEY) {

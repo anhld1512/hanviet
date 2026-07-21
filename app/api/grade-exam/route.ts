@@ -46,6 +46,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Thiếu dữ liệu Q54" }, { status: 400 })
     }
 
+    // Cap độ dài để chặn abuse token cost (Q54 chuẩn chỉ 700자)
+    const MAX_LEN = 3000
+    const allTexts = [
+      q51.prompt_text, q51.answer_a, q51.answer_b,
+      q52.prompt_text, q52.answer_a, q52.answer_b,
+      q53.chart_description, q53.essay,
+      q54.topic, q54.essay,
+    ]
+    if (allTexts.some((t: unknown) => typeof t === "string" && t.length > MAX_LEN)) {
+      return NextResponse.json({ error: "Nội dung vượt quá độ dài cho phép" }, { status: 400 })
+    }
+
     // ── Grade all 6 in parallel ───────────────────────────────
     const [r51A, r51B, r52A, r52B, r53, r54] = await Promise.all([
       gradeQ51Q52({
