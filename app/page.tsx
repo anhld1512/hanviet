@@ -22,10 +22,9 @@ export const metadata: Metadata = {
 // ── Mini grading result card ───────────────────────────────────────────────
 function GradingMockup() {
   const criteria = [
-    { label: "Nội dung",       score: 16, max: 20, pct: 80,  color: "#0066CC" },
-    { label: "Tổ chức văn bản", score: 14, max: 20, pct: 70, color: "#0066CC" },
-    { label: "Ngữ pháp",       score: 5,  max: 5,  pct: 100, color: "#34C759" },
-    { label: "Phong cách",     score: 3,  max: 5,  pct: 60,  color: "#FF9500" },
+    { label: "Nội dung & yêu cầu đề", score: 10, max: 12, pct: 83, color: "#0066CC" },
+    { label: "Bố cục & triển khai",   score: 10, max: 12, pct: 83, color: "#34C759" },
+    { label: "Sử dụng ngôn ngữ",      score: 18, max: 26, pct: 69, color: "#FF9500" },
   ]
   return (
     <div className="relative w-full max-w-[360px] ml-auto select-none">
@@ -76,7 +75,7 @@ function GradingMockup() {
             Nhận xét AI
           </div>
           <p className="text-xs text-[#6E6E73] leading-relaxed">
-            Luận điểm rõ ràng, cấu trúc tốt. Cần bổ sung ví dụ cụ thể và đa dạng hóa cấu trúc câu để cải thiện điểm Phong cách.
+            Luận điểm rõ ràng, cấu trúc tốt. Cần bổ sung ví dụ cụ thể và đa dạng hóa cấu trúc câu để cải thiện điểm Sử dụng ngôn ngữ.
           </p>
         </div>
       </div>
@@ -93,7 +92,7 @@ function GradingMockup() {
           style={{ background: "#E8F9EE" }}>
           <Clock size={11} className="text-[#34C759]" strokeWidth={2.5} />
         </div>
-        <span className="text-xs font-bold text-[#1D1D1F]">Chấm trong 5 giây</span>
+        <span className="text-xs font-bold text-[#1D1D1F]">Chấm trong ~10 giây</span>
       </div>
 
       {/* Score badge top-right */}
@@ -398,10 +397,10 @@ export default function LandingPage() {
                 <div>
                   <h3 className="text-2xl font-extrabold mb-3 leading-snug tracking-tight"
                     style={{ color: "#FFFFFF" }}>
-                    Chấm <span style={{ color: "#93C5FD" }}>4 tiêu chí của Viện Giáo dục Quốc tế Hàn Quốc (NIIED)</span> tách biệt — không gộp chung một điểm
+                    Chấm theo <span style={{ color: "#93C5FD" }}>đúng 3 tiêu chí của Viện Giáo dục Quốc tế Hàn Quốc (NIIED)</span> — điểm riêng từng tiêu chí, không gộp chung
                   </h3>
                   <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(186,220,255,0.90)" }}>
-                    Biết chính xác bạn yếu <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Nội dung</strong>, <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Cấu trúc</strong>, <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Ngữ pháp</strong> hay <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Phong cách</strong> — và tập trung luyện đúng chỗ.
+                    Biết chính xác bạn yếu <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Nội dung</strong>, <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Bố cục</strong> hay <strong style={{ color: "#FFFFFF", fontWeight: 700 }}>Sử dụng ngôn ngữ</strong> — và tập trung luyện đúng chỗ.
                   </p>
                   <a href="https://exam.topik.go.kr/nasdata/webnas/raonkeditordata/uploadId/2024/02/20240227_175504804_07236.pdf"
                     target="_blank" rel="noopener noreferrer"
@@ -465,7 +464,7 @@ export default function LandingPage() {
                 <div>
                   <h3 className="text-lg font-extrabold text-[#1D1D1F] mb-2 leading-snug tracking-tight">
                     Kết quả trong{" "}
-                    <span className="text-[#34C759]">5 giây</span>{" "}—
+                    <span className="text-[#34C759]">10 giây</span>{" "}—
                     không chờ ngày
                   </h3>
                   <p className="text-[#6E6E73] text-sm leading-relaxed">
@@ -505,15 +504,15 @@ export default function LandingPage() {
                   num: "01",
                   concern: "AI có chấm đúng như giáo viên không? Tôi sợ học sai.",
                   answer: "AI dùng đúng rubric của Viện Giáo dục Quốc tế Hàn Quốc (NIIED) — không tự đoán",
-                  detail: "4 tiêu chí Nội dung, Tổ chức, Ngữ pháp, Phong cách là cố định do Viện Giáo dục Quốc tế Hàn Quốc (NIIED) ban hành. AI áp dụng đúng bảng này — cùng tiêu chuẩn hội đồng thi dùng.",
+                  detail: "3 tiêu chí Nội dung & yêu cầu đề, Bố cục & triển khai, Sử dụng ngôn ngữ cùng thang điểm (Q53: 7/7/16, Q54: 12/12/26) do Viện Giáo dục Quốc tế Hàn Quốc (NIIED) công bố. AI chấm theo đúng bảng bậc điểm này, và được kiểm tra bằng đáp án mẫu của chính NIIED.",
                   tag: "Xem bảng điểm chính thức của NIIED (PDF)",
                   tagHref: "https://exam.topik.go.kr/nasdata/webnas/raonkeditordata/uploadId/2024/02/20240227_175504804_07236.pdf",
                 },
                 {
                   num: "02",
                   concern: "Thầy tôi chấm 34 điểm, AI chấm 38 điểm — cái nào đúng?",
-                  answer: "AI nhất quán 100% — không có cảm tính",
-                  detail: "Giáo viên cũng có cảm tính riêng. Điểm thi thật do hội đồng Viện Giáo dục Quốc tế Hàn Quốc (NIIED) quyết định theo rubric cố định — AI dùng đúng rubric đó, mỗi bài đều như nhau.",
+                  answer: "AI chấm nhất quán — không có cảm tính",
+                  detail: "Giáo viên cũng có cảm tính riêng. Điểm thi thật do hội đồng Viện Giáo dục Quốc tế Hàn Quốc (NIIED) quyết định theo rubric cố định — AI dùng đúng rubric đó, chấm lại cùng một bài cho điểm gần như giống nhau.",
                   tag: "Consistent, không cảm tính",
                   tagHref: null,
                 },
@@ -618,7 +617,7 @@ export default function LandingPage() {
                 {
                   step: "02", Icon: Zap, color: "#FF6B00", bg: "#FFF4EA",
                   title: "AI chấm tức thì",
-                  desc: "Nhận điểm 4 tiêu chí của Viện Giáo dục Quốc tế Hàn Quốc (NIIED), gợi ý cải thiện cụ thể, so sánh bài mẫu ngay lập tức.",
+                  desc: "Nhận điểm theo từng tiêu chí của Viện Giáo dục Quốc tế Hàn Quốc (NIIED), gợi ý cải thiện cụ thể, so sánh bài mẫu ngay lập tức.",
                 },
                 {
                   step: "03", Icon: BarChart2, color: "#34C759", bg: "#E8F9EE",
@@ -674,9 +673,9 @@ export default function LandingPage() {
               <tbody className="divide-y divide-gray-50">
                 {[
                   ["Giá / tháng",           "từ 149.000đ",       "250k - 700k/tháng",   "Miễn phí (giới hạn)"],
-                  ["Chờ kết quả",           "5 giây",            "3 - 7 ngày",           "Tức thì"],
+                  ["Chờ kết quả",           "~10 giây",            "3 - 7 ngày",           "Tức thì"],
                   ["Ngôn ngữ feedback",     "Tiếng Việt 100%",   "Tiếng Việt",           "Tiếng Anh"],
-                  ["4 tiêu chí NIIED",      "check",             "check",                "x"],
+                  ["Tiêu chí chấm NIIED",   "check",             "check",                "x"],
                   ["원고지 thật",            "check",             "x",                    "x"],
                   ["Lộ trình cá nhân",      "check",             "x",                    "x"],
                   ["Thi thử đầy đủ",        "check",             "check",                "x"],
@@ -850,7 +849,7 @@ export default function LandingPage() {
                 Sẵn sàng tăng điểm Writing?
               </h2>
               <p className="text-blue-100 text-base md:text-lg mb-10 max-w-[440px] mx-auto">
-                Viết bài đầu tiên ngay hôm nay. Nhận feedback chi tiết trong 5 giây.
+                Viết bài đầu tiên ngay hôm nay. Nhận feedback chi tiết chỉ sau vài giây.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <Link href="/login"

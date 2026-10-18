@@ -11,6 +11,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q54_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { q54TaskText } from "@/lib/grading-input"
 import { saveResultQ53Q54, loadResultQ53Q54, clearResult, preloadResultsFromDB, mergeDBResultsToLocalStorage } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
@@ -62,7 +63,7 @@ export default function Q54Page() {
       const res = await fetch("/api/grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question_type: "q54", topic: selected.topic ?? selected.text_kr, student_essay: answer }),
+        body: JSON.stringify({ question_type: "q54", task: q54TaskText(selected), student_essay: answer }),
       })
       const text = await res.text()
       let data: Record<string, unknown>
@@ -76,7 +77,6 @@ export default function Q54Page() {
       const fullResult = { answer, gradeResult: result }
       saveResultQ53Q54("q54", selected.id, fullResult)
       trackActivity(); saveSubmission({ questionType: "q54", promptId: selected.id, userAnswer: answer, gradeResult: result, fullResult })
-      saveResultQ53Q54("q54", selected.id, { answer, gradeResult: result })
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Lỗi không xác định"
       if (msg === "free_limit_reached") { setShowUpgrade(true); return }

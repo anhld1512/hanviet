@@ -7,6 +7,7 @@ import type { GradeResult } from "@/lib/grading-prompts"
 import WongojiEditor from "@/app/components/writing/WongojiEditor"
 import UpgradeModal from "@/app/components/UpgradeModal"
 import { saveSubmission } from "@/lib/save-submission"
+import { q53TaskText, q54TaskText } from "@/lib/grading-input"
 import { getRandomPrompt } from "@/lib/data/prompts"
 import { Timer, Zap, Eye, EyeOff, AlertTriangle } from "lucide-react"
 
@@ -261,6 +262,8 @@ export default function ExamClient() {
             answer_b: ans51B,
             hint_a: activePrompts.q51.blanks?.[0]?.hint ?? "",
             hint_b: activePrompts.q51.blanks?.[1]?.hint ?? "",
+            ref_a: activePrompts.q51.blanks?.[0]?.example ?? "",
+            ref_b: activePrompts.q51.blanks?.[1]?.example ?? "",
           },
           q52: {
             prompt_text: activePrompts.q52.text_kr,
@@ -268,13 +271,15 @@ export default function ExamClient() {
             answer_b: ans52B,
             hint_a: activePrompts.q52.blanks?.[0]?.hint ?? "",
             hint_b: activePrompts.q52.blanks?.[1]?.hint ?? "",
+            ref_a: activePrompts.q52.blanks?.[0]?.example ?? "",
+            ref_b: activePrompts.q52.blanks?.[1]?.example ?? "",
           },
           q53: {
-            chart_description: activePrompts.q53.text_kr,
+            task: q53TaskText(activePrompts.q53),
             essay: ans53,
           },
           q54: {
-            topic: activePrompts.q54.topic ?? activePrompts.q54.text_kr,
+            task: q54TaskText(activePrompts.q54),
             essay: ans54,
           },
         }),

@@ -3,6 +3,7 @@
 // Separate counters: monthly_gradings (chấm bài) | monthly_prompts (tạo đề AI)
 
 import { createClient } from "@/lib/supabase-server"
+import { createAdminClient } from "@/lib/supabase-admin"
 
 export const FREE_LIMIT = 5
 export const FREE_PROMPT_LIMIT = 5
@@ -70,8 +71,10 @@ export async function incrementUsage(): Promise<void> {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
+    // Quota columns are only writable with the service role (see migration protect_profile_columns).
+    const db = createAdminClient()
 
-    const { data: profile } = await supabase
+    const { data: profile } = await db
       .from("user_profiles")
       .select("monthly_gradings, grading_month, subscription_tier, is_pro, pro_expires_at, bonus_gradings")
       .eq("id", user.id)
@@ -81,7 +84,7 @@ export async function incrementUsage(): Promise<void> {
 
     // Không có profile → upsert row mới (user mới chưa có profile)
     if (!profile) {
-      await supabase
+      await db
         .from("user_profiles")
         .upsert({ id: user.id, monthly_gradings: 1, grading_month: currentMonth })
       return
@@ -96,7 +99,7 @@ export async function incrementUsage(): Promise<void> {
     // Deduct bonus first
     const bonus = profile.bonus_gradings ?? 0
     if (bonus > 0) {
-      await supabase
+      await db
         .from("user_profiles")
         .update({ bonus_gradings: bonus - 1 })
         .eq("id", user.id)
@@ -107,12 +110,12 @@ export async function incrementUsage(): Promise<void> {
     const currentCount =
       profile.grading_month === currentMonth ? (profile.monthly_gradings ?? 0) : 0
 
-    await supabase
+    await db
       .from("user_profiles")
       .update({ monthly_gradings: currentCount + 1, grading_month: currentMonth })
       .eq("id", user.id)
-  } catch {
-    // Silently fail
+  } catch (e) {
+    console.error("[usage] increment failed:", e)
   }
 }
 
@@ -155,8 +158,10 @@ export async function incrementPromptUsage(): Promise<void> {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
+    // Quota columns are only writable with the service role (see migration protect_profile_columns).
+    const db = createAdminClient()
 
-    const { data: profile } = await supabase
+    const { data: profile } = await db
       .from("user_profiles")
       .select("monthly_prompts, prompt_month, subscription_tier, is_pro, pro_expires_at")
       .eq("id", user.id)
@@ -165,7 +170,7 @@ export async function incrementPromptUsage(): Promise<void> {
     const currentMonth = new Date().toISOString().slice(0, 7)
 
     if (!profile) {
-      await supabase
+      await db
         .from("user_profiles")
         .upsert({ id: user.id, monthly_prompts: 1, prompt_month: currentMonth })
       return
@@ -180,11 +185,11 @@ export async function incrementPromptUsage(): Promise<void> {
     const currentCount =
       profile.prompt_month === currentMonth ? (profile.monthly_prompts ?? 0) : 0
 
-    await supabase
+    await db
       .from("user_profiles")
       .update({ monthly_prompts: currentCount + 1, prompt_month: currentMonth })
       .eq("id", user.id)
-  } catch {
-    // Silently fail
+  } catch (e) {
+    console.error("[usage] increment failed:", e)
   }
 }

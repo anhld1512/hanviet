@@ -1,271 +1,249 @@
 import OpenAI from "openai"
 import {
-  buildQ51Prompt,
-  buildQ52Prompt,
-  buildQ53Prompt,
-  buildQ54Prompt,
+  buildBlankPrompt,
+  buildEssayPrompt,
+  MAX_SCORES,
+  type BlankChecks,
+  type BlankInput,
+  type ErrorCategory,
   type GradeResult,
+  type PromptPair,
 } from "./grading-prompts"
+import {
+  analyzeRegister,
+  blankEchoWarning,
+  countChars,
+  describeRegister,
+  detectInjection,
+  fenceUserText,
+  REGISTER_LABEL,
+} from "./korean-text"
 
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
   baseURL: "https://api.deepseek.com",
 })
 
-// Direct DeepSeek API — model "deepseek-chat" = DeepSeek V3 (production stable name)
-// "deepseek-v4-flash" / "deepseek-v3-flash" etc. are NOT valid model names
-const MODEL_SIMPLE = "deepseek-chat"
-const MODEL_ADVANCED = "deepseek-chat"
+const MODEL = process.env.GRADING_MODEL ?? "deepseek-chat"
 
-// Parse JSON an toan tu response (xu ly ca markdown code blocks)
-function parseGradeJSON(text: string): Record<string, unknown> | null {
+export class GradingError extends Error {}
+
+type Json = Record<string, unknown>
+
+function parseJSON(text: string): Json | null {
+  const cleaned = text.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim()
   try {
-    // Strip markdown code fences
-    const cleaned = text
-      .replace(/```json\s*/gi, "")
-      .replace(/```\s*/g, "")
-      .trim()
-
-    // Thu parse toan bo truoc
-    try {
-      return JSON.parse(cleaned)
-    } catch {}
-
-    // Tim JSON object lon nhat bang cach dem ngoac mo/dong
-    let start = cleaned.indexOf("{")
-    if (start === -1) {
-      console.error("[parseGradeJSON] No JSON found:", text.slice(0, 200))
-      return null
-    }
-    let depth = 0
-    let end = -1
-    for (let i = start; i < cleaned.length; i++) {
-      if (cleaned[i] === "{") depth++
-      else if (cleaned[i] === "}") {
-        depth--
-        if (depth === 0) { end = i; break }
-      }
-    }
-    if (end === -1) {
-      console.error("[parseGradeJSON] Unclosed JSON:", cleaned.slice(0, 200))
-      return null
-    }
+    return JSON.parse(cleaned)
+  } catch {}
+  const start = cleaned.indexOf("{")
+  const end = cleaned.lastIndexOf("}")
+  if (start === -1 || end <= start) return null
+  try {
     return JSON.parse(cleaned.slice(start, end + 1))
-  } catch (e) {
-    console.error("[parseGradeJSON] Parse error:", e, "Raw:", text.slice(0, 200))
+  } catch {
     return null
   }
 }
 
-async function callDeepSeek(prompt: string, model: string, maxTokens = 1000, retries = 1): Promise<string> {
-  const response = await client.chat.completions.create({
-    model,
-    messages: [{ role: "user", content: prompt }],
-    max_tokens: maxTokens,
-    temperature: 0.1,
-    // Khong dung response_format json_object — reasoning models tra content:null voi param nay
-    // Parser xu ly output tu do (strip markdown, bracket-count JSON)
-  })
-  const msg = response.choices[0]?.message
-  // Direct DeepSeek API: reasoning models tra content="" (empty string, khong phai null)
-  // Dung || thay vi ?? de bat ca empty string, fallback sang reasoning_content
-  const rawContent = msg?.content
-  const rawReasoning = (msg as unknown as Record<string, string>)?.reasoning_content
-  const text = rawContent || rawReasoning || ""
-  console.log("[DeepSeek RAW] content:", rawContent?.slice(0, 100), "| reasoning:", rawReasoning?.slice(0, 100))
-
-  // Retry mot lan neu response rong (transient API error)
-  if (!text && retries > 0) {
-    console.warn("[callDeepSeek] Empty response, retrying...")
-    return callDeepSeek(prompt, model, maxTokens, retries - 1)
+async function callModel<T>(prompt: PromptPair, maxTokens: number, validate: (j: Json) => T | null): Promise<T> {
+  let lastError = "empty response"
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await client.chat.completions.create({
+        model: MODEL,
+        messages: [
+          { role: "system", content: prompt.system },
+          { role: "user", content: prompt.user },
+        ],
+        max_tokens: maxTokens,
+        temperature: 0,
+        response_format: { type: "json_object" },
+      })
+      const json = parseJSON(res.choices[0]?.message?.content ?? "")
+      const valid = json && validate(json)
+      if (valid) return valid
+      lastError = json ? "invalid schema" : "unparseable JSON"
+    } catch (e) {
+      lastError = e instanceof Error ? e.message : String(e)
+    }
+    console.warn(`[ai-grading] attempt ${attempt + 1} failed: ${lastError}`)
   }
-
-  return text
+  throw new GradingError(lastError)
 }
 
-// ============================================================
-// Grade Q51 / Q52 - dung DeepSeek V4 Flash
-// ============================================================
-export async function gradeQ51Q52(params: {
-  questionType: "q51" | "q52"
-  promptText: string
-  blankKey: string
-  studentAnswer: string
-  contextHint: string
-}): Promise<GradeResult> {
-  const { questionType, promptText, blankKey, studentAnswer, contextHint } = params
+// ─── Normalization helpers ───────────────────────────────────────────────────
 
-  const prompt =
-    questionType === "q51"
-      ? buildQ51Prompt(promptText, blankKey, studentAnswer, contextHint)
-      : buildQ52Prompt(promptText, blankKey, studentAnswer, contextHint)
+function clampInt(v: unknown, max: number): number | null {
+  const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN
+  if (!Number.isFinite(n)) return null
+  return Math.min(max, Math.max(0, Math.round(n)))
+}
 
-  // DeepSeek reasoning model: thinking tokens + content tokens deu tinh chung vao max_tokens
-  // V4 Flash thinking ~2000-3000 tokens + JSON output ~1500 tokens => can >= 8000
-  const text = await callDeepSeek(prompt, MODEL_SIMPLE, 8000)
-  const data = parseGradeJSON(text)
+const str = (v: unknown) => (typeof v === "string" ? v.trim() : "")
 
-  if (!data) {
-    return defaultResult(questionType, text || "Không thể phân tích kết quả chấm điểm.")
+const ERROR_TYPES: ErrorCategory[] = ["grammar", "vocabulary", "style", "logic", "content"]
+
+function normCorrections(v: unknown, limit: number): GradeResult["corrections"] {
+  if (!Array.isArray(v)) return []
+  return v
+    .filter((c): c is Json => !!c && typeof c === "object")
+    .map((c) => ({
+      original: str(c.original),
+      corrected: str(c.corrected),
+      explanation: str(c.explanation),
+      type: ERROR_TYPES.includes(c.type as ErrorCategory) ? (c.type as ErrorCategory) : undefined,
+      pattern: str(c.pattern) || undefined,
+    }))
+    .filter((c) => c.original && c.corrected && c.original !== c.corrected)
+    .slice(0, limit)
+}
+
+function normCoaching(v: unknown): GradeResult["coaching"] {
+  const c = (v && typeof v === "object" ? v : {}) as Json
+  const out = {
+    strength: str(c.strength),
+    weakness: str(c.weakness),
+    focus_pattern: str(c.focus_pattern),
+    level_tip: str(c.level_tip),
   }
+  return Object.values(out).some(Boolean) ? out : undefined
+}
 
-  const scores = (data.scores as Record<string, number>) || {}
-  const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as GradeResult["corrections"]) || []
-  const coachingRaw = data.coaching as Record<string, string> | undefined
+// ─── Q51 / Q52 ────────────────────────────────────────────────────────────────
+
+export async function gradeBlanks(params: {
+  questionType: "q51" | "q52"
+  passage: string
+  blanks: BlankInput[]
+}): Promise<GradeResult[]> {
+  const { questionType, passage } = params
+  const blanks = params.blanks.map((b) => {
+    const answer = fenceUserText(b.answer.trim())
+    const echo = blankEchoWarning(passage, b.key, answer)
+    return { ...b, answer, echo, warnings: echo ? [echo] : [] }
+  })
+  const reg = analyzeRegister(passage)
+
+  const prompt = buildBlankPrompt({
+    questionType,
+    passage: fenceUserText(passage),
+    passageRegister: reg.dominant ? REGISTER_LABEL[reg.dominant] : "không xác định",
+    blanks,
+    injectionHits: detectInjection(blanks.map((b) => b.answer).join("\n")),
+  })
+
+  const graded = await callModel(prompt, 1500 * blanks.length, (j) => {
+    const arr = Array.isArray(j.blanks) ? (j.blanks as Json[]) : null
+    if (!arr || arr.length < blanks.length) return null
+    const scores = arr.map((b) => clampInt(b?.score, 5))
+    return scores.every((s) => s !== null) ? arr.slice(0, blanks.length) : null
+  })
+
+  return graded.map((g, i): GradeResult => {
+    const answer = blanks[i].answer
+    // Blank or non-Korean answers can't score regardless of what the model says.
+    let total = /[가-힣]/.test(answer) ? clampInt(g.score, 5)! : 0
+    if (blanks[i].echo) total = Math.min(total, 3)
+    const c = (g.checks && typeof g.checks === "object" ? g.checks : {}) as Json
+    const checks: BlankChecks = {
+      context: total === 5 || c.context === true,
+      grammar: total === 5 || c.grammar === true,
+      register: total === 5 || c.register === true,
+      form: !blanks[i].echo && (total === 5 || c.form === true),
+    }
+    const tip = str(g.tip)
+    let betterExample = str(g.better_example)
+    if (betterExample && blankEchoWarning(passage, blanks[i].key, betterExample)) betterExample = blanks[i].reference ?? ""
+    return {
+      question_type: questionType,
+      rubric_version: 2,
+      scores: { content: 0, organization: 0, language: 0, style: 0, total },
+      max_scores: { ...MAX_SCORES.blank },
+      feedback: { overall: str(g.feedback), content: "", organization: "", language: "", style: "" },
+      corrections: total === 5 ? [] : normCorrections(g.corrections, 4),
+      checks,
+      coaching: tip ? { strength: "", weakness: "", focus_pattern: tip, level_tip: "" } : undefined,
+      better_example: betterExample || undefined,
+    }
+  })
+}
+
+// ─── Q53 / Q54 ────────────────────────────────────────────────────────────────
+
+function lengthFeedback(questionType: "q53" | "q54", n: number): string {
+  const [min, max] = questionType === "q53" ? [200, 300] : [600, 700]
+  if (n < min) return `${n}자 — thiếu ${min - n}자 so với yêu cầu ${min}~${max}자`
+  if (n > max) return `${n}자 — vượt ${n - max}자 so với yêu cầu ${min}~${max}자`
+  return `${n}자 — đạt yêu cầu ${min}~${max}자`
+}
+
+export async function gradeEssay(params: {
+  questionType: "q53" | "q54"
+  task: string
+  essay: string
+}): Promise<GradeResult> {
+  const { questionType } = params
+  const essay = fenceUserText(params.essay.trim())
+  const m = MAX_SCORES[questionType]
+  const charCount = countChars(essay)
+  const register = analyzeRegister(essay)
+
+  const prompt = buildEssayPrompt({
+    questionType,
+    task: fenceUserText(params.task),
+    essay,
+    charCount,
+    registerSummary: describeRegister(register),
+    injectionHits: detectInjection(essay),
+  })
+
+  const g = await callModel(prompt, 3000, (j) => {
+    const s = (j.scores ?? {}) as Json
+    const content = clampInt(s.content, m.content)
+    const organization = clampInt(s.organization, m.organization)
+    const level = clampInt(s.language_level, m.language / 2)
+    if (content === null || organization === null || level === null) return null
+    return { j, content, organization, language: level * 2 }
+  })
+
+  const fb = (g.j.feedback ?? {}) as Json
+  const hasKorean = /[가-힣]/.test(essay)
+  const scores = hasKorean
+    ? { content: g.content, organization: g.organization, language: g.language, style: 0, total: 0 }
+    : { content: 0, organization: 0, language: 0, style: 0, total: 0 }
+  // Under half the minimum length: every criterion capped at NIIED band E.
+  if (charCount < (questionType === "q53" ? 100 : 300)) {
+    const cap = questionType === "q53" ? { c: 2, l: 6 } : { c: 4, l: 10 }
+    scores.content = Math.min(scores.content, cap.c)
+    scores.organization = Math.min(scores.organization, cap.c)
+    scores.language = Math.min(scores.language, cap.l)
+  }
+  // Mostly the wrong register: language capped at band C (-ㅂ/습니다) or D (-아/어요).
+  const sentences = register.counts.da + register.counts.hapsyo + register.counts.haeyo + register.counts.other
+  if (sentences > 0) {
+    const caps = questionType === "q53" ? { C: 12, D: 8 } : { C: 18, D: 14 }
+    if (register.counts.haeyo * 2 >= sentences) scores.language = Math.min(scores.language, caps.D)
+    else if ((register.counts.haeyo + register.counts.hapsyo) * 2 >= sentences) scores.language = Math.min(scores.language, caps.C)
+  }
+  scores.total = scores.content + scores.organization + scores.language
 
   return {
     question_type: questionType,
-    scores: {
-      content: scores.content ?? 0,
-      organization: 0,
-      language: scores.language ?? 0,
-      style: scores.style ?? 0,
-      total: scores.total ?? 0,
-    },
-    max_scores: { content: 2, organization: 0, language: 2, style: 1, total: 5 },
+    rubric_version: 2,
+    scores,
+    max_scores: { ...m },
     feedback: {
-      overall: feedback.overall ?? "",
-      content: feedback.content ?? "",
-      organization: "",
-      language: feedback.language ?? "",
-      style: feedback.style ?? "",
-    },
-    corrections,
-    coaching: coachingRaw ? {
-      strength: coachingRaw.strength ?? "",
-      weakness: coachingRaw.weakness ?? "",
-      focus_pattern: coachingRaw.focus_pattern ?? "",
-      level_tip: coachingRaw.level_tip ?? "",
-    } : undefined,
-    better_example: (data.better_example as string) ?? undefined,
-  }
-}
-
-// ============================================================
-// Grade Q53 - dung DeepSeek V4 Pro
-// ============================================================
-export async function gradeQ53(params: {
-  chartDescription: string
-  studentEssay: string
-}): Promise<GradeResult> {
-  const { chartDescription, studentEssay } = params
-  const charCount = studentEssay.replace(/\n/g, "").length
-
-  const prompt = buildQ53Prompt(chartDescription, studentEssay, charCount)
-  // DeepSeek V4 Pro: thinking ~3000 + essay grading JSON ~2000 => can >= 8000
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 8000)
-  const data = parseGradeJSON(text)
-
-  if (!data) {
-    return defaultResult("q53", "Không thể phân tích kết quả chấm điểm.")
-  }
-
-  const scores = (data.scores as Record<string, number>) || {}
-  const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as GradeResult["corrections"]) || []
-  const coachingRaw = data.coaching as Record<string, string> | undefined
-
-  return {
-    question_type: "q53",
-    scores: {
-      content: scores.content ?? 0,
-      organization: scores.organization ?? 0,
-      language: scores.language ?? 0,
-      style: 0,
-      total: scores.total ?? 0,
-    },
-    max_scores: { content: 12, organization: 9, language: 9, style: 0, total: 30 },
-    feedback: {
-      overall: feedback.overall ?? "",
-      content: feedback.content ?? "",
-      organization: feedback.organization ?? "",
-      language: feedback.language ?? "",
+      overall: str(fb.overall),
+      content: str(fb.content),
+      organization: str(fb.organization),
+      language: str(fb.language),
       style: "",
     },
-    corrections,
-    coaching: coachingRaw ? {
-      strength: coachingRaw.strength ?? "",
-      weakness: coachingRaw.weakness ?? "",
-      focus_pattern: coachingRaw.focus_pattern ?? "",
-      level_tip: coachingRaw.level_tip ?? "",
-    } : undefined,
-    char_count_feedback: (data.char_count_feedback as string) ?? undefined,
-    better_example: (data.better_example as string) ?? undefined,
-  }
-}
-
-// ============================================================
-// Grade Q54 - dung DeepSeek V4 Pro
-// ============================================================
-export async function gradeQ54(params: {
-  topic: string
-  studentEssay: string
-}): Promise<GradeResult> {
-  const { topic, studentEssay } = params
-  const charCount = studentEssay.replace(/\n/g, "").length
-
-  const prompt = buildQ54Prompt(topic, studentEssay, charCount)
-  // DeepSeek V4 Pro: thinking ~3000 + essay grading JSON ~2000 => can >= 8000
-  const text = await callDeepSeek(prompt, MODEL_ADVANCED, 8000)
-  const data = parseGradeJSON(text)
-
-  if (!data) {
-    return defaultResult("q54", "Không thể phân tích kết quả chấm điểm.")
-  }
-
-  const scores = (data.scores as Record<string, number>) || {}
-  const feedback = (data.feedback as Record<string, string>) || {}
-  const corrections = (data.corrections as GradeResult["corrections"]) || []
-  const coachingRaw = data.coaching as Record<string, string> | undefined
-
-  return {
-    question_type: "q54",
-    scores: {
-      content: scores.content ?? 0,
-      organization: scores.organization ?? 0,
-      language: scores.language ?? 0,
-      style: scores.style ?? 0,
-      total: scores.total ?? 0,
-    },
-    max_scores: { content: 12, organization: 12, language: 14, style: 12, total: 50 },
-    feedback: {
-      overall: feedback.overall ?? "",
-      content: feedback.content ?? "",
-      organization: feedback.organization ?? "",
-      language: feedback.language ?? "",
-      style: feedback.style ?? "",
-    },
-    corrections,
-    coaching: coachingRaw ? {
-      strength: coachingRaw.strength ?? "",
-      weakness: coachingRaw.weakness ?? "",
-      focus_pattern: coachingRaw.focus_pattern ?? "",
-      level_tip: coachingRaw.level_tip ?? "",
-    } : undefined,
-    char_count_feedback: (data.char_count_feedback as string) ?? undefined,
-    thesis_feedback: (data.thesis_feedback as string) ?? undefined,
-    better_opening: (data.better_opening as string) ?? undefined,
-    better_example: (data.better_example as string) ?? undefined,
-  }
-}
-
-// ============================================================
-// Default khi loi
-// ============================================================
-function defaultResult(type: "q51" | "q52" | "q53" | "q54", message: string): GradeResult {
-  const maxMap = {
-    q51: { content: 2, organization: 0, language: 2, style: 1, total: 5 },
-    q52: { content: 2, organization: 0, language: 2, style: 1, total: 5 },
-    q53: { content: 12, organization: 9, language: 9, style: 0, total: 30 },
-    q54: { content: 12, organization: 12, language: 14, style: 12, total: 50 },
-  }
-  return {
-    question_type: type,
-    scores: { content: 0, organization: 0, language: 0, style: 0, total: 0 },
-    max_scores: maxMap[type],
-    feedback: { overall: message, content: "", organization: "", language: "", style: "" },
-    corrections: [],
-    isError: true,
+    corrections: normCorrections(g.j.corrections, 8),
+    coaching: normCoaching(g.j.coaching),
+    char_count_feedback: lengthFeedback(questionType, charCount),
+    better_example: str(g.j.better_example) || undefined,
+    thesis_feedback: str(g.j.thesis_feedback) || undefined,
+    better_opening: str(g.j.better_opening) || undefined,
   }
 }

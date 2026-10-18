@@ -72,26 +72,32 @@ export default function Q51Page() {
     setAnswerA(""); setAnswerB("")
   }
 
-  async function gradeBlank(blankKey: string, answer: string, hint: string): Promise<GradeResult | null> {
+  async function gradeBlanks(): Promise<[GradeResult, GradeResult]> {
     const res = await fetch("/api/grade", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question_type: "q51", prompt_text: selected!.text_kr, blank_key: blankKey, student_answer: answer, context_hint: hint }),
+      body: JSON.stringify({
+        question_type: "q51",
+        prompt_text: selected!.text_kr,
+        blanks: [
+          { key: "ㄱ", answer: answerA, hint: selected!.blanks?.[0]?.hint ?? "", reference: selected!.blanks?.[0]?.example ?? "" },
+          { key: "ㄴ", answer: answerB, hint: selected!.blanks?.[1]?.hint ?? "", reference: selected!.blanks?.[1]?.example ?? "" },
+        ],
+      }),
     })
     const text = await res.text()
     let data: Record<string, unknown>
     try { data = JSON.parse(text) } catch { throw new Error("Máy chủ gặp sự cố. Vui lòng thử lại.") }
     if (!res.ok) throw new Error((data.error as string) || "Lỗi máy chủ")
-    return data as unknown as GradeResult
+    const [rA, rB] = data.results as GradeResult[]
+    return [rA, rB]
   }
 
   async function handleSubmit() {
     if (!answerA.trim() || !answerB.trim() || !selected) return
     setLoading(true); setError(null)
     try {
-      // Sequential (không song song) để tránh DeepSeek rate-limit lỗi
-      const rA = await gradeBlank("ㄱ", answerA, selected.blanks?.[0]?.hint ?? "")
-      const rB = await gradeBlank("ㄴ", answerB, selected.blanks?.[1]?.hint ?? "")
+      const [rA, rB] = await gradeBlanks()
       setGradeA(rA); setGradeB(rB)
       if (rA && rB) {
         const total = rA.scores.total + rB.scores.total
@@ -101,8 +107,9 @@ export default function Q51Page() {
         setScores((prev) => ({ ...prev, [selected.id]: Math.max(prev[selected.id] ?? 0, pct) }))
         const combined: GradeResult = {
           question_type: "q51",
-          scores: { content: rA.scores.content + rB.scores.content, organization: 0, language: rA.scores.language + rB.scores.language, style: rA.scores.style + rB.scores.style, total },
-          max_scores: { content: 4, organization: 0, language: 4, style: 2, total: 10 },
+          rubric_version: 2,
+          scores: { content: 0, organization: 0, language: 0, style: 0, total },
+          max_scores: { content: 0, organization: 0, language: 0, style: 0, total: max },
           feedback: { overall: rA.feedback.overall + " | " + rB.feedback.overall, content: "", organization: "", language: "", style: "" },
           corrections: [...rA.corrections, ...rB.corrections],
         }

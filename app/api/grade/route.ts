@@ -1,107 +1,90 @@
 import { NextRequest, NextResponse } from "next/server"
-import { gradeQ51Q52, gradeQ53, gradeQ54 } from "@/lib/ai-grading"
-import { checkUsage, incrementUsage } from "@/lib/usage"
+import { gradeBlanks, gradeEssay, GradingError } from "@/lib/ai-grading"
+import type { BlankInput } from "@/lib/grading-prompts"
+import { checkUsage, incrementUsage, FREE_LIMIT } from "@/lib/usage"
 
 export const maxDuration = 60
 
-// Q54 chuẩn chỉ 700자 — cap 2000 để chặn abuse token cost
-const MAX_ANSWER_LEN = 2000
-const MAX_PROMPT_LEN = 3000
-const tooLong = (...fields: (string | undefined)[]) =>
-  fields.some((f) => (f?.length ?? 0) > MAX_ANSWER_LEN)
+const MAX_BLANK_LEN = 300
+const MAX_ESSAY_LEN = 2000
+const MAX_TASK_LEN = 4000
+
+const text = (v: unknown) => (typeof v === "string" ? v : "")
+
+function readBlanks(body: Record<string, unknown>): BlankInput[] {
+  if (Array.isArray(body.blanks)) {
+    return (body.blanks as Record<string, unknown>[]).slice(0, 2).map((b) => ({
+      key: text(b.key) || "ㄱ",
+      answer: text(b.answer),
+      hint: text(b.hint),
+      reference: text(b.reference),
+    }))
+  }
+  // Single-blank shape from clients loaded before rubric v2
+  return [{ key: text(body.blank_key) || "ㄱ", answer: text(body.student_answer), hint: text(body.context_hint) }]
+}
 
 export async function POST(req: NextRequest) {
+  const usage = await checkUsage()
+  if (!usage.allowed) {
+    return NextResponse.json(
+      {
+        error: "free_limit_reached",
+        message: `Bạn đã dùng hết ${FREE_LIMIT} lượt chấm miễn phí tháng này. Nâng cấp Pro để luyện không giới hạn.`,
+        used: usage.used,
+        remaining: 0,
+      },
+      { status: 402 }
+    )
+  }
+
+  if (!process.env.DEEPSEEK_API_KEY) {
+    return NextResponse.json({ error: "Máy chấm chưa được cấu hình" }, { status: 500 })
+  }
+
+  let body: Record<string, unknown>
   try {
-    // ── Usage gate ──────────────────────────────────────────
-    const usage = await checkUsage()
-    if (!usage.allowed) {
-      return NextResponse.json(
-        {
-          error: "free_limit_reached",
-          message: `Bạn đã dùng hết ${5} lượt chấm miễn phí tháng này. Nâng cấp Pro để luyện không giới hạn.`,
-          used: usage.used,
-          remaining: 0,
-        },
-        { status: 402 }
-      )
-    }
-    // ────────────────────────────────────────────────────────
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "Dữ liệu gửi lên không hợp lệ" }, { status: 400 })
+  }
+  const questionType = body.question_type
 
-    const body = await req.json()
-    const { question_type } = body
-
-    if (!question_type) {
-      return NextResponse.json({ error: "Thieu question_type" }, { status: 400 })
-    }
-
-    if (
-      tooLong(body.student_answer, body.student_essay) ||
-      (body.prompt_text?.length ?? 0) > MAX_PROMPT_LEN ||
-      (body.chart_description?.length ?? 0) > MAX_PROMPT_LEN ||
-      (body.topic?.length ?? 0) > MAX_PROMPT_LEN
-    ) {
-      return NextResponse.json({ error: "Bài viết vượt quá độ dài cho phép" }, { status: 400 })
-    }
-
-    if (!process.env.DEEPSEEK_API_KEY) {
-      return NextResponse.json(
-        { error: "DEEPSEEK_API_KEY chưa được cấu hình. Thêm vào file .env.local" },
-        { status: 500 }
-      )
-    }
-
-    let result
-    switch (question_type) {
-      case "q51":
-      case "q52": {
-        const { prompt_text, blank_key, student_answer, context_hint } = body
-        if (!student_answer?.trim()) {
-          return NextResponse.json({ error: "Thiếu nội dung bài viết" }, { status: 400 })
-        }
-        result = await gradeQ51Q52({
-          questionType: question_type,
-          promptText: prompt_text ?? "",
-          blankKey: blank_key ?? "ㄱ",
-          studentAnswer: student_answer,
-          contextHint: context_hint ?? "",
-        })
-        break
+  try {
+    if (questionType === "q51" || questionType === "q52") {
+      const passage = text(body.prompt_text)
+      const blanks = readBlanks(body)
+      if (!passage || blanks.some((b) => !b.answer.trim())) {
+        return NextResponse.json({ error: "Thiếu đề bài hoặc câu trả lời" }, { status: 400 })
       }
-      case "q53": {
-        const { chart_description, student_essay } = body
-        if (!student_essay?.trim()) {
-          return NextResponse.json({ error: "Thiếu nội dung bài viết" }, { status: 400 })
-        }
-        result = await gradeQ53({
-          chartDescription: chart_description ?? "",
-          studentEssay: student_essay,
-        })
-        break
+      if (passage.length > MAX_TASK_LEN || blanks.some((b) => b.answer.length > MAX_BLANK_LEN)) {
+        return NextResponse.json({ error: "Câu trả lời vượt quá độ dài cho phép" }, { status: 400 })
       }
-      case "q54": {
-        const { topic, student_essay } = body
-        if (!student_essay?.trim()) {
-          return NextResponse.json({ error: "Thiếu nội dung bài viết" }, { status: 400 })
-        }
-        result = await gradeQ54({
-          topic: topic ?? "",
-          studentEssay: student_essay,
-        })
-        break
-      }
-      default:
-        return NextResponse.json({ error: "question_type khong hop le" }, { status: 400 })
+      const results = await gradeBlanks({ questionType, passage, blanks })
+      await incrementUsage()
+      return NextResponse.json(Array.isArray(body.blanks) ? { results } : results[0])
     }
 
-    // ── Increment usage after successful grading ─────────────
-    // Fire-and-forget, don't await
-    incrementUsage().catch(() => {})
-    // ────────────────────────────────────────────────────────
+    if (questionType === "q53" || questionType === "q54") {
+      const task = text(body.task) || text(questionType === "q53" ? body.chart_description : body.topic)
+      const essay = text(body.student_essay)
+      if (!task || !essay.trim()) {
+        return NextResponse.json({ error: "Thiếu đề bài hoặc bài viết" }, { status: 400 })
+      }
+      if (task.length > MAX_TASK_LEN || essay.length > MAX_ESSAY_LEN) {
+        return NextResponse.json({ error: "Bài viết vượt quá độ dài cho phép" }, { status: 400 })
+      }
+      const result = await gradeEssay({ questionType, task, essay })
+      await incrementUsage()
+      return NextResponse.json(result)
+    }
 
-    return NextResponse.json(result)
+    return NextResponse.json({ error: "Loại câu hỏi không hợp lệ" }, { status: 400 })
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    console.error("[/api/grade] ERROR:", msg)
-    return NextResponse.json({ error: `Loi: ${msg}` }, { status: 500 })
+    console.error("[/api/grade]", err)
+    const message = err instanceof GradingError
+      ? "Máy chấm đang bận, vui lòng thử lại. Lượt chấm của bạn chưa bị trừ."
+      : "Lỗi máy chủ, vui lòng thử lại. Lượt chấm của bạn chưa bị trừ."
+    return NextResponse.json({ error: message }, { status: 502 })
   }
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { GradeResult, ErrorCategory } from "@/lib/grading-prompts"
+import type { GradeResult, ErrorCategory, BlankChecks } from "@/lib/grading-prompts"
 
 interface GradingResultProps {
   result: GradeResult
@@ -12,10 +12,17 @@ interface GradingResultProps {
 }
 
 const CRITERION_LABELS: Record<string, string> = {
-  content:      "Nội dung",
-  organization: "Cấu trúc",
-  language:     "Ngữ pháp & Từ vựng",
+  content:      "Nội dung & yêu cầu đề",
+  organization: "Bố cục & triển khai",
+  language:     "Sử dụng ngôn ngữ",
   style:        "Thể văn",
+}
+
+const CHECK_LABELS: Record<keyof BlankChecks, string> = {
+  context:  "Đúng ngữ cảnh",
+  grammar:  "Từ vựng & ngữ pháp",
+  register: "Đúng thể văn (격식)",
+  form:     "Một câu, không chép đề",
 }
 
 const ERROR_TYPE_CONFIG: Record<ErrorCategory, { label: string; color: string; dot: string }> = {
@@ -366,7 +373,18 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
 
           <div className="w-px h-8 bg-gray-200 shrink-0 mx-1" />
 
-          {/* Criteria chips — tên + điểm, không text */}
+          {/* Rubric v2: NIIED chấm tổng thể mỗi chỗ trống — hiện checklist thay vì điểm thành phần */}
+          {result.checks && (Object.keys(CHECK_LABELS) as (keyof BlankChecks)[]).map(k => {
+            const ok = result.checks![k]
+            return (
+              <span key={k} className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg border shrink-0 ${ok ? "bg-blue-50 text-blue-600 border-blue-100" : "bg-red-50 text-red-500 border-red-200"}`}>
+                <span>{ok ? "✓" : "✗"}</span>
+                <span>{CHECK_LABELS[k]}</span>
+              </span>
+            )
+          })}
+
+          {/* Criteria chips — tên + điểm, không text (kết quả chấm theo thang cũ) */}
           {criteria.map(c => {
             const isFull = c.score === c.max
             const isZero = c.score === 0 && c.max > 0
@@ -386,6 +404,12 @@ export default function GradingResult({ result, onRetry, onNext, hideActions, us
           })}
         </div>
       </div>
+
+      {result.checks && feedback.overall && (
+        <div className="bg-white rounded-2xl border border-gray-100 px-5 py-4">
+          <p className="text-sm text-gray-600 leading-relaxed">{feedback.overall}</p>
+        </div>
+      )}
 
       {/* ── Row 2: Errors ── */}
       {/* Typography system: header=text-sm bold | SAI→ĐÚNG=text-base mono | pattern=text-xs badge */}

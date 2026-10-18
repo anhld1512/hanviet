@@ -278,7 +278,6 @@ export default function OnboardingPage() {
         ...answers,
         learning_path,
         onboarding_completed: true,
-        subscription_tier: "free",
         study_streak: 0,
         total_essays_written: 0,
       })

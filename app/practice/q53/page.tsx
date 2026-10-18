@@ -11,6 +11,7 @@ import UpgradeModal from "@/app/components/UpgradeModal"
 import { Q53_PROMPTS, type WritingPrompt } from "@/lib/data/prompts"
 import type { GradeResult } from "@/lib/grading-prompts"
 import { saveSubmission } from "@/lib/save-submission"
+import { q53TaskText } from "@/lib/grading-input"
 import { saveResultQ53Q54, loadResultQ53Q54, clearResult, preloadResultsFromDB, mergeDBResultsToLocalStorage } from "@/lib/last-result-cache"
 import { trackActivity } from "@/lib/activity-tracker"
 import { getBestPct, saveBestPct, scoreColor, scoreBadgeColor, difficultyLabel, difficultyColor, loadBestScoresFromDB, mergeBestScoresToLocalStorage } from "@/lib/practice-score"
@@ -120,7 +121,7 @@ export default function Q53Page() {
       const res = await fetch("/api/grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question_type: "q53", chart_description: selected.text_kr, student_essay: answer }),
+        body: JSON.stringify({ question_type: "q53", task: q53TaskText(selected), student_essay: answer }),
       })
       const text = await res.text()
       let data: Record<string, unknown>
