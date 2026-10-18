@@ -98,34 +98,43 @@ export function buildBlankPrompt(params: {
   const isQ51 = questionType === "q51"
 
   const typeRules = isQ51
-    ? `Q51 là văn bản thực dụng (thư, thông báo, tin nhắn...). Câu điền phải khớp mức độ trang trọng của đoạn văn.
+    ? `Q51 là văn bản thực dụng (thư, thông báo, tin nhắn...). Đuôi kết thúc câu phải khớp mức độ trang trọng của đoạn văn.
 Với văn bản 합쇼체, các đuôi -ㅂ/습니다, -(으)ㅂ니까?, -(으)시겠습니까?, -(으)신지요?, -(으)십시오 đều hợp lệ (NIIED cho 5đ cả "와 주시겠습니까?" lẫn "시간이 괜찮으신지요?"). Câu điền là câu hỏi thì đuôi câu hỏi là đúng.
 Dùng 해요체 thân mật (-아/어요) hoặc 반말/다체 trong văn bản 합쇼체 → sai 격식.`
-    : `Q52 là đoạn văn viết học thuật dùng 다체. Câu điền phải dùng văn viết: -ㄴ/는다, -(으)ㄹ 것이다, -는 것이 좋다, -아/어야 한다, -기 때문이다... (NIIED cho 5đ "칭찬을 하면 잘 성장할 것이다" và "아이들에게 칭찬을 자주 하는 것이 좋다").
+    : `Q52 là đoạn văn viết học thuật dùng 다체. Nếu đáp án kết thúc câu thì phải dùng văn viết: -ㄴ/는다, -(으)ㄹ 것이다, -는 것이 좋다, -아/어야 한다, -기 때문이다... (NIIED cho 5đ "칭찬을 하면 잘 성장할 것이다" và "아이들에게 칭찬을 자주 하는 것이 좋다").
 Dùng -ㅂ/습니다 hoặc -아/어요 → sai 격식 văn viết. Câu điền phải nối logic với từ nối/câu trước sau (그러므로, 하지만, 예를 들어...).`
 
   const system = `Bạn là giám khảo TOPIK II môn Viết, chấm câu ${isQ51 ? "51" : "52"} theo hướng dẫn chính thức của NIIED, đồng thời là coach cho học viên Việt Nam.
 
 === HƯỚNG DẪN CHẤM CHÍNH THỨC (NIIED) ===
-Mỗi chỗ trống 5 điểm, chấm TỔNG THỂ.
-- Đọc câu trước và sau chỗ trống; câu điền phải nối tự nhiên và giữ nguyên ý của đoạn văn.
-- Dùng từ vựng, ngữ pháp không hợp ngữ cảnh → trừ điểm.
-- Thêm nội dung thừa làm sai ý gốc → trừ điểm.
-- Sai chính tả, hoặc không đúng tính hình thức/trang trọng (형식성, 격식성) của văn bản → trừ điểm.
-- Chép lại chữ đứng trước/sau chỗ trống vào đáp án → trừ điểm. Viết nhiều hơn MỘT câu → trừ điểm.
-- Đáp án KHÔNG cần dài. Một câu ngắn, đúng ngữ cảnh, đúng ngữ pháp mục tiêu là đủ 5 điểm (NIIED cho 5đ cả "집들이를 할까 합니다." lẫn "집들이를 할 생각입니다." — các cách diễn đạt ý định tương đương đều được điểm tối đa). Tuyệt đối không trừ điểm vì "quá ngắn", "chưa đủ chi tiết" hay "có cách nói hay hơn" nếu câu đã đúng ngữ cảnh.
-- Nếu hệ thống báo đáp án lặp lại chữ đứng ngay trước/sau chỗ trống, đó là lỗi hình thức theo NIIED: tối đa 3 điểm, form = false.
-- Chỉ trừ điểm khi vi phạm một trong các mục trên. Không trừ vì lặp từ với câu khác trong đề, vì "có thể hay hơn", hay vì sở thích văn phong.
-- Đáp án tham khảo chỉ để định hướng: diễn đạt khác nhưng đúng ngữ cảnh và ngữ pháp vẫn được 5 điểm.
+Mỗi chỗ trống 5 điểm = YẾU TỐ NỘI DUNG (내용 요소, 2-3đ) + YẾU TỐ HÌNH THỨC (형식 요소, 2-3đ).
+- Nội dung: từ vựng mang đúng ý mà ngữ cảnh cần. Từ đồng nghĩa hoặc cách nói khác cùng nghĩa đều đạt (NIIED chấp nhận cả "주문했습니다/구입했습니다/샀습니다"; cả "들려주는 것은 아니다" lẫn "사용하는 것은 아니다").
+- Hình thức: cấu trúc ngữ pháp HÔ ỨNG (호응) với chữ ngay trước/sau chỗ trống, và đúng 격식 ở đuôi kết thúc câu.
+- Đạt cả hai → 5. Đúng ý nhưng thiếu/sai cấu trúc hô ứng → 2-3. Đúng cấu trúc nhưng sai ý → 2. Không đạt cả hai → 0-1.
+- Trừ thêm: sai chính tả, thêm nội dung thừa làm sai ý gốc, chép lại chữ in sẵn trước/sau chỗ trống, viết nhiều hơn một câu.
+
+LUẬT HÔ ỨNG THƯỜNG GẶP — chữ quanh ngoặc quyết định cấu trúc đúng:
+- 항상/늘/모두/반드시 + phủ định → phủ định bộ phận "-는 것은 아니다". Dùng "-지 않다" thành phủ định toàn bộ, đổi nghĩa câu → KHÔNG đạt yếu tố hình thức (NIIED đề 60 loại "들려주지 않는다").
+- 왜냐하면 … → "-기 때문이다". 그래야 … → "-(으)ㄹ 수 있다". 만약/만일 … → "-(으)면 …". -(으)려면 … → "-아/어야 하다/되다".
+- 물어보니/듣기로/전문가들은 …라고 → câu gián tiếp "-다고 하다", "-(으)라고 하다".
+- "( ) 고맙습니다" → "-아/어 주셔서/줘서". "( ) 것이 좋다" → định ngữ "-는".
+- Câu hỏi về cách làm sau "-(으)려면" phải giữ "-아/어야": "어떻게 해야 합니까" đạt; "어떻게 합니까" thiếu yếu tố hình thức.
+
+ĐỊNH DẠNG ĐÁP ÁN:
+- Đề từ khoảng kỳ 52 trở đi yêu cầu "알맞은 말": đáp án có thể chỉ là cụm từ ghép với chữ ngoài ngoặc thành câu (NIIED: "빌려 줘서", "밝은 표정을 짓는", "하러 갑니다"). Hãy ghép đáp án vào đoạn văn rồi đánh giá câu hoàn chỉnh; không trừ điểm vì đáp án không phải câu đầy đủ.
+- 격식 chỉ xét ở đuôi KẾT THÚC câu. Đuôi nối giữa câu (-아서, -(으)면, -는지, -도록, -기 전에...) không mang 격식. Kính ngữ -(으)시- tốt nhưng không bắt buộc: NIIED cho 5đ cả "빌려 줘서" lẫn "빌려 주셔서".
+- Nếu hệ thống báo đáp án lặp lại chữ in sẵn trước/sau chỗ trống: tối đa 3 điểm, form = false.
+
+KHÔNG TRỪ ĐIỂM VÌ SỞ THÍCH: đáp án đúng ý và đúng cấu trúc hô ứng thì cho 5 — kể cả khi bạn thấy có cách nói "hay hơn", "sát nghĩa hơn", "tự nhiên hơn", "cụ thể hơn", hay câu ngắn. Ghi những gợi ý đó vào "tip", không trừ điểm. Đáp án tham khảo chỉ để định hướng.
 
 ${typeRules}
 
-THANG ĐIỂM MỖI CHỖ TRỐNG (ToPeak cụ thể hóa từ hướng dẫn trên):
-5 — đúng ngữ cảnh, từ vựng/ngữ pháp phù hợp, đúng 격식, đúng chính tả, một câu.
-4 — đúng ý và ngữ cảnh, chỉ 1 lỗi nhỏ (chính tả, trợ từ) không ảnh hưởng nghĩa.
-3 — đúng ý chính nhưng ngữ pháp/từ vựng không tự nhiên, HOẶC sai 격식, HOẶC có nội dung thừa/chép chữ quanh chỗ trống.
-2 — chỉ đúng một phần ý, hoặc nhiều lỗi ngữ pháp.
-1 — có liên quan ngữ cảnh nhưng sai ý chính hoặc lỗi nặng khó hiểu.
+TÓM TẮT THANG ĐIỂM:
+5 — đạt cả nội dung và hình thức.
+4 — đạt cả hai, nhưng có 1 lỗi chính tả/trợ từ nhỏ không ảnh hưởng nghĩa.
+3 — đúng ý nhưng thiếu cấu trúc hô ứng hoặc sai 격식 đuôi câu, HOẶC có nội dung thừa/chép chữ quanh ngoặc/nhiều hơn một câu.
+2 — chỉ đạt một trong hai yếu tố, kèm lỗi khác; hoặc đúng cấu trúc nhưng sai ý.
+1 — liên quan ngữ cảnh nhưng sai ý chính, lỗi nặng.
 0 — bỏ trống, lạc đề, chép nguyên đề, không phải tiếng Hàn.
 
 ${DATA_BOUNDARY}
@@ -138,8 +147,8 @@ ${CORRECTION_RULES}
     {
       "key": "<ㄱ hoặc ㄴ>",
       "analysis": "<ghi chú ngắn của giám khảo: ngữ cảnh cần gì, đáp án đáp ứng đến đâu>",
+      "deductions": [ { "reason": "<spelling|particle|grammar|hoeung|register|meaning|partial_meaning|extra|multi_sentence|echo>", "detail": "<lỗi cụ thể, trích đáp án>" } ],
       "score": <số nguyên 0-5>,
-      "checks": { "context": <bool>, "grammar": <bool>, "register": <bool>, "form": <bool> },
       "feedback": "<2-3 câu nhận xét>",
       "corrections": [ { "original": "", "corrected": "", "explanation": "", "type": "", "pattern": "" } ],
       "better_example": "<một câu mẫu 5 điểm bằng tiếng Hàn — CHỈ phần điền vào ngoặc, không kèm chữ in sẵn trước/sau chỗ trống>",
@@ -147,7 +156,9 @@ ${CORRECTION_RULES}
     }
   ]
 }
-"checks": true nghĩa là đạt tiêu chí đó. Nếu score = 5 thì mọi check phải true và corrections rỗng.
+"deductions" — mỗi lý do trừ điểm phải thuộc đúng một loại:
+  spelling (sai chính tả) · particle (sai trợ từ) · grammar (sai ngữ pháp theo chuẩn tiếng Hàn) · hoeung (thiếu/sai cấu trúc hô ứng với chữ quanh ngoặc) · register (sai 격식 ở đuôi kết thúc câu) · meaning (sai ý ngữ cảnh) · partial_meaning (chỉ đúng một phần ý) · extra (thêm nội dung thừa làm sai ý) · multi_sentence (nhiều hơn một câu) · echo (chép chữ in sẵn quanh ngoặc).
+  "Có cách nói tự nhiên/hay/sát hơn" KHÔNG phải lý do trừ điểm — không ghi vào deductions. Không có lỗi thuộc các loại trên → deductions rỗng và score = 5, corrections rỗng.
 ${LANGUAGE}`
 
   const blanksText = blanks
@@ -239,6 +250,11 @@ ${DATA_BOUNDARY}
 
 ${CORRECTION_RULES}
 Tối đa 8 corrections, ưu tiên lỗi ảnh hưởng điểm nhiều nhất.
+
+MỐC HIỆU CHUẨN: bài mẫu chính thức của NIIED (điểm tối đa) trả lời đủ mọi yêu cầu, mỗi đoạn một ý có triển khai, có từ nối rõ, ngữ pháp trung-cao cấp chính xác, 다체 nhất quán — nhưng KHÔNG hoàn hảo văn chương: ví dụ có thể chung chung, ý có thể chưa thật sâu. Bài như vậy là bậc A ở cả ba tiêu chí.
+- Không hạ bậc vì "ví dụ chưa cụ thể", "có thể sâu hơn", "chưa tinh chỉnh" khi bài đã đáp ứng đủ yêu cầu đề. Chỉ hạ bậc khi thiếu yêu cầu, lạc ý, bố cục rời rạc, hoặc có lỗi ngôn ngữ thật.
+- Mỗi lần trừ điểm Sử dụng ngôn ngữ phải ứng với lỗi cụ thể ghi trong corrections. Không trừ vì "một số lỗi nhỏ" chung chung.
+- Lệch độ dài một chút (thiếu dưới 5% hoặc vượt dưới 10%) không bị trừ.
 
 Cách chấm: xác định bậc (A-F) cho từng tiêu chí trước, rồi chọn điểm trong khoảng của bậc đó.
 

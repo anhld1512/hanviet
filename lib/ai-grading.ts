@@ -47,7 +47,7 @@ function parseJSON(text: string): Json | null {
 
 async function callModel<T>(prompt: PromptPair, maxTokens: number, validate: (j: Json) => T | null): Promise<T> {
   let lastError = "empty response"
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await client.chat.completions.create({
         model: MODEL,
@@ -111,6 +111,12 @@ function normCoaching(v: unknown): GradeResult["coaching"] {
 
 // ─── Q51 / Q52 ────────────────────────────────────────────────────────────────
 
+const DEDUCTION_REASONS = [
+  "spelling", "particle", "grammar", "hoeung", "register",
+  "meaning", "partial_meaning", "extra", "multi_sentence", "echo",
+] as const
+type DeductionReason = (typeof DEDUCTION_REASONS)[number]
+
 export async function gradeBlanks(params: {
   questionType: "q51" | "q52"
   passage: string
@@ -142,14 +148,22 @@ export async function gradeBlanks(params: {
   return graded.map((g, i): GradeResult => {
     const answer = blanks[i].answer
     // Blank or non-Korean answers can't score regardless of what the model says.
-    let total = /[가-힣]/.test(answer) ? clampInt(g.score, 5)! : 0
-    if (blanks[i].echo) total = Math.min(total, 3)
-    const c = (g.checks && typeof g.checks === "object" ? g.checks : {}) as Json
+    const reasons = new Set(
+      (Array.isArray(g.deductions) ? (g.deductions as Json[]) : [])
+        .map((d) => d?.reason)
+        .filter((r): r is DeductionReason => DEDUCTION_REASONS.includes(r as DeductionReason))
+    )
+    if (blanks[i].echo) reasons.add("echo")
+    // Only listed error types may cost points; style preferences don't.
+    let total = reasons.size === 0 ? 5 : Math.min(clampInt(g.score, 5)!, 4)
+    if (reasons.has("echo") || reasons.has("multi_sentence")) total = Math.min(total, 3)
+    if (!/[가-힣]/.test(answer)) total = 0
+    const has = (...rs: DeductionReason[]) => rs.some((r) => reasons.has(r))
     const checks: BlankChecks = {
-      context: total === 5 || c.context === true,
-      grammar: total === 5 || c.grammar === true,
-      register: total === 5 || c.register === true,
-      form: !blanks[i].echo && (total === 5 || c.form === true),
+      context: !has("meaning", "partial_meaning", "extra"),
+      grammar: !has("spelling", "particle", "grammar", "hoeung"),
+      register: !has("register"),
+      form: !has("multi_sentence", "echo"),
     }
     const tip = str(g.tip)
     let betterExample = str(g.better_example)
@@ -197,7 +211,7 @@ export async function gradeEssay(params: {
     injectionHits: detectInjection(essay),
   })
 
-  const g = await callModel(prompt, 3000, (j) => {
+  const g = await callModel(prompt, 4500, (j) => {
     const s = (j.scores ?? {}) as Json
     const content = clampInt(s.content, m.content)
     const organization = clampInt(s.organization, m.organization)

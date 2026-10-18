@@ -53,6 +53,7 @@ process.stderr.write("\n")
 
 let pass = 0
 let maxSpread = 0
+let errors = 0
 const latencies: number[] = []
 const report = cases.map((c) => {
   const rs = results.get(c.id) ?? []
@@ -62,7 +63,9 @@ const report = cases.map((c) => {
   const contentOk = c.kind !== "essay" || c.expectContentMax === undefined || rs.every((r) => (r.content ?? 99) <= c.expectContentMax!)
   const ok = inRange && contentOk
   if (ok) pass++
-  maxSpread = Math.max(maxSpread, Math.max(...totals) - Math.min(...totals))
+  const graded = rs.filter((r) => !r.error).map((r) => r.total)
+  errors += rs.length - graded.length
+  if (graded.length) maxSpread = Math.max(maxSpread, Math.max(...graded) - Math.min(...graded))
   const contents = c.kind === "essay" ? ` content=${rs.map((r) => r.content).join("/")}` : ""
   console.log(`${ok ? "PASS" : "FAIL"}  ${c.id.padEnd(42)} kỳ vọng ${c.expect.join("–").padEnd(6)} → ${totals.join(", ")}${contents}`)
   if (!ok) for (const r of rs) console.log(`        ${r.error ?? r.feedback?.slice(0, 160)}`)
@@ -72,7 +75,7 @@ const report = cases.map((c) => {
 latencies.sort((a, b) => a - b)
 const p50 = latencies[Math.floor(latencies.length / 2)] / 1000
 const p90 = latencies[Math.floor(latencies.length * 0.9)] / 1000
-console.log(`\n${pass}/${cases.length} case đạt · độ lệch lớn nhất giữa các lần chấm: ${maxSpread} điểm · thời gian p50 ${p50.toFixed(1)}s, p90 ${p90.toFixed(1)}s`)
+console.log(`\n${pass}/${cases.length} case đạt · độ lệch lớn nhất giữa các lần chấm: ${maxSpread} điểm · lượt chấm lỗi: ${errors}/${latencies.length} · thời gian p50 ${p50.toFixed(1)}s, p90 ${p90.toFixed(1)}s`)
 
 const outDir = join(process.cwd(), "scripts/grading-eval/results")
 mkdirSync(outDir, { recursive: true })
